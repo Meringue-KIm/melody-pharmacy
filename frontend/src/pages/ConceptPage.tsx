@@ -1,22 +1,29 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { getConcepts } from '../api/songApi'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { getConcepts, getSituations } from '../api/songApi'
 import type { Concept, Situation } from '../api/songApi'
 import '../styles/Main.css'
 
 export default function ConceptPage() {
   const navigate = useNavigate()
-  const location = useLocation()
-  const situation = location.state?.situation as Situation
+  const [searchParams] = useSearchParams()
+  const situationId = Number(searchParams.get('situationId'))
+
+  const [situation, setSituation] = useState<Situation | null>(null)
   const [concepts, setConcepts] = useState<Concept[]>([])
 
   useEffect(() => {
-    if (!situation) { navigate('/'); return }
-    getConcepts().then((res: { data: Concept[] }) => setConcepts(res.data))
-  }, [])
+    if (!situationId) { navigate('/'); return }
+    getSituations().then(res => {
+      const found = res.data.find(s => s.id === situationId)
+      if (!found) { navigate('/'); return }
+      setSituation(found)
+    })
+    getConcepts().then(res => setConcepts(res.data))
+  }, [situationId])
 
   const handleSelect = (concept: Concept) => {
-    navigate('/recommend', { state: { situation, concept } })
+    navigate(`/recommend?situationId=${situationId}&conceptId=${concept.id}`)
   }
 
   return (

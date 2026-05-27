@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { recommend, saveSong, unsaveSong, getSaved, recordPlay } from '../api/songApi'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { recommend, saveSong, unsaveSong, getSaved, recordPlay, getSituations, getConcepts } from '../api/songApi'
 import type { Song, Situation, Concept } from '../api/songApi'
 import '../styles/Recommend.css'
 
@@ -8,25 +8,29 @@ type Tab = 'recommend' | 'saved'
 
 export default function RecommendPage() {
   const navigate = useNavigate()
-  const location = useLocation()
-  const situation = location.state?.situation as Situation
-  const concept = location.state?.concept as Concept
+  const [searchParams] = useSearchParams()
+  const situationId = Number(searchParams.get('situationId'))
+  const conceptId   = Number(searchParams.get('conceptId'))
 
+  const [situation, setSituation] = useState<Situation | null>(null)
+  const [concept,   setConcept]   = useState<Concept | null>(null)
   const [tab, setTab] = useState<Tab>('recommend')
   const [songs, setSongs] = useState<Song[]>([])
   const [savedSongs, setSavedSongs] = useState<Song[]>([])
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (!situation || !concept) { navigate('/'); return }
+    if (!situationId || !conceptId) { navigate('/'); return }
+    getSituations().then(res => setSituation(res.data.find(s => s.id === situationId) ?? null))
+    getConcepts().then(res => setConcept(res.data.find(c => c.id === conceptId) ?? null))
     loadRecommend()
     loadSaved()
-  }, [])
+  }, [situationId, conceptId])
 
   const loadRecommend = async () => {
     setLoading(true)
     try {
-      const res = await recommend(situation.id, concept.id)
+      const res = await recommend(situationId, conceptId)
       setSongs(res.data)
     } finally {
       setLoading(false)
@@ -34,7 +38,7 @@ export default function RecommendPage() {
   }
 
   const loadSaved = async () => {
-    const res = await getSaved(situation.id, concept.id)
+    const res = await getSaved(situationId, conceptId)
     setSavedSongs(res.data)
   }
 
@@ -42,14 +46,14 @@ export default function RecommendPage() {
     if (song.saved) {
       await unsaveSong(song.id)
     } else {
-      await saveSong(song.id, situation.id, concept.id)
+      await saveSong(song.id, situationId, conceptId)
     }
     loadRecommend()
     loadSaved()
   }
 
   const handlePlay = (song: Song) => {
-    recordPlay(song.id, situation.id, concept.id)
+    recordPlay(song.id, situationId, conceptId)
     window.open(song.youtubeUrl, '_blank')
   }
 
@@ -58,7 +62,7 @@ export default function RecommendPage() {
   return (
     <div className="recommend-container">
       <header className="main-header">
-        <button className="back-btn" onClick={() => navigate('/concept', { state: { situation } })}>← 뒤로</button>
+        <button className="back-btn" onClick={() => navigate(`/concept?situationId=${situationId}`)}>← 뒤로</button>
         <div className="logo">🎵 멜로디약국</div>
         <div />
       </header>

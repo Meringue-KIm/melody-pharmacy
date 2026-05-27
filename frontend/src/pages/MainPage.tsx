@@ -14,7 +14,7 @@ export default function MainPage() {
   }, [])
 
   const handleSelect = (situation: Situation) => {
-    navigate('/concept', { state: { situation } })
+    navigate(`/concept?situationId=${situation.id}`)
   }
 
   const handleLogout = () => {

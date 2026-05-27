@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { signup } from '../api/authApi'
+import { signup, login } from '../api/authApi'
 import '../styles/Auth.css'
 
 export default function SignupPage() {
@@ -15,7 +15,10 @@ export default function SignupPage() {
     setError('')
     try {
       await signup(form)
-      navigate('/login')
+      const res = await login({ email: form.email, password: form.password })
+      localStorage.setItem('token', res.data.accessToken)
+      localStorage.setItem('nickname', res.data.nickname)
+      navigate('/')
     } catch {
       setError('이미 사용 중인 이메일입니다.')
     } finally {
