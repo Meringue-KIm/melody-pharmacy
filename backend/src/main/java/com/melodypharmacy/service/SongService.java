@@ -22,8 +22,10 @@ public class SongService {
     private final PlayHistoryRepository playHistoryRepository;
 
     @Transactional(readOnly = true)
-    public List<SongResponse> recommend(Long situationId, Long conceptId, Long userId) {
-        List<Song> songs = songRepository.findRandomBySituationAndConcept(situationId, conceptId);
+    public List<SongResponse> recommend(Long situationId, Long conceptId, Long userId, boolean excludePlayed) {
+        List<Song> songs = excludePlayed
+                ? songRepository.findRandomExcludingPlayed(situationId, conceptId, userId)
+                : songRepository.findRandomBySituationAndConcept(situationId, conceptId);
 
         return songs.stream()
                 .limit(5)
@@ -66,7 +68,9 @@ public class SongService {
                 : userSongRepository.findByUserId(userId);
 
         return userSongs.stream()
-                .map(us -> new SongResponse(us.getSong(), true))
+                .map(us -> new SongResponse(us.getSong(), true).withSavedContext(
+                        us.getSituation().getIcon(), us.getSituation().getName(),
+                        us.getConcept().getIcon(),   us.getConcept().getName()))
                 .toList();
     }
 

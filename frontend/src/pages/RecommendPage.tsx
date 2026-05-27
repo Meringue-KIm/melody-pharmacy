@@ -6,9 +6,8 @@ import '../styles/Recommend.css'
 
 type Tab = 'recommend' | 'saved' | 'history'
 
-function getVideoId(youtubeUrl: string): string {
-  const match = youtubeUrl.match(/[?&]v=([^&]+)/)
-  return match ? match[1] : ''
+function getVideoId(url: string) {
+  return url.match(/[?&]v=([^&]+)/)?.[1] ?? ''
 }
 
 export default function RecommendPage() {
@@ -19,12 +18,20 @@ export default function RecommendPage() {
 
   const [situation, setSituation] = useState<Situation | null>(null)
   const [concept,   setConcept]   = useState<Concept | null>(null)
-  const [tab, setTab] = useState<Tab>('recommend')
-  const [songs, setSongs] = useState<Song[]>([])
-  const [savedSongs, setSavedSongs] = useState<Song[]>([])
-  const [loading, setLoading] = useState(false)
+  const [tab, setTab]             = useState<Tab>('recommend')
+  const [songs, setSongs]         = useState<Song[]>([])
+  const [savedSongs, setSavedSongs]   = useState<Song[]>([])
   const [historySongs, setHistorySongs] = useState<Song[]>([])
+  const [loading, setLoading]     = useState(false)
+  const [error, setError]         = useState(false)
   const [playingId, setPlayingId] = useState<number | null>(null)
+  const [excludePlayed, setExcludePlayed] = useState(false)
+  const [toast, setToast] = useState('')
+
+  const showToast = (msg: string) => {
+    setToast(msg)
+    setTimeout(() => setToast(''), 2000)
+  }
 
   useEffect(() => {
     if (!situationId || !conceptId) { navigate('/'); return }
@@ -35,52 +42,78 @@ export default function RecommendPage() {
     loadHistory()
   }, [situationId, conceptId])
 
-  const loadRecommend = async () => {
+  const loadRecommend = async (exclude = excludePlayed) => {
     setLoading(true)
+    setError(false)
     try {
-      const res = await recommend(situationId, conceptId)
+      const res = await recommend(situationId, conceptId, exclude)
       setSongs(res.data)
+    } catch {
+      setError(true)
     } finally {
       setLoading(false)
     }
   }
 
-  const loadSaved = async () => {
-    const res = await getSaved(situationId, conceptId)
-    setSavedSongs(res.data)
-  }
-
-  const loadHistory = async () => {
-    const res = await getHistory()
-    setHistorySongs(res.data)
-  }
+  const loadSaved    = async () => { const r = await getSaved(situationId, conceptId); setSavedSongs(r.data) }
+  const loadHistory  = async () => { const r = await getHistory(); setHistorySongs(r.data) }
 
   const handleSave = async (song: Song) => {
+    if (song.saved) await unsaveSong(song.id)
+    else await saveSong(song.id, situationId, conceptId)
+
+    const toggleSaved = (list: Song[]) =>
+      list.map(s => s.id === song.id ? { ...s, saved: !s.saved } : s)
+
+    setSongs(toggleSaved)
+    setHistorySongs(toggleSaved)
+
     if (song.saved) {
-      await unsaveSong(song.id)
+      setSavedSongs(prev => prev.filter(s => s.id !== song.id))
+      showToast('저장 해제됐어요')
     } else {
-      await saveSong(song.id, situationId, conceptId)
+      loadSaved()
+      showToast('저장됐어요 ♥')
     }
-    loadRecommend()
-    loadSaved()
   }
 
   const handlePlay = (song: Song) => {
     recordPlay(song.id, situationId, conceptId)
-    if (playingId === song.id) {
-      setPlayingId(null)
-    } else {
-      setPlayingId(song.id)
+    const isOpening = playingId !== song.id
+    setPlayingId(prev => prev === song.id ? null : song.id)
+    if (isOpening) {
+      setTimeout(() => {
+        document.getElementById(`song-${song.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+      }, 50)
     }
+  }
+
+  const handleShare = async (song: Song) => {
+    const text = `🎵 ${song.title} - ${song.artist}`
+    if (navigator.share) {
+      await navigator.share({ title: text, url: song.youtubeUrl })
+    } else {
+      await navigator.clipboard.writeText(song.youtubeUrl)
+      showToast('링크가 복사됐어요!')
+    }
+  }
+
+  const handleToggleExclude = () => {
+    const next = !excludePlayed
+    setExcludePlayed(next)
+    setPlayingId(null)
+    loadRecommend(next)
   }
 
   const currentSongs = tab === 'recommend' ? songs : tab === 'saved' ? savedSongs : historySongs
 
   return (
     <div className="recommend-container">
+      {toast && <div className="toast">{toast}</div>}
+
       <header className="main-header">
         <button className="back-btn" onClick={() => navigate(`/concept?situationId=${situationId}`)}>← 뒤로</button>
-        <div className="logo">🎵 멜로디약국</div>
+        <div className="logo" style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>🎵 멜로디약국</div>
         <div />
       </header>
 
@@ -102,20 +135,45 @@ export default function RecommendPage() {
       </div>
 
       {tab === 'recommend' && (
-        <button className="refresh-btn" onClick={() => { setPlayingId(null); loadRecommend() }}>🔄 다시 추천받기</button>
+        <div className="recommend-controls">
+          <button className="refresh-btn" disabled={loading} onClick={() => { setPlayingId(null); loadRecommend() }}>🔄 다시 추천받기</button>
+          <button
+            className={`exclude-btn ${excludePlayed ? 'active' : ''}`}
+            onClick={handleToggleExclude}
+          >
+            {excludePlayed ? '✅' : '⬜'} 들은 노래 제외
+          </button>
+        </div>
+      )}
+
+      {error && (
+        <div className="page-error">
+          불러오기 실패했어요 😢<br />
+          <button onClick={() => loadRecommend()}>다시 시도</button>
+        </div>
       )}
 
       <div className="song-list">
-        {loading && <p className="loading">처방 중... 💊</p>}
-        {!loading && currentSongs.length === 0 && (
-          <p className="empty">
-            {tab === 'recommend' ? '추천할 노래가 없어요.'
-             : tab === 'saved' ? '저장된 노래가 없어요.'
-             : '아직 들은 노래가 없어요.'}
-          </p>
+        {loading && Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="skeleton skeleton-song" />
+        ))}
+        {!loading && !error && currentSongs.length === 0 && (
+          <div className="empty">
+            {tab === 'recommend' && (
+              excludePlayed
+                ? <><p>들은 노래를 모두 제외했어요.</p><button className="empty-btn" onClick={handleToggleExclude}>전체 다시 보기</button></>
+                : <p>추천할 노래가 없어요.</p>
+            )}
+            {tab === 'saved' && (
+              <><p>아직 저장한 노래가 없어요.</p><button className="empty-btn" onClick={() => { setTab('recommend'); setPlayingId(null) }}>노래 추천받기</button></>
+            )}
+            {tab === 'history' && (
+              <><p>아직 들은 노래가 없어요.</p><button className="empty-btn" onClick={() => { setTab('recommend'); setPlayingId(null) }}>노래 추천받기</button></>
+            )}
+          </div>
         )}
-        {currentSongs.map((song) => (
-          <div key={song.id} className={`song-card ${playingId === song.id ? 'playing' : ''}`}>
+        {currentSongs.map(song => (
+          <div key={song.id} id={`song-${song.id}`} className={`song-card ${playingId === song.id ? 'playing' : ''}`}>
             <div className="song-row">
               {song.thumbnailUrl && (
                 <img src={song.thumbnailUrl} alt={song.title} className="song-thumbnail" />
@@ -123,20 +181,20 @@ export default function RecommendPage() {
               <div className="song-info">
                 <p className="song-title">{song.title}</p>
                 <p className="song-artist">{song.artist}</p>
+                {tab === 'saved' && song.savedSituationName && (
+                  <p className="song-context">
+                    {song.savedSituationIcon} {song.savedSituationName} · {song.savedConceptIcon} {song.savedConceptName}
+                  </p>
+                )}
               </div>
               <div className="song-actions">
-                <button
-                  className={`play-btn ${playingId === song.id ? 'playing' : ''}`}
-                  onClick={() => handlePlay(song)}
-                >
+                <button className={`play-btn ${playingId === song.id ? 'playing' : ''}`} onClick={() => handlePlay(song)}>
                   {playingId === song.id ? '■' : '▶'}
                 </button>
-                <button
-                  className={`save-btn ${song.saved ? 'saved' : ''}`}
-                  onClick={() => handleSave(song)}
-                >
+                <button className={`save-btn ${song.saved ? 'saved' : ''}`} onClick={() => handleSave(song)}>
                   {song.saved ? '♥' : '♡'}
                 </button>
+                <button className="share-btn" onClick={() => handleShare(song)}>📤</button>
               </div>
             </div>
 

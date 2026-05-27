@@ -4,36 +4,43 @@ import { getSituations } from '../api/songApi'
 import type { Situation } from '../api/songApi'
 import '../styles/Main.css'
 
-const LAST_KEY = 'lastSelection'
-
 interface LastSelection {
-  situationId: number
-  situationIcon: string
-  situationName: string
-  conceptId: number
-  conceptIcon: string
-  conceptName: string
+  situationId: number; situationIcon: string; situationName: string
+  conceptId: number;   conceptIcon: string;   conceptName: string
 }
 
 export default function MainPage() {
   const navigate = useNavigate()
   const nickname = localStorage.getItem('nickname') || '환자'
   const [situations, setSituations] = useState<Situation[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
   const [last, setLast] = useState<LastSelection | null>(null)
 
   useEffect(() => {
-    getSituations().then(res => setSituations(res.data))
-    const saved = localStorage.getItem(LAST_KEY)
+    const saved = localStorage.getItem('lastSelection')
     if (saved) setLast(JSON.parse(saved))
+    load()
   }, [])
+
+  const load = () => {
+    setLoading(true)
+    setError(false)
+    getSituations()
+      .then(res => setSituations(res.data))
+      .catch(() => setError(true))
+      .finally(() => setLoading(false))
+  }
 
   const handleSelect = (situation: Situation) => {
     navigate(`/concept?situationId=${situation.id}`)
   }
 
   const handleLogout = () => {
+    if (!window.confirm('로그아웃 하시겠어요?')) return
     localStorage.removeItem('token')
     localStorage.removeItem('nickname')
+    localStorage.removeItem('lastSelection')
     navigate('/login')
   }
 
@@ -55,7 +62,7 @@ export default function MainPage() {
               className="last-btn"
               onClick={() => navigate(`/recommend?situationId=${last.situationId}&conceptId=${last.conceptId}`)}
             >
-              {last.situationIcon} {last.situationName} &nbsp;·&nbsp; {last.conceptIcon} {last.conceptName}
+              <span className="last-btn-text">{last.situationIcon} {last.situationName} · {last.conceptIcon} {last.conceptName}</span>
               <span className="last-arrow">→</span>
             </button>
           </div>
@@ -66,13 +73,25 @@ export default function MainPage() {
           <span>상황을 선택하면 딱 맞는 노래를 처방해드려요 💊</span>
         </h1>
 
+        {error && (
+          <div className="page-error">
+            네트워크 오류가 발생했어요 😢<br />
+            <button onClick={load}>다시 시도</button>
+          </div>
+        )}
+
         <div className="situation-grid">
-          {situations.map((s) => (
-            <button key={s.id} className="situation-card" onClick={() => handleSelect(s)}>
-              <span className="situation-icon">{s.icon}</span>
-              <span className="situation-name">{s.name}</span>
-            </button>
-          ))}
+          {loading
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="skeleton skeleton-card" />
+              ))
+            : situations.map(s => (
+                <button key={s.id} className="situation-card" onClick={() => handleSelect(s)}>
+                  <span className="situation-icon">{s.icon}</span>
+                  <span className="situation-name">{s.name}</span>
+                </button>
+              ))
+          }
         </div>
       </main>
     </div>

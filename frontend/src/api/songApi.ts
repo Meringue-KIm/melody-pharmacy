@@ -19,6 +19,10 @@ export interface Song {
   youtubeUrl: string
   thumbnailUrl: string
   saved: boolean
+  savedSituationIcon?: string
+  savedSituationName?: string
+  savedConceptIcon?: string
+  savedConceptName?: string
 }
 
 export const getSituations = () =>
@@ -27,8 +31,8 @@ export const getSituations = () =>
 export const getConcepts = () =>
   api.get<Concept[]>('/api/concepts')
 
-export const recommend = (situationId: number, conceptId: number) =>
-  api.get<Song[]>('/api/songs/recommend', { params: { situationId, conceptId } })
+export const recommend = (situationId: number, conceptId: number, excludePlayed = false) =>
+  api.get<Song[]>('/api/songs/recommend', { params: { situationId, conceptId, excludePlayed } })
 
 export const saveSong = (songId: number, situationId: number, conceptId: number) =>
   api.post(`/api/songs/${songId}/save`, null, { params: { situationId, conceptId } })

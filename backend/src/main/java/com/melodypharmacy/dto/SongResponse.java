@@ -11,17 +11,25 @@ public class SongResponse {
     private final String youtubeUrl;
     private final String thumbnailUrl;
     private boolean saved;
+    private String savedSituationIcon;
+    private String savedSituationName;
+    private String savedConceptIcon;
+    private String savedConceptName;
 
-    public SongResponse(Song song) {
+    public SongResponse(Song song, boolean saved) {
         this.id = song.getId();
         this.title = song.getTitle();
         this.artist = song.getArtist();
         this.youtubeUrl = song.getYoutubeUrl();
         this.thumbnailUrl = song.getThumbnailUrl();
+        this.saved = saved;
     }
 
-    public SongResponse(Song song, boolean saved) {
-        this(song);
-        this.saved = saved;
+    public SongResponse withSavedContext(String sitIcon, String sitName, String conIcon, String conName) {
+        this.savedSituationIcon = sitIcon;
+        this.savedSituationName = sitName;
+        this.savedConceptIcon = conIcon;
+        this.savedConceptName = conName;
+        return this;
     }
 }

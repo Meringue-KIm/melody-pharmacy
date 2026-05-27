@@ -20,3 +20,7 @@ server:
 jwt:
   secret: JWT_SECRET_REMOVED
   expiration: 86400000  # 24시간 (밀리초)
+
+kakao:
+  client-id: KAKAO_CLIENT_ID_REMOVED
+  redirect-uri: http://localhost:5173/oauth/kakao

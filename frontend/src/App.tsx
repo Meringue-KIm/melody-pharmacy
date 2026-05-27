@@ -4,6 +4,7 @@ import SignupPage from './pages/SignupPage'
 import MainPage from './pages/MainPage'
 import ConceptPage from './pages/ConceptPage'
 import RecommendPage from './pages/RecommendPage'
+import KakaoCallbackPage from './pages/KakaoCallbackPage'
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const token = localStorage.getItem('token')
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="/" element={<PrivateRoute><MainPage /></PrivateRoute>} />
         <Route path="/concept" element={<PrivateRoute><ConceptPage /></PrivateRoute>} />
         <Route path="/recommend" element={<PrivateRoute><RecommendPage /></PrivateRoute>} />
+        <Route path="/oauth/kakao" element={<KakaoCallbackPage />} />
       </Routes>
     </BrowserRouter>
   )

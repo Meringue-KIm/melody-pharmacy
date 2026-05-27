@@ -21,3 +21,6 @@ export const signup = (data: SignupRequest) =>
 
 export const login = (data: LoginRequest) =>
   api.post<TokenResponse>('/api/auth/login', data)
+
+export const kakaoLogin = (code: string) =>
+  api.get<TokenResponse>('/api/auth/kakao', { params: { code } })

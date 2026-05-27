@@ -21,9 +21,10 @@ public class SongController {
     public ResponseEntity<List<SongResponse>> recommend(
             @RequestParam Long situationId,
             @RequestParam Long conceptId,
+            @RequestParam(defaultValue = "false") boolean excludePlayed,
             @AuthenticationPrincipal UserDetails userDetails) {
         Long userId = Long.parseLong(userDetails.getUsername());
-        return ResponseEntity.ok(songService.recommend(situationId, conceptId, userId));
+        return ResponseEntity.ok(songService.recommend(situationId, conceptId, userId, excludePlayed));
     }
 
     @PostMapping("/{songId}/save")

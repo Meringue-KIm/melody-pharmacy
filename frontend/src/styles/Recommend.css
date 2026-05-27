@@ -55,8 +55,14 @@
   margin-left: 4px;
 }
 
+.recommend-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
 .refresh-btn {
-  width: 100%;
+  flex: 1;
   padding: 12px;
   background: rgba(255,255,255,0.07);
   border: 1px solid rgba(255,255,255,0.1);
@@ -64,19 +70,79 @@
   color: rgba(255,255,255,0.7);
   font-size: 14px;
   cursor: pointer;
-  margin-bottom: 16px;
   transition: all 0.2s;
 }
 
 .refresh-btn:hover { background: rgba(255,255,255,0.12); }
 
+.exclude-btn {
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.exclude-btn.active {
+  background: rgba(124,58,237,0.2);
+  border-color: #7c3aed;
+  color: #a78bfa;
+}
+
+.page-error {
+  text-align: center;
+  padding: 40px 0;
+  color: rgba(255,255,255,0.5);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.page-error button {
+  margin-top: 12px;
+  padding: 8px 20px;
+  background: rgba(124,58,237,0.3);
+  border: 1px solid #7c3aed;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
 .song-list { display: flex; flex-direction: column; gap: 12px; }
 
-.loading, .empty {
+.empty {
   text-align: center;
   color: rgba(255,255,255,0.4);
   padding: 40px 0;
   font-size: 15px;
+}
+
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.06) 25%,
+    rgba(255,255,255,0.12) 50%,
+    rgba(255,255,255,0.06) 75%);
+  background-size: 400px 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.skeleton-song {
+  height: 80px;
+  border-radius: 14px;
+}
+
+.refresh-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .song-card {
@@ -127,6 +193,12 @@
   margin-top: 2px;
 }
 
+.song-context {
+  font-size: 11px;
+  color: #a78bfa;
+  margin-top: 4px;
+}
+
 .song-actions {
   display: flex;
   gap: 8px;
@@ -134,8 +206,8 @@
 }
 
 .play-btn {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: #7c3aed;
   border: none;
@@ -167,8 +239,8 @@
 }
 
 .save-btn {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: rgba(255,255,255,0.1);
   border: none;
@@ -185,3 +257,58 @@
   background: rgba(248, 113, 113, 0.2);
   color: #f87171;
 }
+
+.share-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.share-btn:hover { background: rgba(255,255,255,0.15); }
+
+/* 토스트 */
+.toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30, 20, 60, 0.95);
+  border: 1px solid rgba(124, 58, 237, 0.5);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 999;
+  animation: fadeInUp 0.2s ease;
+  white-space: nowrap;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* 빈 상태 CTA */
+.empty-btn {
+  margin-top: 14px;
+  padding: 10px 24px;
+  background: rgba(124, 58, 237, 0.3);
+  border: 1px solid #7c3aed;
+  border-radius: 20px;
+  color: #a78bfa;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.empty-btn:hover { background: rgba(124, 58, 237, 0.5); }

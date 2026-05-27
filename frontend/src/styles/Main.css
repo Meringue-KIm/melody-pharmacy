@@ -36,6 +36,10 @@ body {
 .nickname {
   color: rgba(255,255,255,0.7);
   font-size: 14px;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .logout-btn {
@@ -130,6 +134,52 @@ body {
 .concept-icon { font-size: 28px; }
 .concept-name { font-size: 13px; font-weight: 600; }
 
+/* 스켈레톤 */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.06) 25%,
+    rgba(255,255,255,0.12) 50%,
+    rgba(255,255,255,0.06) 75%);
+  background-size: 400px 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 16px;
+}
+
+.skeleton-card {
+  height: 100px;
+  border-radius: 16px;
+}
+
+.skeleton-concept {
+  height: 80px;
+  border-radius: 14px;
+}
+
+/* 에러 */
+.page-error {
+  text-align: center;
+  padding: 60px 0 0;
+  color: rgba(255,255,255,0.5);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.page-error button {
+  margin-top: 16px;
+  padding: 10px 24px;
+  background: rgba(124,58,237,0.3);
+  border: 1px solid #7c3aed;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
 .last-selection {
   margin-bottom: 24px;
 }
@@ -155,6 +205,15 @@ body {
   align-items: center;
   justify-content: space-between;
   transition: background 0.2s;
+  overflow: hidden;
+}
+
+.last-btn-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
 }
 
 .last-btn:hover { background: rgba(124, 58, 237, 0.4); }
