@@ -1,0 +1,26 @@
+# ===== Backend =====
+backend/target/
+backend/.mvn/
+backend/*.log
+backend/src/main/resources/application-local.yml
+
+# ===== Frontend =====
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# ===== IDE =====
+.idea/
+*.iml
+.vscode/
+*.suo
+*.user
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+
+# ===== 환경변수 (절대 올리면 안됨) =====
+.env
+.env.local
+*.env
