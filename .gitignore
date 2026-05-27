@@ -1,6 +1,7 @@
 # ===== Backend =====
+backend/build/
 backend/target/
-backend/.mvn/
+backend/.gradle/
 backend/*.log
 backend/src/main/resources/application-local.yml
 
