@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.melodypharmacy.repository.UserSongRepositoryTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-05-27T15:52:47" hostname="안녕" time="0.289">
+  <properties/>
+  <testcase name="이미 저장된 노래 존재 여부 확인" classname="com.melodypharmacy.repository.UserSongRepositoryTest" time="0.044"/>
+  <testcase name="상황+컨셉으로 저장소 조회" classname="com.melodypharmacy.repository.UserSongRepositoryTest" time="0.064"/>
+  <testcase name="노래 저장소에 저장 성공" classname="com.melodypharmacy.repository.UserSongRepositoryTest" time="0.041"/>
+  <testcase name="유저 저장소 전체 조회" classname="com.melodypharmacy.repository.UserSongRepositoryTest" time="0.054"/>
+  <testcase name="저장된 노래 삭제" classname="com.melodypharmacy.repository.UserSongRepositoryTest" time="0.081"/>
+  <system-out><![CDATA[2026-05-28T00:52:47.212+09:00  INFO 39412 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.melodypharmacy.repository.UserSongRepositoryTest]: UserSongRepositoryTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-28T00:52:47.237+09:00  INFO 39412 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.melodypharmacy.MelodyPharmacyApplication for test class com.melodypharmacy.repository.UserSongRepositoryTest
+Hibernate: 
+    select
+        us1_0.id,
+        us1_0.concept_id,
+        us1_0.created_at,
+        us1_0.situation_id,
+        us1_0.song_id,
+        us1_0.user_id 
+    from
+        user_songs us1_0
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.artist,
+        s1_0.created_at,
+        s1_0.thumbnail_url,
+        s1_0.title,
+        s1_0.youtube_url 
+    from
+        songs s1_0
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.nickname,
+        u1_0.password 
+    from
+        users u1_0
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.icon,
+        s1_0.name 
+    from
+        situations s1_0
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.icon,
+        c1_0.name 
+    from
+        concepts c1_0
+Hibernate: 
+    insert 
+    into
+        users
+        (created_at, email, nickname, password) 
+    values
+        (?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        songs
+        (artist, created_at, thumbnail_url, title, youtube_url) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        situations
+        (icon, name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        concepts
+        (icon, name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        user_songs
+        (concept_id, created_at, situation_id, song_id, user_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        us1_0.id 
+    from
+        user_songs us1_0 
+    left join
+        users u1_0 
+            on u1_0.id=us1_0.user_id 
+    left join
+        songs s1_0 
+            on s1_0.id=us1_0.song_id 
+    where
+        u1_0.id=? 
+        and s1_0.id=? 
+    limit
+        ?
+Hibernate: 
+    select
+        us1_0.id,
+        us1_0.concept_id,
+        us1_0.created_at,
+        us1_0.situation_id,
+        us1_0.song_id,
+        us1_0.user_id 
+    from
+        user_songs us1_0
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.artist,
+        s1_0.created_at,
+        s1_0.thumbnail_url,
+        s1_0.title,
+        s1_0.youtube_url 
+    from
+        songs s1_0
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.nickname,
+        u1_0.password 
+    from
+        users u1_0
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.icon,
+        s1_0.name 
+    from
+        situations s1_0
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.icon,
+        c1_0.name 
+    from
+        concepts c1_0
+Hibernate: 
+    insert 
+    into
+        users
+        (created_at, email, nickname, password) 
+    values
+        (?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        songs
+        (artist, created_at, thumbnail_url, title, youtube_url) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        situations
+        (icon, name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        concepts
+        (icon, name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        user_songs
+        (concept_id, created_at, situation_id, song_id, user_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        us1_0.id,
+        us1_0.concept_id,
+        us1_0.created_at,
+        us1_0.situation_id,
+        us1_0.song_id,
+        us1_0.user_id 
+    from
+        user_songs us1_0 
+    left join
+        users u1_0 
+            on u1_0.id=us1_0.user_id 
+    left join
+        situations s1_0 
+            on s1_0.id=us1_0.situation_id 
+    left join
+        concepts c1_0 
+            on c1_0.id=us1_0.concept_id 
+    where
+        u1_0.id=? 
+        and s1_0.id=? 
+        and c1_0.id=?
+Hibernate: 
+    select
+        us1_0.id,
+        us1_0.concept_id,
+        us1_0.created_at,
+        us1_0.situation_id,
+        us1_0.song_id,
+        us1_0.user_id 
+    from
+        user_songs us1_0
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.artist,
+        s1_0.created_at,
+        s1_0.thumbnail_url,
+        s1_0.title,
+        s1_0.youtube_url 
+    from
+        songs s1_0
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.nickname,
+        u1_0.password 
+    from
+        users u1_0
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.icon,
+        s1_0.name 
+    from
+        situations s1_0
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.icon,
+        c1_0.name 
+    from
+        concepts c1_0
+Hibernate: 
+    insert 
+    into
+        users
+        (created_at, email, nickname, password) 
+    values
+        (?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        songs
+        (artist, created_at, thumbnail_url, title, youtube_url) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        situations
+        (icon, name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        concepts
+        (icon, name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        user_songs
+        (concept_id, created_at, situation_id, song_id, user_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        us1_0.id,
+        us1_0.concept_id,
+        us1_0.created_at,
+        us1_0.situation_id,
+        us1_0.song_id,
+        us1_0.user_id 
+    from
+        user_songs us1_0
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.artist,
+        s1_0.created_at,
+        s1_0.thumbnail_url,
+        s1_0.title,
+        s1_0.youtube_url 
+    from
+        songs s1_0
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.nickname,
+        u1_0.password 
+    from
+        users u1_0
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.icon,
+        s1_0.name 
+    from
+        situations s1_0
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.icon,
+        c1_0.name 
+    from
+        concepts c1_0
+Hibernate: 
+    insert 
+    into
+        users
+        (created_at, email, nickname, password) 
+    values
+        (?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        songs
+        (artist, created_at, thumbnail_url, title, youtube_url) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        situations
+        (icon, name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        concepts
+        (icon, name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        user_songs
+        (concept_id, created_at, situation_id, song_id, user_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        us1_0.id,
+        us1_0.concept_id,
+        us1_0.created_at,
+        us1_0.situation_id,
+        us1_0.song_id,
+        us1_0.user_id 
+    from
+        user_songs us1_0 
+    left join
+        users u1_0 
+            on u1_0.id=us1_0.user_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        us1_0.id,
+        us1_0.concept_id,
+        us1_0.created_at,
+        us1_0.situation_id,
+        us1_0.song_id,
+        us1_0.user_id 
+    from
+        user_songs us1_0
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.artist,
+        s1_0.created_at,
+        s1_0.thumbnail_url,
+        s1_0.title,
+        s1_0.youtube_url 
+    from
+        songs s1_0
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.nickname,
+        u1_0.password 
+    from
+        users u1_0
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.icon,
+        s1_0.name 
+    from
+        situations s1_0
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.icon,
+        c1_0.name 
+    from
+        concepts c1_0
+Hibernate: 
+    insert 
+    into
+        users
+        (created_at, email, nickname, password) 
+    values
+        (?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        songs
+        (artist, created_at, thumbnail_url, title, youtube_url) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        situations
+        (icon, name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        concepts
+        (icon, name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        user_songs
+        (concept_id, created_at, situation_id, song_id, user_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    delete 
+    from
+        user_songs 
+    where
+        id=?
+Hibernate: 
+    select
+        us1_0.id,
+        us1_0.concept_id,
+        us1_0.created_at,
+        us1_0.situation_id,
+        us1_0.song_id,
+        us1_0.user_id 
+    from
+        user_songs us1_0 
+    left join
+        users u1_0 
+            on u1_0.id=us1_0.user_id 
+    left join
+        songs s1_0 
+            on s1_0.id=us1_0.song_id 
+    where
+        u1_0.id=? 
+        and s1_0.id=?
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

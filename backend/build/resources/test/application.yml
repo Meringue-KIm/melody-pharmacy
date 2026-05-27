@@ -7,16 +7,13 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     open-in-view: false
     properties:
       hibernate:
         format_sql: true
 
-server:
-  port: 8080
-
 jwt:
   secret: JWT_SECRET_REMOVED
-  expiration: 86400000  # 24시간 (밀리초)
+  expiration: 86400000

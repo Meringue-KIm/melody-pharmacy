@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.melodypharmacy.repository.SongRepositoryTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-05-27T15:52:46" hostname="안녕" time="0.148">
+  <properties/>
+  <testcase name="상황+컨셉으로 노래 추천 - 태그 없으면 빈 리스트" classname="com.melodypharmacy.repository.SongRepositoryTest" time="0.041"/>
+  <testcase name="다른 상황+컨셉의 노래는 추천에서 제외" classname="com.melodypharmacy.repository.SongRepositoryTest" time="0.052"/>
+  <testcase name="상황+컨셉으로 노래 추천 - 결과 반환" classname="com.melodypharmacy.repository.SongRepositoryTest" time="0.052"/>
+  <system-out><![CDATA[2026-05-28T00:52:40.485+09:00  INFO 39412 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.melodypharmacy.repository.SongRepositoryTest]: SongRepositoryTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-28T00:52:40.527+09:00  INFO 39412 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.melodypharmacy.MelodyPharmacyApplication for test class com.melodypharmacy.repository.SongRepositoryTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.5)
+
+2026-05-28T00:52:40.573+09:00  INFO 39412 --- [    Test worker] c.m.repository.SongRepositoryTest        : Starting SongRepositoryTest using Java 17.0.1 with PID 39412 (started by 선영 in C:\Users\선영\Desktop\melody-pharmacy\backend)
+2026-05-28T00:52:40.574+09:00  INFO 39412 --- [    Test worker] c.m.repository.SongRepositoryTest        : No active profile set, falling back to 1 default profile: "default"
+2026-05-28T00:52:40.721+09:00  INFO 39412 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-28T00:52:40.759+09:00  INFO 39412 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 37 ms. Found 7 JPA repository interfaces.
+2026-05-28T00:52:40.819+09:00  INFO 39412 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-28T00:52:40.834+09:00  INFO 39412 --- [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-05-28T00:52:40.852+09:00  INFO 39412 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-28T00:52:40.855+09:00  INFO 39412 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-05-28T00:52:40.882+09:00  INFO 39412 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3fcb6c7b
+2026-05-28T00:52:40.882+09:00  INFO 39412 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-05-28T00:52:41.002+09:00  INFO 39412 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: 
+    alter table play_history 
+       drop 
+       foreign key FKoq2lpal07shy38cfuuj2j1lrj
+Hibernate: 
+    alter table play_history 
+       drop 
+       foreign key FKjsr1rta44xbyvfu2efaxhqq9v
+Hibernate: 
+    alter table play_history 
+       drop 
+       foreign key FKxub9ctve6n5at1l7liyu0lnd
+Hibernate: 
+    alter table play_history 
+       drop 
+       foreign key FKrp5x4efdgfs4esp9cjaw059a2
+Hibernate: 
+    alter table song_tags 
+       drop 
+       foreign key FKc0cocehedt0nqn4le5kp797kg
+Hibernate: 
+    alter table song_tags 
+       drop 
+       foreign key FKag2lpe04djnafrwjl7lbny4cd
+Hibernate: 
+    alter table song_tags 
+       drop 
+       foreign key FKmny2885txw3u867lyc71yxfv7
+Hibernate: 
+    alter table user_songs 
+       drop 
+       foreign key FK82smyml0xw04n70wslcux4lu5
+Hibernate: 
+    alter table user_songs 
+       drop 
+       foreign key FKm4f8tgs0xq96um80kvjx2ud1n
+Hibernate: 
+    alter table user_songs 
+       drop 
+       foreign key FK42u1bddt0kof9svr0jfp0o6d1
+Hibernate: 
+    alter table user_songs 
+       drop 
+       foreign key FKbjhhb27qygfcq6kvl56m4a5p
+Hibernate: 
+    drop table if exists concepts
+Hibernate: 
+    drop table if exists play_history
+Hibernate: 
+    drop table if exists situations
+Hibernate: 
+    drop table if exists song_tags
+Hibernate: 
+    drop table if exists songs
+Hibernate: 
+    drop table if exists user_songs
+Hibernate: 
+    drop table if exists users
+Hibernate: 
+    create table concepts (
+        id bigint not null auto_increment,
+        icon varchar(255),
+        name varchar(255) not null,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table play_history (
+        concept_id bigint,
+        id bigint not null auto_increment,
+        played_at datetime(6) not null,
+        situation_id bigint,
+        song_id bigint not null,
+        user_id bigint not null,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table situations (
+        id bigint not null auto_increment,
+        icon varchar(255),
+        name varchar(255) not null,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table song_tags (
+        concept_id bigint not null,
+        id bigint not null auto_increment,
+        situation_id bigint not null,
+        song_id bigint not null,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table songs (
+        created_at datetime(6) not null,
+        id bigint not null auto_increment,
+        artist varchar(255) not null,
+        thumbnail_url varchar(255),
+        title varchar(255) not null,
+        youtube_url varchar(255) not null,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table user_songs (
+        concept_id bigint,
+        created_at datetime(6) not null,
+        id bigint not null auto_increment,
+        situation_id bigint,
+        song_id bigint not null,
+        user_id bigint not null,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table users (
+        created_at datetime(6) not null,
+        id bigint not null auto_increment,
+        email varchar(255) not null,
+        nickname varchar(255) not null,
+        password varchar(255) not null,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    alter table song_tags 
+       add constraint UKooj8tb4fqps1katr41alwo9h1 unique (song_id, situation_id, concept_id)
+Hibernate: 
+    alter table user_songs 
+       add constraint UKdxaqy41ivvw5funl7nrryli1l unique (user_id, song_id)
+Hibernate: 
+    alter table users 
+       add constraint UK_6dotkott2kjsp8vw4d0m25fb7 unique (email)
+Hibernate: 
+    alter table play_history 
+       add constraint FKoq2lpal07shy38cfuuj2j1lrj 
+       foreign key (concept_id) 
+       references concepts (id)
+Hibernate: 
+    alter table play_history 
+       add constraint FKjsr1rta44xbyvfu2efaxhqq9v 
+       foreign key (situation_id) 
+       references situations (id)
+Hibernate: 
+    alter table play_history 
+       add constraint FKxub9ctve6n5at1l7liyu0lnd 
+       foreign key (song_id) 
+       references songs (id)
+Hibernate: 
+    alter table play_history 
+       add constraint FKrp5x4efdgfs4esp9cjaw059a2 
+       foreign key (user_id) 
+       references users (id)
+Hibernate: 
+    alter table song_tags 
+       add constraint FKc0cocehedt0nqn4le5kp797kg 
+       foreign key (concept_id) 
+       references concepts (id)
+Hibernate: 
+    alter table song_tags 
+       add constraint FKag2lpe04djnafrwjl7lbny4cd 
+       foreign key (situation_id) 
+       references situations (id)
+Hibernate: 
+    alter table song_tags 
+       add constraint FKmny2885txw3u867lyc71yxfv7 
+       foreign key (song_id) 
+       references songs (id)
+Hibernate: 
+    alter table user_songs 
+       add constraint FK82smyml0xw04n70wslcux4lu5 
+       foreign key (concept_id) 
+       references concepts (id)
+Hibernate: 
+    alter table user_songs 
+       add constraint FKm4f8tgs0xq96um80kvjx2ud1n 
+       foreign key (situation_id) 
+       references situations (id)
+Hibernate: 
+    alter table user_songs 
+       add constraint FK42u1bddt0kof9svr0jfp0o6d1 
+       foreign key (song_id) 
+       references songs (id)
+Hibernate: 
+    alter table user_songs 
+       add constraint FKbjhhb27qygfcq6kvl56m4a5p 
+       foreign key (user_id) 
+       references users (id)
+2026-05-28T00:52:46.827+09:00  INFO 39412 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-28T00:52:46.907+09:00  INFO 39412 --- [    Test worker] c.m.repository.SongRepositoryTest        : Started SongRepositoryTest in 6.376 seconds (process running for 25.525)
+Hibernate: 
+    select
+        st1_0.id,
+        st1_0.concept_id,
+        st1_0.situation_id,
+        st1_0.song_id 
+    from
+        song_tags st1_0
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.artist,
+        s1_0.created_at,
+        s1_0.thumbnail_url,
+        s1_0.title,
+        s1_0.youtube_url 
+    from
+        songs s1_0
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.icon,
+        s1_0.name 
+    from
+        situations s1_0
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.icon,
+        c1_0.name 
+    from
+        concepts c1_0
+Hibernate: 
+    insert 
+    into
+        situations
+        (icon, name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        concepts
+        (icon, name) 
+    values
+        (?, ?)
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.artist,
+        s1_0.created_at,
+        s1_0.thumbnail_url,
+        s1_0.title,
+        s1_0.youtube_url 
+    from
+        song_tags st1_0 
+    join
+        songs s1_0 
+            on s1_0.id=st1_0.song_id 
+    where
+        st1_0.situation_id=? 
+        and st1_0.concept_id=? 
+    order by
+        rand()
+Hibernate: 
+    select
+        st1_0.id,
+        st1_0.concept_id,
+        st1_0.situation_id,
+        st1_0.song_id 
+    from
+        song_tags st1_0
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.artist,
+        s1_0.created_at,
+        s1_0.thumbnail_url,
+        s1_0.title,
+        s1_0.youtube_url 
+    from
+        songs s1_0
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.icon,
+        s1_0.name 
+    from
+        situations s1_0
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.icon,
+        c1_0.name 
+    from
+        concepts c1_0
+Hibernate: 
+    insert 
+    into
+        situations
+        (icon, name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        concepts
+        (icon, name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        situations
+        (icon, name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        concepts
+        (icon, name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        songs
+        (artist, created_at, thumbnail_url, title, youtube_url) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        songs
+        (artist, created_at, thumbnail_url, title, youtube_url) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        song_tags
+        (concept_id, situation_id, song_id) 
+    values
+        (?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        song_tags
+        (concept_id, situation_id, song_id) 
+    values
+        (?, ?, ?)
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.artist,
+        s1_0.created_at,
+        s1_0.thumbnail_url,
+        s1_0.title,
+        s1_0.youtube_url 
+    from
+        song_tags st1_0 
+    join
+        songs s1_0 
+            on s1_0.id=st1_0.song_id 
+    where
+        st1_0.situation_id=? 
+        and st1_0.concept_id=? 
+    order by
+        rand()
+Hibernate: 
+    select
+        st1_0.id,
+        st1_0.concept_id,
+        st1_0.situation_id,
+        st1_0.song_id 
+    from
+        song_tags st1_0
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.artist,
+        s1_0.created_at,
+        s1_0.thumbnail_url,
+        s1_0.title,
+        s1_0.youtube_url 
+    from
+        songs s1_0
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.icon,
+        s1_0.name 
+    from
+        situations s1_0
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.icon,
+        c1_0.name 
+    from
+        concepts c1_0
+Hibernate: 
+    insert 
+    into
+        situations
+        (icon, name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        concepts
+        (icon, name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        songs
+        (artist, created_at, thumbnail_url, title, youtube_url) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        songs
+        (artist, created_at, thumbnail_url, title, youtube_url) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        song_tags
+        (concept_id, situation_id, song_id) 
+    values
+        (?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        song_tags
+        (concept_id, situation_id, song_id) 
+    values
+        (?, ?, ?)
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.artist,
+        s1_0.created_at,
+        s1_0.thumbnail_url,
+        s1_0.title,
+        s1_0.youtube_url 
+    from
+        song_tags st1_0 
+    join
+        songs s1_0 
+            on s1_0.id=st1_0.song_id 
+    where
+        st1_0.situation_id=? 
+        and st1_0.concept_id=? 
+    order by
+        rand()
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
