@@ -47,7 +47,7 @@ export default function ConceptPage() {
     <div className="main-container">
       <header className="main-header">
         <button className="back-btn" onClick={() => navigate('/')}>← 뒤로</button>
-        <div className="logo">🎵 멜로디약국</div>
+        <div className="logo" style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>🎵 멜로디약국</div>
         <div />
       </header>
 

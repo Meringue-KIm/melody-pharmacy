@@ -40,6 +40,14 @@ export default function LoginPage() {
         <div className="auth-logo">🎵 멜로디약국</div>
         <p className="auth-subtitle">오늘 기분에 맞는 노래를 처방해드려요</p>
 
+        <div className="auth-features">
+          <span>💊 기분별 처방</span>
+          <span>·</span>
+          <span>🎵 50곡 큐레이션</span>
+          <span>·</span>
+          <span>❤️ 저장 &amp; 기록</span>
+        </div>
+
         <form onSubmit={handleSubmit} className="auth-form">
           <input
             type="email"

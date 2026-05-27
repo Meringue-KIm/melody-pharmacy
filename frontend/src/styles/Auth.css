@@ -30,6 +30,17 @@
   margin-bottom: 32px;
 }
 
+.auth-features {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  color: rgba(255,255,255,0.35);
+  font-size: 12px;
+}
+
 .auth-form {
   display: flex;
   flex-direction: column;

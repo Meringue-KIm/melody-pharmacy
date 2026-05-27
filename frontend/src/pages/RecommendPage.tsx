@@ -110,6 +110,7 @@ export default function RecommendPage() {
   }
 
   const currentSongs = tab === 'recommend' ? songs : tab === 'saved' ? savedSongs : historySongs
+  const playingSong  = [...songs, ...savedSongs, ...historySongs].find(s => s.id === playingId) ?? null
 
   return (
     <div className="recommend-container">
@@ -130,14 +131,37 @@ export default function RecommendPage() {
         </span>
       </div>
 
+      {playingSong && (
+        <div className="now-playing">
+          <div className="now-playing-row">
+            {playingSong.thumbnailUrl && (
+              <img src={playingSong.thumbnailUrl} alt="" className="now-playing-thumb" />
+            )}
+            <div className="now-playing-info">
+              <p className="now-playing-title">{playingSong.title}</p>
+              <p className="now-playing-artist">{playingSong.artist}</p>
+            </div>
+            <button className="now-playing-stop" onClick={() => setPlayingId(null)}>■ 정지</button>
+          </div>
+          <div className="youtube-embed">
+            <iframe
+              src={`https://www.youtube.com/embed/${getVideoId(playingSong.youtubeUrl)}?autoplay=1`}
+              title={playingSong.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </div>
+      )}
+
       <div className="tab-bar">
-        <button className={tab === 'recommend' ? 'active' : ''} onClick={() => { setTab('recommend'); setPlayingId(null) }}>
+        <button className={tab === 'recommend' ? 'active' : ''} onClick={() => setTab('recommend')}>
           추천
         </button>
-        <button className={tab === 'saved' ? 'active' : ''} onClick={() => { setTab('saved'); setPlayingId(null) }}>
+        <button className={tab === 'saved' ? 'active' : ''} onClick={() => setTab('saved')}>
           저장소 {savedSongs.length > 0 && <span className="badge">{savedSongs.length}</span>}
         </button>
-        <button className={tab === 'history' ? 'active' : ''} onClick={() => { setTab('history'); setPlayingId(null) }}>
+        <button className={tab === 'history' ? 'active' : ''} onClick={() => setTab('history')}>
           최근
         </button>
       </div>
@@ -213,16 +237,6 @@ export default function RecommendPage() {
               </div>
             </div>
 
-            {playingId === song.id && (
-              <div className="youtube-embed">
-                <iframe
-                  src={`https://www.youtube.com/embed/${getVideoId(song.youtubeUrl)}?autoplay=1`}
-                  title={song.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
-            )}
           </div>
         ))}
       </div>
