@@ -41,3 +41,6 @@ export const getSaved = (situationId?: number, conceptId?: number) =>
 
 export const recordPlay = (songId: number, situationId?: number, conceptId?: number) =>
   api.post(`/api/songs/${songId}/play`, null, { params: { situationId, conceptId } })
+
+export const getHistory = () =>
+  api.get<Song[]>('/api/songs/history')

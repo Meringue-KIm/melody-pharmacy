@@ -23,6 +23,16 @@ export default function ConceptPage() {
   }, [situationId])
 
   const handleSelect = (concept: Concept) => {
+    if (situation) {
+      localStorage.setItem('lastSelection', JSON.stringify({
+        situationId: situation.id,
+        situationIcon: situation.icon,
+        situationName: situation.name,
+        conceptId: concept.id,
+        conceptIcon: concept.icon,
+        conceptName: concept.name,
+      }))
+    }
     navigate(`/recommend?situationId=${situationId}&conceptId=${concept.id}`)
   }
 

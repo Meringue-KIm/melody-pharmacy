@@ -70,6 +70,20 @@ public class SongService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<SongResponse> getHistory(Long userId) {
+        return playHistoryRepository.findByUserIdOrderByPlayedAtDesc(userId)
+                .stream()
+                .map(h -> h.getSong())
+                .distinct()
+                .limit(20)
+                .map(song -> {
+                    boolean saved = userSongRepository.existsByUserIdAndSongId(userId, song.getId());
+                    return new SongResponse(song, saved);
+                })
+                .toList();
+    }
+
     @Transactional
     public void recordPlay(Long songId, Long situationId, Long conceptId, Long userId) {
         User user = userRepository.getReferenceById(userId);

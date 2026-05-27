@@ -4,13 +4,27 @@ import { getSituations } from '../api/songApi'
 import type { Situation } from '../api/songApi'
 import '../styles/Main.css'
 
+const LAST_KEY = 'lastSelection'
+
+interface LastSelection {
+  situationId: number
+  situationIcon: string
+  situationName: string
+  conceptId: number
+  conceptIcon: string
+  conceptName: string
+}
+
 export default function MainPage() {
   const navigate = useNavigate()
   const nickname = localStorage.getItem('nickname') || '환자'
   const [situations, setSituations] = useState<Situation[]>([])
+  const [last, setLast] = useState<LastSelection | null>(null)
 
   useEffect(() => {
-    getSituations().then((res: { data: Situation[] }) => setSituations(res.data))
+    getSituations().then(res => setSituations(res.data))
+    const saved = localStorage.getItem(LAST_KEY)
+    if (saved) setLast(JSON.parse(saved))
   }, [])
 
   const handleSelect = (situation: Situation) => {
@@ -34,6 +48,19 @@ export default function MainPage() {
       </header>
 
       <main className="main-content">
+        {last && (
+          <div className="last-selection">
+            <p className="last-label">지난번 선택</p>
+            <button
+              className="last-btn"
+              onClick={() => navigate(`/recommend?situationId=${last.situationId}&conceptId=${last.conceptId}`)}
+            >
+              {last.situationIcon} {last.situationName} &nbsp;·&nbsp; {last.conceptIcon} {last.conceptName}
+              <span className="last-arrow">→</span>
+            </button>
+          </div>
+        )}
+
         <h1 className="main-title">
           오늘 어떤 상황이신가요?<br />
           <span>상황을 선택하면 딱 맞는 노래를 처방해드려요 💊</span>

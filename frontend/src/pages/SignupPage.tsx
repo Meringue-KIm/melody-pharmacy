@@ -13,6 +13,11 @@ export default function SignupPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
+    if (form.password.length < 6) {
+      setError('비밀번호는 6자 이상이어야 합니다.')
+      setLoading(false)
+      return
+    }
     try {
       await signup(form)
       const res = await login({ email: form.email, password: form.password })

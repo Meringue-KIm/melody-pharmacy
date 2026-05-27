@@ -55,6 +55,13 @@ public class SongController {
         return ResponseEntity.ok(songService.getSaved(situationId, conceptId, userId));
     }
 
+    @GetMapping("/history")
+    public ResponseEntity<List<SongResponse>> getHistory(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Long userId = Long.parseLong(userDetails.getUsername());
+        return ResponseEntity.ok(songService.getHistory(userId));
+    }
+
     @PostMapping("/{songId}/play")
     public ResponseEntity<Void> recordPlay(
             @PathVariable Long songId,

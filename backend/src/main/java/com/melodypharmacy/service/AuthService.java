@@ -21,6 +21,9 @@ public class AuthService {
 
     @Transactional
     public void signup(SignupRequest request) {
+        if (request.getPassword() == null || request.getPassword().length() < 6) {
+            throw new IllegalArgumentException("비밀번호는 6자 이상이어야 합니다.");
+        }
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
         }
