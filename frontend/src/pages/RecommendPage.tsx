@@ -82,10 +82,11 @@ export default function RecommendPage() {
   }
 
   const handlePlay = (song: Song) => {
-    recordPlay(song.id, situationId, conceptId)
     const isOpening = playingId !== song.id
     setPlayingId(prev => prev === song.id ? null : song.id)
     if (isOpening) {
+      recordPlay(song.id, situationId, conceptId)
+      setHistorySongs(prev => [song, ...prev.filter(s => s.id !== song.id)].slice(0, 20))
       setTimeout(() => {
         document.getElementById(`song-${song.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
       }, 50)
@@ -105,7 +106,6 @@ export default function RecommendPage() {
   const handleToggleExclude = () => {
     const next = !excludePlayed
     setExcludePlayed(next)
-    setPlayingId(null)
     loadRecommend(next)
   }
 
@@ -172,7 +172,7 @@ export default function RecommendPage() {
 
       {tab === 'recommend' && (
         <div className="recommend-controls">
-          <button className="refresh-btn" disabled={loading} onClick={() => { setPlayingId(null); loadRecommend() }}>🔄 다시 추천받기</button>
+          <button className="refresh-btn" disabled={loading} onClick={() => loadRecommend()}>🔄 다시 추천받기</button>
           <button
             className={`exclude-btn ${excludePlayed ? 'active' : ''}`}
             onClick={handleToggleExclude}
