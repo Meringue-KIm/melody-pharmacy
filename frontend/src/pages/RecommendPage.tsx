@@ -55,25 +55,29 @@ export default function RecommendPage() {
     }
   }
 
-  const loadSaved    = async () => { const r = await getSaved(situationId, conceptId); setSavedSongs(r.data) }
+  const loadSaved    = async () => { const r = await getSaved(); setSavedSongs(r.data) }
   const loadHistory  = async () => { const r = await getHistory(); setHistorySongs(r.data) }
 
   const handleSave = async (song: Song) => {
-    if (song.saved) await unsaveSong(song.id)
-    else await saveSong(song.id, situationId, conceptId)
+    try {
+      if (song.saved) await unsaveSong(song.id)
+      else await saveSong(song.id, situationId, conceptId)
 
-    const toggleSaved = (list: Song[]) =>
-      list.map(s => s.id === song.id ? { ...s, saved: !s.saved } : s)
+      const toggleSaved = (list: Song[]) =>
+        list.map(s => s.id === song.id ? { ...s, saved: !s.saved } : s)
 
-    setSongs(toggleSaved)
-    setHistorySongs(toggleSaved)
+      setSongs(toggleSaved)
+      setHistorySongs(toggleSaved)
 
-    if (song.saved) {
-      setSavedSongs(prev => prev.filter(s => s.id !== song.id))
-      showToast('저장 해제됐어요')
-    } else {
-      loadSaved()
-      showToast('저장됐어요 ♥')
+      if (song.saved) {
+        setSavedSongs(prev => prev.filter(s => s.id !== song.id))
+        showToast('저장 해제됐어요')
+      } else {
+        loadSaved()
+        showToast('저장됐어요 ♥')
+      }
+    } catch {
+      showToast('저장에 실패했어요. 다시 시도해주세요.')
     }
   }
 
@@ -118,8 +122,12 @@ export default function RecommendPage() {
       </header>
 
       <div className="recommend-info">
-        <span className="tag">{situation?.icon} {situation?.name}</span>
-        <span className="tag">{concept?.icon} {concept?.name}</span>
+        <span className="tag tag-link" onClick={() => navigate('/')}>
+          {situation?.icon} {situation?.name}
+        </span>
+        <span className="tag tag-link" onClick={() => navigate(`/concept?situationId=${situationId}`)}>
+          {concept?.icon} {concept?.name} ✎
+        </span>
       </div>
 
       <div className="tab-bar">
@@ -134,6 +142,10 @@ export default function RecommendPage() {
         </button>
       </div>
 
+      {tab === 'recommend' && !loading && songs.length > 0 && (
+        <p className="song-count">총 {songs.length}곡</p>
+      )}
+
       {tab === 'recommend' && (
         <div className="recommend-controls">
           <button className="refresh-btn" disabled={loading} onClick={() => { setPlayingId(null); loadRecommend() }}>🔄 다시 추천받기</button>
@@ -141,7 +153,10 @@ export default function RecommendPage() {
             className={`exclude-btn ${excludePlayed ? 'active' : ''}`}
             onClick={handleToggleExclude}
           >
-            {excludePlayed ? '✅' : '⬜'} 들은 노래 제외
+            <span className="toggle-track">
+              <span className="toggle-thumb" />
+            </span>
+            들은 노래 제외
           </button>
         </div>
       )}

@@ -32,8 +32,12 @@ export default function SignupPage() {
       localStorage.setItem('token', res.data.accessToken)
       localStorage.setItem('nickname', res.data.nickname)
       navigate('/')
-    } catch {
-      setError('이미 사용 중인 이메일입니다.')
+    } catch (err: any) {
+      if (err.response?.status === 400) {
+        setError('이미 사용 중인 이메일입니다.')
+      } else {
+        setError('서버에 연결할 수 없어요. 잠시 후 다시 시도해주세요.')
+      }
     } finally {
       setLoading(false)
     }
