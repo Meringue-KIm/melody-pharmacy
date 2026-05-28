@@ -15,7 +15,7 @@ spring:
         format_sql: true
 
 server:
-  port: 8080
+  port: 8081
 
 jwt:
   secret: JWT_SECRET_REMOVED
@@ -24,3 +24,14 @@ jwt:
 kakao:
   client-id: KAKAO_CLIENT_ID_REMOVED
   redirect-uri: http://localhost:5173/oauth/kakao
+
+gemini:
+  api-key: GEMINI_API_KEY_REMOVED
+
+youtube:
+  api-key: YOUTUBE_API_KEY_REMOVED
+
+song-pool:
+  target-size: 100
+  min-views-to-keep: 1000000   # 100만 뷰 미만이면 제거 후보
+  grace-period-days: 30        # 추가 후 이 기간은 제거 안 함

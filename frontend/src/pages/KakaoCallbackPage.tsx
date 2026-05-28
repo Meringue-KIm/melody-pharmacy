@@ -16,6 +16,7 @@ export default function KakaoCallbackPage() {
       .then(res => {
         localStorage.setItem('token', res.data.accessToken)
         localStorage.setItem('nickname', res.data.nickname)
+        localStorage.setItem('provider', 'kakao')
         navigate('/')
       })
       .catch(() => setError('카카오 로그인에 실패했어요. 다시 시도해주세요.'))

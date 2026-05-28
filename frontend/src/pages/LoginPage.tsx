@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { login } from '../api/authApi'
 import '../styles/Auth.css'
@@ -12,6 +12,19 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [showPw, setShowPw] = useState(false)
+  const [expiredMsg, setExpiredMsg] = useState('')
+
+  useEffect(() => {
+    if (sessionStorage.getItem('sessionExpired')) {
+      sessionStorage.removeItem('sessionExpired')
+      setExpiredMsg('세션이 만료됐어요. 다시 로그인해주세요.')
+    }
+  }, [])
+
+  const handleChange = (field: string, value: string) => {
+    setForm(prev => ({ ...prev, [field]: value }))
+    setError('')
+  }
 
   const handleKakaoLogin = () => {
     window.location.href =
@@ -26,6 +39,7 @@ export default function LoginPage() {
       const res = await login(form)
       localStorage.setItem('token', res.data.accessToken)
       localStorage.setItem('nickname', res.data.nickname)
+      localStorage.setItem('provider', 'email')
       navigate('/')
     } catch (err: any) {
       if (err.response?.status === 400 || err.response?.status === 401) {
@@ -52,12 +66,14 @@ export default function LoginPage() {
           <span>❤️ 저장 &amp; 기록</span>
         </div>
 
+        {expiredMsg && <p className="auth-expired">{expiredMsg}</p>}
+
         <form onSubmit={handleSubmit} className="auth-form">
           <input
             type="email"
             placeholder="이메일"
             value={form.email}
-            onChange={e => setForm({ ...form, email: e.target.value })}
+            onChange={e => handleChange('email', e.target.value)}
             required
           />
           <div className="password-wrap">
@@ -65,7 +81,7 @@ export default function LoginPage() {
               type={showPw ? 'text' : 'password'}
               placeholder="비밀번호"
               value={form.password}
-              onChange={e => setForm({ ...form, password: e.target.value })}
+              onChange={e => handleChange('password', e.target.value)}
               required
             />
             <button type="button" className="pw-toggle" onClick={() => setShowPw(p => !p)}>

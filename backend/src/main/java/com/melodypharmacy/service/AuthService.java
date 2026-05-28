@@ -1,5 +1,6 @@
 package com.melodypharmacy.service;
 
+import com.melodypharmacy.dto.ChangePasswordRequest;
 import com.melodypharmacy.dto.LoginRequest;
 import com.melodypharmacy.dto.SignupRequest;
 import com.melodypharmacy.dto.TokenResponse;
@@ -33,6 +34,27 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .nickname(request.getNickname())
                 .build());
+    }
+
+    @Transactional
+    public void updateNickname(String email, String nickname) {
+        if (nickname == null || nickname.trim().length() < 2 || nickname.length() > 20) {
+            throw new IllegalArgumentException("닉네임은 2~20자로 입력해주세요.");
+        }
+        userRepository.updateNicknameByEmail(email, nickname.trim());
+    }
+
+    @Transactional
+    public void changePassword(String email, ChangePasswordRequest request) {
+        if (request.getNewPassword() == null || request.getNewPassword().length() < 6) {
+            throw new IllegalArgumentException("비밀번호는 6자 이상이어야 합니다.");
+        }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없어요."));
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("현재 비밀번호가 올바르지 않아요.");
+        }
+        userRepository.updatePasswordByEmail(email, passwordEncoder.encode(request.getNewPassword()));
     }
 
     @Transactional(readOnly = true)

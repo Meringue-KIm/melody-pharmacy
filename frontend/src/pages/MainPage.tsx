@@ -15,11 +15,17 @@ export default function MainPage() {
   const [situations, setSituations] = useState<Situation[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
-  const [last, setLast] = useState<LastSelection | null>(null)
+  const [lastSelections, setLastSelections] = useState<LastSelection[]>([])
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
 
   useEffect(() => {
-    const saved = localStorage.getItem('lastSelection')
-    if (saved) setLast(JSON.parse(saved))
+    const saved = localStorage.getItem('lastSelections')
+    if (saved) {
+      setLastSelections(JSON.parse(saved))
+    } else {
+      const old = localStorage.getItem('lastSelection')
+      if (old) setLastSelections([JSON.parse(old)])
+    }
     load()
   }, [])
 
@@ -37,34 +43,53 @@ export default function MainPage() {
   }
 
   const handleLogout = () => {
-    if (!window.confirm('로그아웃 하시겠어요?')) return
     localStorage.removeItem('token')
     localStorage.removeItem('nickname')
+    localStorage.removeItem('lastSelections')
     localStorage.removeItem('lastSelection')
+    localStorage.removeItem('provider')
     navigate('/login')
   }
 
   return (
     <div className="main-container">
+      {showLogoutModal && (
+        <div className="modal-overlay" onClick={() => setShowLogoutModal(false)}>
+          <div className="modal-box" onClick={e => e.stopPropagation()}>
+            <p className="modal-title">로그아웃</p>
+            <p className="modal-desc">정말 로그아웃 하시겠어요?</p>
+            <div className="modal-actions">
+              <button className="modal-cancel" onClick={() => setShowLogoutModal(false)}>취소</button>
+              <button className="modal-confirm" onClick={handleLogout}>로그아웃</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <header className="main-header">
         <div className="logo">🎵 멜로디약국</div>
         <div className="header-right">
-          <span className="nickname">{nickname}님</span>
-          <button className="logout-btn" onClick={handleLogout}>로그아웃</button>
+          <button className="saved-link-btn" onClick={() => navigate('/saved')}>♥ 저장소</button>
+          <button className="nickname-btn" onClick={() => navigate('/profile')}>{nickname}님</button>
+          <button className="logout-btn" onClick={() => setShowLogoutModal(true)}>로그아웃</button>
         </div>
       </header>
 
       <main className="main-content">
-        {last && (
+        {lastSelections.length > 0 && (
           <div className="last-selection">
             <p className="last-label">지난번 선택</p>
-            <button
-              className="last-btn"
-              onClick={() => navigate(`/recommend?situationId=${last.situationId}&conceptId=${last.conceptId}`)}
-            >
-              <span className="last-btn-text">{last.situationIcon} {last.situationName} · {last.conceptIcon} {last.conceptName}</span>
-              <span className="last-arrow">→</span>
-            </button>
+            <div className="last-chips-row">
+              {lastSelections.map((last, i) => (
+                <button
+                  key={i}
+                  className="last-chip"
+                  onClick={() => navigate(`/recommend?situationId=${last.situationId}&conceptId=${last.conceptId}`)}
+                >
+                  {last.situationIcon} {last.situationName} · {last.conceptIcon} {last.conceptName}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
@@ -82,7 +107,7 @@ export default function MainPage() {
 
         <div className="situation-grid">
           {loading
-            ? Array.from({ length: 4 }).map((_, i) => (
+            ? Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="skeleton skeleton-card" />
               ))
             : situations.map(s => (

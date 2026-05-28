@@ -30,8 +30,8 @@ public class SongController {
     @PostMapping("/{songId}/save")
     public ResponseEntity<Void> save(
             @PathVariable Long songId,
-            @RequestParam Long situationId,
-            @RequestParam Long conceptId,
+            @RequestParam(required = false) Long situationId,
+            @RequestParam(required = false) Long conceptId,
             @AuthenticationPrincipal UserDetails userDetails) {
         Long userId = Long.parseLong(userDetails.getUsername());
         songService.save(songId, situationId, conceptId, userId);

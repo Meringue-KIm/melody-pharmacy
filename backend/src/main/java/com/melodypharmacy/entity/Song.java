@@ -28,6 +28,12 @@ public class Song {
     @Column(name = "thumbnail_url")
     private String thumbnailUrl;
 
+    @Column(name = "youtube_view_count")
+    private Long youtubeViewCount;
+
+    @Column(name = "stats_updated_at")
+    private LocalDateTime statsUpdatedAt;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

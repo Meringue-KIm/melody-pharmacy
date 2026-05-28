@@ -24,3 +24,9 @@ export const login = (data: LoginRequest) =>
 
 export const kakaoLogin = (code: string) =>
   api.get<TokenResponse>('/api/auth/kakao', { params: { code } })
+
+export const changePassword = (oldPassword: string, newPassword: string) =>
+  api.put('/api/user/password', { oldPassword, newPassword })
+
+export const updateNickname = (nickname: string) =>
+  api.patch('/api/user/nickname', { nickname })

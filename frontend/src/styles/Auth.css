@@ -103,7 +103,7 @@
   padding-right: 48px !important;
 }
 
-.pw-toggle {
+.auth-form .pw-toggle {
   position: absolute;
   right: 14px;
   background: none;
@@ -116,7 +116,7 @@
   line-height: 1;
 }
 
-.pw-toggle:hover { color: rgba(255,255,255,0.8); }
+.auth-form .pw-toggle:hover { color: rgba(255,255,255,0.8); }
 
 .auth-divider {
   display: flex;
@@ -149,3 +149,48 @@
 }
 
 .kakao-btn:hover { background: #f0d900; }
+
+/* 세션 만료 메시지 */
+.auth-expired {
+  background: rgba(124, 58, 237, 0.15);
+  border: 1px solid rgba(124, 58, 237, 0.4);
+  border-radius: 10px;
+  color: #a78bfa;
+  font-size: 13px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* 프로필 섹션 */
+.profile-section {
+  text-align: left;
+  margin-top: 20px;
+}
+.profile-section-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+.profile-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin: 24px 0 0;
+}
+.profile-section .auth-form {
+  gap: 10px;
+}
+
+/* 비밀번호 찾기 링크 */
+.auth-forgot {
+  text-align: center;
+  margin-top: 4px;
+}
+.auth-forgot a {
+  color: rgba(255,255,255,0.35);
+  font-size: 13px;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.auth-forgot a:hover { color: rgba(255,255,255,0.6); }

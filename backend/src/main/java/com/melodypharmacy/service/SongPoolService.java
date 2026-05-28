@@ -1,0 +1,163 @@
+package com.melodypharmacy.service;
+
+import com.melodypharmacy.dto.GeminiSongDto;
+import com.melodypharmacy.entity.*;
+import com.melodypharmacy.repository.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class SongPoolService {
+
+    private final GeminiService geminiService;
+    private final YouTubeService youTubeService;
+    private final SongRepository songRepository;
+    private final SongTagRepository songTagRepository;
+
+    @Value("${song-pool.target-size:100}")
+    private int targetSize;
+
+    @Value("${song-pool.min-views-to-keep:1000000}")
+    private long minViewsToKeep;
+
+    @Value("${song-pool.grace-period-days:30}")
+    private int gracePeriodDays;
+
+    /**
+     * 조합의 풀이 targetSize 미만이면 AI로 보충한다.
+     */
+    @Transactional
+    public void fillCombination(Situation situation, Concept concept) {
+        if (!geminiService.isConfigured()) return;
+
+        long current = songTagRepository.countBySituationIdAndConceptId(
+                situation.getId(), concept.getId());
+        if (current >= targetSize) return;
+
+        int needed = (int) (targetSize - current);
+        int toRequest = Math.min(needed + 5, 15);
+
+        List<GeminiSongDto> recommendations =
+                geminiService.recommend(situation.getName(), concept.getName(), toRequest);
+        if (recommendations.isEmpty()) return;
+
+        // Gemini가 준 ID를 배치 검증 (videos API: 1 unit/50개)
+        List<String> ytIds = recommendations.stream()
+                .map(GeminiSongDto::getYoutubeId)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+
+        Map<String, Long> viewCounts = youTubeService.batchGetViewCounts(ytIds);
+
+        int added = 0;
+        for (GeminiSongDto dto : recommendations) {
+            if (added >= needed) break;
+            if (dto.getTitle() == null || dto.getArtist() == null) continue;
+
+            String videoId = dto.getYoutubeId();
+
+            // Gemini ID가 유효하지 않으면 search API로 폴백
+            if (videoId == null || !viewCounts.containsKey(videoId)) {
+                videoId = youTubeService.searchVideoId(dto.getTitle(), dto.getArtist())
+                        .orElse(null);
+                if (videoId == null) continue;
+                Long vc = youTubeService.batchGetViewCounts(List.of(videoId)).get(videoId);
+                if (vc != null) viewCounts.put(videoId, vc);
+            }
+
+            final String finalVideoId = videoId;
+            Long viewCount = viewCounts.get(finalVideoId);
+
+            Song song = songRepository.findByTitleAndArtist(dto.getTitle(), dto.getArtist())
+                    .orElseGet(() -> songRepository.save(Song.builder()
+                            .title(dto.getTitle())
+                            .artist(dto.getArtist())
+                            .youtubeUrl("https://www.youtube.com/watch?v=" + finalVideoId)
+                            .thumbnailUrl("https://i.ytimg.com/vi/" + finalVideoId + "/hqdefault.jpg")
+                            .youtubeViewCount(viewCount)
+                            .statsUpdatedAt(LocalDateTime.now())
+                            .build()));
+
+            if (!songTagRepository.existsBySongAndSituationAndConcept(song, situation, concept)) {
+                songTagRepository.save(SongTag.builder()
+                        .song(song).situation(situation).concept(concept)
+                        .addedAt(LocalDateTime.now())
+                        .build());
+                added++;
+            }
+        }
+
+        if (added > 0) {
+            log.info("[{}/{}] {}곡 추가 → 현재 {}곡",
+                    situation.getName(), concept.getName(), added, current + added);
+        }
+    }
+
+    /**
+     * 인기 없는 곡을 song_tags에서 제거한다 (songs 테이블은 유지).
+     * 조건: AI 추가 + 유예 기간 경과 + 조회수 미달 + 아무도 저장 안 함
+     */
+    @Transactional
+    public int cleanCombination(Situation situation, Concept concept) {
+        LocalDateTime cutoff = LocalDateTime.now().minusDays(gracePeriodDays);
+
+        List<SongTag> removable = songTagRepository.findRemovableTags(
+                situation.getId(), concept.getId(), cutoff, minViewsToKeep);
+        if (removable.isEmpty()) return 0;
+
+        // 한 번에 최대 20%만 제거 (급격한 변화 방지)
+        long total = songTagRepository.countBySituationIdAndConceptId(
+                situation.getId(), concept.getId());
+        int maxRemove = Math.max(1, (int) (total * 0.20));
+
+        List<SongTag> toRemove = removable.stream().limit(maxRemove).collect(Collectors.toList());
+        songTagRepository.deleteAll(toRemove);
+
+        log.info("[{}/{}] {}곡 제거",
+                situation.getName(), concept.getName(), toRemove.size());
+        return toRemove.size();
+    }
+
+    /**
+     * 전체 곡의 YouTube 조회수를 갱신한다 (50개씩 배치).
+     */
+    @Transactional
+    public void updateAllViewCounts() {
+        if (!youTubeService.isConfigured()) return;
+
+        List<Song> songs = songRepository.findAll();
+        List<String> videoIds = songs.stream()
+                .map(s -> extractVideoId(s.getYoutubeUrl()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        Map<String, Long> viewCounts = youTubeService.batchGetViewCounts(videoIds);
+
+        for (Song song : songs) {
+            String vid = extractVideoId(song.getYoutubeUrl());
+            if (vid != null && viewCounts.containsKey(vid)) {
+                songRepository.updateViewCount(song.getId(), viewCounts.get(vid), LocalDateTime.now());
+            }
+        }
+        log.info("조회수 갱신 완료: {}곡", viewCounts.size());
+    }
+
+    private String extractVideoId(String url) {
+        if (url == null) return null;
+        int idx = url.indexOf("v=");
+        if (idx < 0) return null;
+        String id = url.substring(idx + 2);
+        int amp = id.indexOf('&');
+        return amp >= 0 ? id.substring(0, amp) : id;
+    }
+}

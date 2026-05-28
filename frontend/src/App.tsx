@@ -4,6 +4,8 @@ import SignupPage from './pages/SignupPage'
 import MainPage from './pages/MainPage'
 import ConceptPage from './pages/ConceptPage'
 import RecommendPage from './pages/RecommendPage'
+import SavedPage from './pages/SavedPage'
+import ProfilePage from './pages/ProfilePage'
 import KakaoCallbackPage from './pages/KakaoCallbackPage'
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
@@ -20,6 +22,8 @@ export default function App() {
         <Route path="/" element={<PrivateRoute><MainPage /></PrivateRoute>} />
         <Route path="/concept" element={<PrivateRoute><ConceptPage /></PrivateRoute>} />
         <Route path="/recommend" element={<PrivateRoute><RecommendPage /></PrivateRoute>} />
+        <Route path="/saved" element={<PrivateRoute><SavedPage /></PrivateRoute>} />
+        <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
         <Route path="/oauth/kakao" element={<KakaoCallbackPage />} />
       </Routes>
     </BrowserRouter>

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: 'http://localhost:8081',
 })
 
 api.interceptors.request.use((config: import('axios').InternalAxiosRequestConfig) => {
@@ -16,8 +16,11 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      const wasLoggedIn = !!localStorage.getItem('token')
       localStorage.removeItem('token')
       localStorage.removeItem('nickname')
+      localStorage.removeItem('lastSelection')
+      if (wasLoggedIn) sessionStorage.setItem('sessionExpired', '1')
       window.location.href = '/login'
     }
     return Promise.reject(error)

@@ -35,10 +35,15 @@ export default function ConceptPage() {
 
   const handleSelect = (concept: Concept) => {
     if (situation) {
-      localStorage.setItem('lastSelection', JSON.stringify({
+      const entry = {
         situationId: situation.id, situationIcon: situation.icon, situationName: situation.name,
         conceptId: concept.id,     conceptIcon: concept.icon,     conceptName: concept.name,
-      }))
+      }
+      const prev = JSON.parse(localStorage.getItem('lastSelections') || '[]')
+      const deduped = [entry, ...prev.filter((s: typeof entry) =>
+        !(s.situationId === entry.situationId && s.conceptId === entry.conceptId)
+      )]
+      localStorage.setItem('lastSelections', JSON.stringify(deduped.slice(0, 3)))
     }
     navigate(`/recommend?situationId=${situationId}&conceptId=${concept.id}`)
   }

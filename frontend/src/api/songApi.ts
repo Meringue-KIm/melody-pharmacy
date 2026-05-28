@@ -34,8 +34,10 @@ export const getConcepts = () =>
 export const recommend = (situationId: number, conceptId: number, excludePlayed = false) =>
   api.get<Song[]>('/api/songs/recommend', { params: { situationId, conceptId, excludePlayed } })
 
-export const saveSong = (songId: number, situationId: number, conceptId: number) =>
-  api.post(`/api/songs/${songId}/save`, null, { params: { situationId, conceptId } })
+export const saveSong = (songId: number, situationId?: number, conceptId?: number) =>
+  api.post(`/api/songs/${songId}/save`, null, {
+    params: situationId && conceptId ? { situationId, conceptId } : undefined,
+  })
 
 export const unsaveSong = (songId: number) =>
   api.delete(`/api/songs/${songId}/save`)

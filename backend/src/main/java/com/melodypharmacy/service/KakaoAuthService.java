@@ -5,6 +5,7 @@ import com.melodypharmacy.entity.User;
 import com.melodypharmacy.repository.UserRepository;
 import com.melodypharmacy.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class KakaoAuthService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final RestTemplate restTemplate;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${kakao.client-id}")
     private String clientId;
@@ -53,7 +55,7 @@ public class KakaoAuthService {
             return userRepository.save(User.builder()
                     .kakaoId(kakaoId)
                     .email(resolvedEmail)
-                    .password(UUID.randomUUID().toString())
+                    .password(passwordEncoder.encode(UUID.randomUUID().toString()))
                     .nickname(nickname)
                     .build());
         });

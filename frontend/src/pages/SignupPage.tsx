@@ -13,6 +13,11 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false)
   const [showPw, setShowPw] = useState(false)
 
+  const handleChange = (field: string, value: string) => {
+    setForm(prev => ({ ...prev, [field]: value }))
+    setError('')
+  }
+
   const handleKakaoLogin = () => {
     window.location.href =
       `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${encodeURIComponent(KAKAO_REDIRECT_URI)}&response_type=code`
@@ -24,6 +29,14 @@ export default function SignupPage() {
       setError('비밀번호는 6자 이상이어야 합니다.')
       return
     }
+    if (form.nickname.trim().length < 2) {
+      setError('닉네임은 2자 이상으로 입력해주세요.')
+      return
+    }
+    if (form.nickname.length > 20) {
+      setError('닉네임은 20자 이하로 입력해주세요.')
+      return
+    }
     setLoading(true)
     setError('')
     try {
@@ -31,6 +44,7 @@ export default function SignupPage() {
       const res = await login({ email: form.email, password: form.password })
       localStorage.setItem('token', res.data.accessToken)
       localStorage.setItem('nickname', res.data.nickname)
+      localStorage.setItem('provider', 'email')
       navigate('/')
     } catch (err: any) {
       if (err.response?.status === 400) {
@@ -54,7 +68,7 @@ export default function SignupPage() {
             type="email"
             placeholder="이메일"
             value={form.email}
-            onChange={e => setForm({ ...form, email: e.target.value })}
+            onChange={e => handleChange('email', e.target.value)}
             required
           />
           <div className="password-wrap">
@@ -62,7 +76,7 @@ export default function SignupPage() {
               type={showPw ? 'text' : 'password'}
               placeholder="비밀번호 (6자 이상)"
               value={form.password}
-              onChange={e => setForm({ ...form, password: e.target.value })}
+              onChange={e => handleChange('password', e.target.value)}
               required
             />
             <button type="button" className="pw-toggle" onClick={() => setShowPw(p => !p)}>
@@ -71,9 +85,9 @@ export default function SignupPage() {
           </div>
           <input
             type="text"
-            placeholder="닉네임"
+            placeholder="닉네임 (2~20자)"
             value={form.nickname}
-            onChange={e => setForm({ ...form, nickname: e.target.value })}
+            onChange={e => handleChange('nickname', e.target.value)}
             required
           />
           {error && <p className="auth-error">{error}</p>}

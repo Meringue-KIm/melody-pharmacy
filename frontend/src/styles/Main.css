@@ -33,14 +33,20 @@ body {
   gap: 12px;
 }
 
-.nickname {
+.nickname-btn {
+  background: none;
+  border: none;
   color: rgba(255,255,255,0.7);
   font-size: 14px;
   max-width: 80px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  cursor: pointer;
+  padding: 4px 6px;
+  transition: color 0.2s;
 }
+.nickname-btn:hover { color: rgba(255,255,255,0.95); }
 
 .logout-btn {
   background: none;
@@ -82,6 +88,10 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
+}
+
+.situation-grid .situation-card:last-child:nth-child(odd) {
+  grid-column: span 2;
 }
 
 .situation-card {
@@ -224,3 +234,102 @@ body {
   font-size: 18px;
   color: rgba(124, 58, 237, 0.9);
 }
+
+/* 지난 선택 칩 레이아웃 */
+.last-chips-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.last-chips-row::-webkit-scrollbar { display: none; }
+
+.last-chip {
+  flex-shrink: 0;
+  background: rgba(124, 58, 237, 0.2);
+  border: 1px solid rgba(124, 58, 237, 0.5);
+  border-radius: 20px;
+  color: #fff;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.last-chip:hover { background: rgba(124, 58, 237, 0.4); }
+
+/* 저장소 버튼 */
+.saved-link-btn {
+  background: rgba(248, 113, 113, 0.15);
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  border-radius: 20px;
+  color: #f87171;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.saved-link-btn:hover { background: rgba(248, 113, 113, 0.28); }
+
+/* 로그아웃 모달 */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.modal-box {
+  background: #1e1440;
+  border: 1px solid rgba(124, 58, 237, 0.4);
+  border-radius: 18px;
+  padding: 28px 28px 22px;
+  width: 280px;
+  text-align: center;
+}
+.modal-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 10px;
+}
+.modal-desc {
+  font-size: 14px;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 22px;
+}
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+.modal-cancel {
+  flex: 1;
+  padding: 12px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  color: rgba(255,255,255,0.7);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.modal-cancel:hover { background: rgba(255,255,255,0.12); }
+.modal-confirm {
+  flex: 1;
+  padding: 12px;
+  background: rgba(248,113,113,0.2);
+  border: 1px solid rgba(248,113,113,0.5);
+  border-radius: 12px;
+  color: #f87171;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.modal-confirm:hover { background: rgba(248,113,113,0.35); }

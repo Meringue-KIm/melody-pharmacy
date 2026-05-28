@@ -4,11 +4,16 @@ import com.melodypharmacy.dto.SongResponse;
 import com.melodypharmacy.entity.*;
 import com.melodypharmacy.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -27,13 +32,41 @@ public class SongService {
                 ? songRepository.findRandomExcludingPlayed(situationId, conceptId, userId)
                 : songRepository.findRandomBySituationAndConcept(situationId, conceptId);
 
-        return songs.stream()
-                .limit(5)
-                .map(song -> {
-                    boolean saved = userSongRepository.existsByUserIdAndSongId(userId, song.getId());
-                    return new SongResponse(song, saved);
-                })
+        Set<Long> savedIds = userSongRepository.findSongIdsByUserId(userId);
+
+        List<Song> ordered;
+        if (excludePlayed) {
+            ordered = diversifyByArtist(songs);
+        } else {
+            Set<Long> recentIds = playHistoryRepository.findRecentSongIdsByUserId(
+                    userId, LocalDateTime.now().minusDays(7));
+            List<Song> fresh  = songs.stream().filter(s -> !recentIds.contains(s.getId())).toList();
+            List<Song> recent = songs.stream().filter(s ->  recentIds.contains(s.getId())).toList();
+            ordered = new ArrayList<>(diversifyByArtist(fresh));
+            ordered.addAll(diversifyByArtist(recent));
+        }
+
+        return ordered.stream()
+                .map(song -> new SongResponse(song, savedIds.contains(song.getId())))
                 .toList();
+    }
+
+    private List<Song> diversifyByArtist(List<Song> songs) {
+        if (songs.size() <= 1) return new ArrayList<>(songs);
+        Map<String, List<Song>> byArtist = new LinkedHashMap<>();
+        for (Song song : songs) {
+            byArtist.computeIfAbsent(song.getArtist(), k -> new ArrayList<>()).add(song);
+        }
+        List<List<Song>> groups = new ArrayList<>(byArtist.values());
+        Collections.shuffle(groups);
+        List<Song> result = new ArrayList<>();
+        int maxSize = groups.stream().mapToInt(List::size).max().orElse(0);
+        for (int i = 0; i < maxSize; i++) {
+            for (List<Song> group : groups) {
+                if (i < group.size()) result.add(group.get(i));
+            }
+        }
+        return result;
     }
 
     @Transactional
@@ -45,8 +78,8 @@ public class SongService {
         User user = userRepository.getReferenceById(userId);
         Song song = songRepository.findById(songId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 노래입니다."));
-        Situation situation = situationRepository.getReferenceById(situationId);
-        Concept concept = conceptRepository.getReferenceById(conceptId);
+        Situation situation = situationId != null ? situationRepository.getReferenceById(situationId) : null;
+        Concept concept = conceptId != null ? conceptRepository.getReferenceById(conceptId) : null;
 
         userSongRepository.save(UserSong.builder()
                 .user(user).song(song)
@@ -68,23 +101,27 @@ public class SongService {
                 : userSongRepository.findByUserId(userId);
 
         return userSongs.stream()
-                .map(us -> new SongResponse(us.getSong(), true).withSavedContext(
-                        us.getSituation().getIcon(), us.getSituation().getName(),
-                        us.getConcept().getIcon(),   us.getConcept().getName()))
+                .map(us -> {
+                    SongResponse resp = new SongResponse(us.getSong(), true);
+                    if (us.getSituation() != null && us.getConcept() != null) {
+                        return resp.withSavedContext(
+                                us.getSituation().getIcon(), us.getSituation().getName(),
+                                us.getConcept().getIcon(),   us.getConcept().getName());
+                    }
+                    return resp;
+                })
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public List<SongResponse> getHistory(Long userId) {
+        Set<Long> savedIds = userSongRepository.findSongIdsByUserId(userId);
         return playHistoryRepository.findByUserIdOrderByPlayedAtDesc(userId)
                 .stream()
                 .map(h -> h.getSong())
                 .distinct()
                 .limit(20)
-                .map(song -> {
-                    boolean saved = userSongRepository.existsByUserIdAndSongId(userId, song.getId());
-                    return new SongResponse(song, saved);
-                })
+                .map(song -> new SongResponse(song, savedIds.contains(song.getId())))
                 .toList();
     }
 
