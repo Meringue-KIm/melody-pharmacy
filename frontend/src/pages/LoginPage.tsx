@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { login } from '../api/authApi'
-import '../styles/Auth.css'
+import mascotPrescribe from '../assets/mascot-prescribe.png'
 
 const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID
 const KAKAO_REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI || 'http://localhost:5173/oauth/kakao'
@@ -20,11 +20,6 @@ export default function LoginPage() {
       setExpiredMsg('세션이 만료됐어요. 다시 로그인해주세요.')
     }
   }, [])
-
-  const handleChange = (field: string, value: string) => {
-    setForm(prev => ({ ...prev, [field]: value }))
-    setError('')
-  }
 
   const handleKakaoLogin = () => {
     window.location.href =
@@ -53,35 +48,44 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="auth-container">
+    <div className="frame" data-screen="login">
       <div className="auth-box">
-        <div className="auth-logo">🎵 멜로디약국</div>
-        <p className="auth-subtitle">오늘 기분에 맞는 노래를 처방해드려요</p>
+        <div className="auth-mascot">
+          <img src={mascotPrescribe} alt="멜로디약국 약사" style={{ width: 150, height: 150, objectFit: 'contain' }} />
+        </div>
+        <div className="auth-header">
+          <div className="brand brand-lg" style={{ justifyContent: 'center' }}>
+            <span>멜로디약국</span>
+          </div>
+          <p className="auth-sub">오늘 기분에 맞는 노래를 처방해드려요</p>
+        </div>
 
         <div className="auth-features">
           <span>💊 기분별 처방</span>
-          <span>·</span>
-          <span>🎵 50곡 큐레이션</span>
-          <span>·</span>
-          <span>❤️ 저장 &amp; 기록</span>
+          <span className="dot">·</span>
+          <span>♪ 큐레이션 50곡</span>
+          <span className="dot">·</span>
+          <span>♡ 저장 &amp; 기록</span>
         </div>
 
-        {expiredMsg && <p className="auth-expired">{expiredMsg}</p>}
+        {expiredMsg && <p className="auth-error">{expiredMsg}</p>}
 
         <form onSubmit={handleSubmit} className="auth-form">
           <input
+            className="input"
             type="email"
             placeholder="이메일"
             value={form.email}
-            onChange={e => handleChange('email', e.target.value)}
+            onChange={e => { setForm(p => ({ ...p, email: e.target.value })); setError('') }}
             required
           />
-          <div className="password-wrap">
+          <div className="pw-wrap">
             <input
+              className="input"
               type={showPw ? 'text' : 'password'}
               placeholder="비밀번호"
               value={form.password}
-              onChange={e => handleChange('password', e.target.value)}
+              onChange={e => { setForm(p => ({ ...p, password: e.target.value })); setError('') }}
               required
             />
             <button type="button" className="pw-toggle" onClick={() => setShowPw(p => !p)}>
@@ -89,14 +93,20 @@ export default function LoginPage() {
             </button>
           </div>
           {error && <p className="auth-error">{error}</p>}
-          <button type="submit" disabled={loading}>
-            {loading ? '로그인 중...' : '로그인'}
+          <button type="submit" className="btn btn-block" disabled={loading}>
+            {loading ? '처방전 받는 중…' : '로그인'}
           </button>
         </form>
 
-        <div className="auth-divider"><span>또는</span></div>
+        <p style={{ textAlign: 'right', marginTop: 8 }}>
+          <Link to="/forgot-password" style={{ fontSize: 13, color: 'var(--muted)', borderBottom: '1px solid var(--line)' }}>
+            비밀번호를 잊으셨나요?
+          </Link>
+        </p>
+
+        <div className="divider"><span>또는</span></div>
         <button type="button" className="kakao-btn" onClick={handleKakaoLogin}>
-          카카오로 로그인
+          <span className="kakao-icon">💬</span> 카카오로 시작하기
         </button>
 
         <p className="auth-link">

@@ -1,0 +1,712 @@
+﻿/* =================================================================
+   멜로디약국 — 4 pastel themes × dark mode
+   Notebook · Receipt · Cassette · Sticker
+   ================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Single+Day&family=Gowun+Dodum&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Type */
+  --font-hand: 'Gaegu', 'Single Day', cursive;
+  --font-display: 'Single Day', 'Gaegu', cursive;
+  --font-body: 'Gowun Dodum', 'Gaegu', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  /* Shape */
+  --r-sm: 12px;
+  --r: 18px;
+  --r-lg: 28px;
+  --r-pill: 999px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.34, 1.2, 0.64, 1);
+
+  /* === NOTEBOOK (Lilac) — default === */
+  --bg: #F4EEFE;
+  --surface: #FFFCF5;
+  --surface-2: #F9F2FF;
+  --ink: #2B1F44;
+  --ink-soft: #58457E;
+  --muted: #9E91BD;
+  --line: #D9CCF2;
+  --accent: #8E6FE0;
+  --accent-soft: #C5B0F0;
+  --accent-fade: #E8DCFB;
+  --accent-2: #FFB99A;       /* peach (for hearts, secondary actions) */
+  --accent-3: #9CD0F5;       /* baby blue */
+  --good: #5BA8E0;
+  --warn: #F5905D;
+  --shadow-card: 0 1px 0 var(--line), 0 8px 24px rgba(74, 53, 128, 0.08);
+  --shadow-soft: 0 4px 14px rgba(74, 53, 128, 0.06);
+  --paper-rule: rgba(142, 111, 224, 0.10);
+  --paper-rule-size: 32px;
+  --tape: rgba(255, 185, 154, 0.55);
+  --stamp: #8E6FE0;
+  --border-style: solid;
+  --border-width: 1.5px;
+}
+
+/* ----- Theme: Receipt (peach) ----- */
+[data-theme="receipt"] {
+  --bg: #FFF4EC;
+  --surface: #FFFAF2;
+  --surface-2: #FFE9D7;
+  --ink: #3A2418;
+  --ink-soft: #6E4936;
+  --muted: #B89986;
+  --line: #F2C8AB;
+  --accent: #E8794A;
+  --accent-soft: #F5B591;
+  --accent-fade: #FFE2D1;
+  --accent-2: #C5B0F0;       /* lilac contrast */
+  --accent-3: #9CD0F5;
+  --good: #67A36A;
+  --warn: #E8794A;
+  --shadow-card: 0 1px 0 var(--line), 0 6px 18px rgba(184, 90, 45, 0.08);
+  --shadow-soft: 0 4px 14px rgba(184, 90, 45, 0.06);
+  --paper-rule: rgba(232, 121, 74, 0.06);
+  --tape: rgba(245, 181, 145, 0.65);
+  --stamp: #E8794A;
+  --border-style: dashed;
+  --border-width: 2px;
+}
+
+/* ----- Theme: Cassette (baby blue) ----- */
+[data-theme="cassette"] {
+  --bg: #E5F1FB;
+  --surface: #F8FBFF;
+  --surface-2: #D1ECFF;
+  --ink: #102740;
+  --ink-soft: #335C82;
+  --muted: #8AA8C5;
+  --line: #B9DCF5;
+  --accent: #3E84C9;
+  --accent-soft: #9CD0F5;
+  --accent-fade: #D1ECFF;
+  --accent-2: #FFB99A;
+  --accent-3: #C5B0F0;
+  --good: #67A36A;
+  --warn: #E8794A;
+  --shadow-card: 0 2px 0 var(--line), 0 6px 18px rgba(16, 39, 64, 0.10);
+  --shadow-soft: 0 4px 12px rgba(16, 39, 64, 0.08);
+  --paper-rule: rgba(62, 132, 201, 0.08);
+  --tape: rgba(156, 208, 245, 0.7);
+  --stamp: #3E84C9;
+  --border-style: solid;
+  --border-width: 2.5px;
+}
+
+/* ----- Theme: Sticker (mixed pastel) ----- */
+[data-theme="sticker"] {
+  --bg: #FFF8EE;
+  --surface: #FFFFFF;
+  --surface-2: #FFF1E0;
+  --ink: #2D2440;
+  --ink-soft: #5E527E;
+  --muted: #A89FBE;
+  --line: #ECDDC7;
+  --accent: #B58BE8;
+  --accent-soft: #E0CDF6;
+  --accent-fade: #F3E9FE;
+  --accent-2: #FF9FB5;       /* coral pink */
+  --accent-3: #8FD8C2;       /* mint */
+  --good: #8FD8C2;
+  --warn: #FFB857;
+  --shadow-card: 0 3px 0 var(--line), 0 10px 24px rgba(181, 139, 232, 0.12);
+  --shadow-soft: 0 4px 14px rgba(181, 139, 232, 0.10);
+  --paper-rule: transparent;
+  --tape: rgba(255, 159, 181, 0.55);
+  --stamp: #B58BE8;
+  --border-style: solid;
+  --border-width: 2px;
+}
+
+/* =================================================================
+   Dark mode — keep hue, deepen tones
+   ================================================================= */
+[data-dark="true"] {
+  --bg: #1A1925;
+  --surface: #23223A;
+  --surface-2: #2C2B44;
+  --ink: #EDE8FF;
+  --ink-soft: #B8ACDC;
+  --muted: #7A7098;
+  --line: #3A3660;
+  --accent: #B8A0F0;
+  --accent-soft: #8E6FE0;
+  --accent-fade: #302860;
+  --accent-2: #FFB99A;
+  --accent-3: #9CD0F5;
+  --shadow-card: 0 1px 0 var(--line), 0 8px 20px rgba(0, 0, 0, 0.30);
+  --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.22);
+  --paper-rule: rgba(180, 160, 240, 0.05);
+  --tape: rgba(255, 185, 154, 0.25);
+  --stamp: #B8A0F0;
+}
+
+[data-dark="true"][data-theme="receipt"] {
+  --bg: #201812;
+  --surface: #2C2018;
+  --surface-2: #382820;
+  --ink: #FFE6D6;
+  --ink-soft: #D4A882;
+  --muted: #8A6E58;
+  --line: #4A3228;
+  --accent: #F0A878;
+  --accent-soft: #E8794A;
+  --accent-fade: #382820;
+  --stamp: #F0A878;
+}
+
+[data-dark="true"][data-theme="cassette"] {
+  --bg: #141C26;
+  --surface: #1C2A3A;
+  --surface-2: #22364A;
+  --ink: #E7F2FC;
+  --ink-soft: #90C0E0;
+  --muted: #5E7E9A;
+  --line: #283E58;
+  --accent: #90C4EE;
+  --accent-soft: #3E84C9;
+  --accent-fade: #1C304A;
+  --stamp: #90C4EE;
+}
+
+[data-dark="true"][data-theme="sticker"] {
+  --bg: #1C1A24;
+  --surface: #26243A;
+  --surface-2: #302E48;
+  --ink: #F8EEFF;
+  --ink-soft: #C8B8E8;
+  --muted: #7E7298;
+  --line: #3A3458;
+  --accent: #CCB8F0;
+  --accent-soft: #B58BE8;
+  --accent-fade: #2A2440;
+  --stamp: #CCB8F0;
+}
+
+/* =================================================================
+   Base
+   ================================================================= */
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; height: 100%; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  line-break: strict;
+}
+
+/* Korean text: never break mid-syllable inside common UI strings */
+.brand, .brand-mini, .iconbtn, .chip, .tile-name, .tab, .btn, .btn-ghost-sm,
+.song-title, .player-title, .profile-name, .stat-label, .menu-item,
+.h2, .rx-label, .rx-dose, .dose-chip, .rx-form-cell, .bag-strip > span,
+.kakao-btn, .auth-link {
+  word-break: keep-all;
+  white-space: nowrap;
+}
+
+.h1, .subtitle, .auth-sub {
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+input, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+a { color: var(--accent); text-decoration: none; }
+
+/* =================================================================
+   App shell — responsive, holds either mobile (centered) or fluid
+   ================================================================= */
+.app {
+  min-height: 100vh;
+  background: var(--bg);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* paper-rule background — subtle horizontal lines like notebook paper */
+.app::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(to bottom, transparent calc(var(--paper-rule-size, 32px) - 1px), var(--paper-rule) calc(var(--paper-rule-size, 32px) - 1px), var(--paper-rule) var(--paper-rule-size, 32px), transparent var(--paper-rule-size, 32px));
+  background-size: 100% var(--paper-rule-size, 32px);
+  opacity: 1;
+  z-index: 0;
+}
+
+/* mobile-first frame */
+.frame {
+  position: relative;
+  z-index: 1;
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 20px 18px 120px;
+}
+
+/* desktop layout */
+@media (min-width: 900px) {
+  .frame {
+    max-width: 1120px;
+    padding: 32px 40px 80px;
+  }
+  .frame[data-screen="login"],
+  .frame[data-screen="signup"] {
+    max-width: 520px;
+  }
+}
+
+/* =================================================================
+   Common: brand mark, headings
+   ================================================================= */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.brand .rx {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.02em;
+}
+
+[data-theme="receipt"] .brand .rx { border-radius: var(--r-sm); }
+[data-theme="cassette"] .brand .rx { border-radius: 6px; }
+
+.h1 {
+  font-family: var(--font-display);
+  font-size: 30px;
+  line-height: 1.25;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+
+.h2 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  margin: 0;
+}
+
+.subtitle {
+  color: var(--ink-soft);
+  font-size: 18px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.eyebrow {
+  color: var(--muted);
+  font-size: 14px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* =================================================================
+   Header
+   ================================================================= */
+.appheader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 12px;
+}
+
+.appheader-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  min-width: 36px;
+  padding: 0 12px;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--ink-soft);
+  border: var(--border-width) var(--border-style) var(--line);
+  font-family: var(--font-body);
+  font-size: 14px;
+  transition: all 0.15s var(--ease);
+}
+
+.iconbtn:hover {
+  background: var(--accent-fade);
+  color: var(--accent);
+  border-color: var(--accent-soft);
+}
+
+/* =================================================================
+   Cards — situation, concept, song
+   ================================================================= */
+.card {
+  position: relative;
+  background: var(--surface);
+  border: var(--border-width) var(--border-style) var(--line);
+  border-radius: var(--r);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 1px 0 var(--line), 0 14px 30px rgba(74, 53, 128, 0.12);
+}
+
+/* situation/concept grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+@media (min-width: 700px) {
+  .grid { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+}
+
+@media (min-width: 1000px) {
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 28px 16px;
+  aspect-ratio: 1.05;
+  background: var(--surface);
+  border: var(--border-width) var(--border-style) var(--line);
+  border-radius: var(--r);
+  box-shadow: var(--shadow-card);
+  transition: all 0.2s var(--ease);
+  cursor: pointer;
+  text-align: center;
+}
+
+.tile:hover {
+  transform: translateY(-3px) rotate(-1deg);
+  border-color: var(--accent-soft);
+  background: var(--accent-fade);
+}
+
+.tile-icon {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.tile-name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--ink);
+}
+
+/* sticker theme — random rotations, tape strips */
+[data-theme="sticker"] .tile:nth-child(3n+1) { transform: rotate(-1.2deg); }
+[data-theme="sticker"] .tile:nth-child(3n+2) { transform: rotate(0.8deg); }
+[data-theme="sticker"] .tile:nth-child(3n+3) { transform: rotate(-0.4deg); }
+[data-theme="sticker"] .tile:hover { transform: rotate(0deg) translateY(-3px) scale(1.02); }
+
+[data-theme="sticker"] .tile::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+  width: 50px;
+  height: 16px;
+  background: var(--tape);
+  border-radius: 2px;
+  z-index: 1;
+  opacity: 0.9;
+}
+
+.tile { position: relative; }
+
+/* cassette theme — chunky inset */
+[data-theme="cassette"] .tile {
+  border-radius: var(--r-sm);
+  box-shadow: 0 3px 0 var(--line), inset 0 1px 0 rgba(255,255,255,0.6);
+}
+
+/* receipt theme — perforated edges */
+[data-theme="receipt"] .tile {
+  border-radius: var(--r-sm);
+}
+
+/* =================================================================
+   Buttons
+   ================================================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 22px;
+  background: var(--accent);
+  color: white;
+  border-radius: var(--r-pill);
+  font-family: var(--font-display);
+  font-size: 18px;
+  border: var(--border-width) solid var(--accent);
+  transition: all 0.15s var(--ease);
+  box-shadow: 0 3px 0 color-mix(in oklab, var(--accent) 70%, black);
+}
+
+.btn:hover { transform: translateY(-1px); box-shadow: 0 4px 0 color-mix(in oklab, var(--accent) 70%, black); }
+.btn:active { transform: translateY(2px); box-shadow: 0 1px 0 color-mix(in oklab, var(--accent) 70%, black); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: 0 3px 0 color-mix(in oklab, var(--accent) 70%, black); }
+
+.btn-ghost {
+  background: var(--surface);
+  color: var(--ink);
+  border: var(--border-width) var(--border-style) var(--line);
+  box-shadow: 0 2px 0 var(--line);
+}
+
+.btn-ghost:hover { background: var(--accent-fade); border-color: var(--accent-soft); color: var(--accent); box-shadow: 0 3px 0 var(--accent-soft); }
+.btn-ghost:active { box-shadow: 0 1px 0 var(--line); }
+
+.btn-block { width: 100%; }
+
+/* chips */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--accent-fade);
+  color: var(--accent);
+  border-radius: var(--r-pill);
+  border: var(--border-width) var(--border-style) var(--accent-soft);
+  font-family: var(--font-body);
+  font-size: 14px;
+  transition: all 0.15s var(--ease);
+}
+
+.chip:hover { background: var(--accent-soft); color: white; }
+
+/* =================================================================
+   Inputs
+   ================================================================= */
+.input {
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: var(--border-width) var(--border-style) var(--line);
+  border-radius: var(--r);
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--ink);
+  outline: none;
+  transition: all 0.15s var(--ease);
+}
+
+.input::placeholder { color: var(--muted); }
+.input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-fade); }
+
+/* =================================================================
+   Decorations: Rx stamp, dashed cuts, tape
+   ================================================================= */
+.rx-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 2px solid var(--stamp);
+  color: var(--stamp);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  transform: rotate(-4deg);
+  background: var(--surface);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.cut {
+  border: none;
+  border-top: 1.5px dashed var(--line);
+  margin: 16px 0;
+}
+
+/* =================================================================
+   Toast
+   ================================================================= */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--surface);
+  padding: 12px 20px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: 15px;
+  z-index: 9999;
+  box-shadow: var(--shadow-card);
+  animation: toast-in 0.3s var(--ease);
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translate(-50%, 10px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* =================================================================
+   Skeleton
+   ================================================================= */
+.skel {
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--accent-fade) 50%, var(--surface-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+  border-radius: var(--r);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* =================================================================
+   Mascot illustration wrapper — dark mode coloring (테마별)
+   ================================================================= */
+.mascot-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+/* ── 대안 1: Notebook dark — 네온 라인 + 보라 파스텔 글로우 ── */
+[data-dark="true"] .mascot-wrap {
+  padding: 18px;
+  background: radial-gradient(circle, rgba(142,111,224,0.18) 0%, rgba(142,111,224,0.04) 70%, transparent 100%);
+  box-shadow: 0 0 28px rgba(142,111,224,0.50), inset 0 1px 1px rgba(255,255,255,0.06);
+}
+[data-dark="true"] .mascot-wrap img {
+  filter:
+    drop-shadow(0 0 6px rgba(197,176,240,0.90))
+    drop-shadow(0 0 18px rgba(142,111,224,0.60))
+    brightness(1.10)
+    saturate(1.15);
+}
+
+/* ── 대안 2: Receipt dark — 도트 배경 + 따뜻한 오렌지 글로우 ── */
+[data-dark="true"][data-theme="receipt"] .mascot-wrap {
+  padding: 18px;
+  background:
+    radial-gradient(circle, rgba(232,121,74,0.16) 0%, transparent 72%),
+    radial-gradient(rgba(180,90,40,0.20) 1px, transparent 1px);
+  background-size: 100% 100%, 10px 10px;
+  box-shadow: 0 0 26px rgba(232,121,74,0.45), inset 0 1px 1px rgba(255,220,180,0.08);
+}
+[data-dark="true"][data-theme="receipt"] .mascot-wrap img {
+  filter:
+    drop-shadow(0 0 6px rgba(245,181,145,0.85))
+    drop-shadow(0 0 16px rgba(232,121,74,0.55))
+    brightness(1.08)
+    sepia(0.12);
+}
+
+/* ── 대안 3: Cassette dark — 미니멀 + 아래서 오는 블루 스포트라이트 ── */
+[data-dark="true"][data-theme="cassette"] .mascot-wrap {
+  padding: 18px;
+  background: radial-gradient(ellipse 80% 50% at 50% 100%, rgba(62,132,201,0.22) 0%, transparent 70%);
+  box-shadow: 0 12px 28px rgba(62,132,201,0.35), 0 0 0 1px rgba(156,208,245,0.12);
+}
+[data-dark="true"][data-theme="cassette"] .mascot-wrap img {
+  filter:
+    drop-shadow(0 6px 10px rgba(62,132,201,0.60))
+    drop-shadow(0 0 20px rgba(156,208,245,0.35))
+    brightness(1.06);
+}
+
+/* ── 대안 4: Sticker dark — 유리돔 + 파스텔 보더 + 내부 조명 ── */
+[data-dark="true"][data-theme="sticker"] .mascot-wrap {
+  padding: 20px;
+  background: radial-gradient(circle, rgba(181,139,232,0.14) 0%, rgba(181,139,232,0.04) 65%, transparent 100%);
+  border: 1.5px solid rgba(224,205,246,0.28);
+  box-shadow:
+    inset 0 2px 10px rgba(255,255,255,0.07),
+    inset 0 -2px 8px rgba(181,139,232,0.15),
+    0 0 24px rgba(181,139,232,0.38);
+}
+[data-dark="true"][data-theme="sticker"] .mascot-wrap img {
+  filter:
+    drop-shadow(0 0 5px rgba(224,205,246,0.80))
+    drop-shadow(0 0 16px rgba(181,139,232,0.50))
+    brightness(1.10)
+    saturate(1.10);
+}
+
+/* =================================================================
+   Mascot color tokens
+   ================================================================= */
+:root {
+  --mascot-band:        #2D2218;
+  --mascot-face:        #FAF3E2;
+  --mascot-outline:     #2D2218;
+  --mascot-phone:       #2D2218;
+  --mascot-phone-inner: #5A4A35;
+}
+
+[data-dark="true"] {
+  --mascot-band:        var(--accent);
+  --mascot-face:        #F0EAFF;
+  --mascot-outline:     var(--accent-soft);
+  --mascot-phone:       var(--accent);
+  --mascot-phone-inner: var(--accent-soft);
+}
+
+/* =================================================================
+   App additions (not in handoff)
+   ================================================================= */
+.frame[data-screen="forgot"] {
+  max-width: 520px;
+}

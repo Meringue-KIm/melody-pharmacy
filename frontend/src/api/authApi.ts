@@ -30,3 +30,6 @@ export const changePassword = (oldPassword: string, newPassword: string) =>
 
 export const updateNickname = (nickname: string) =>
   api.patch('/api/user/nickname', { nickname })
+
+export const resetPassword = (email: string, newPassword: string) =>
+  api.post('/api/auth/reset-password', { email, newPassword })

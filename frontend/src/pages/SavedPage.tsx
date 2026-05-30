@@ -2,7 +2,9 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getSaved, getHistory, saveSong, unsaveSong, recordPlay } from '../api/songApi'
 import type { Song } from '../api/songApi'
-import '../styles/Recommend.css'
+import AppHeader from '../components/AppHeader'
+import mascotLab from '../assets/mascot-lab.png'
+import MascotIllustration from '../components/MascotIllustration'
 
 type Tab = 'saved' | 'history'
 
@@ -13,6 +15,7 @@ function getVideoId(url: string) {
 export default function SavedPage() {
   const navigate = useNavigate()
   const [tab, setTab] = useState<Tab>('saved')
+  const [filterSit, setFilterSit] = useState<string | null>(null)
   const [savedSongs, setSavedSongs] = useState<Song[]>([])
   const [historySongs, setHistorySongs] = useState<Song[]>([])
   const [loading, setLoading] = useState(true)
@@ -38,6 +41,12 @@ export default function SavedPage() {
   }
 
   useEffect(() => { load() }, [])
+
+  const handleThumbError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget
+    if (img.src.includes('hqdefault')) img.src = img.src.replace('hqdefault', 'mqdefault')
+    else if (img.src.includes('mqdefault')) img.src = img.src.replace('mqdefault', 'default')
+  }
 
   const currentSongs = tab === 'saved' ? savedSongs : historySongs
   const playingSong = [...savedSongs, ...historySongs].find(s => s.id === playingId) ?? null
@@ -79,7 +88,8 @@ export default function SavedPage() {
     )
   }, [])
 
-  const handleSave = async (song: Song) => {
+  const handleSave = async (song: Song, e: React.MouseEvent) => {
+    e.stopPropagation()
     if (savingIds.has(song.id)) return
     setSavingIds(prev => new Set(prev).add(song.id))
     try {
@@ -101,33 +111,37 @@ export default function SavedPage() {
     }
   }
 
-  const handleShare = async (song: Song) => {
+  const handleShare = async (song: Song, e: React.MouseEvent) => {
+    e.stopPropagation()
     const text = `🎵 ${song.title} - ${song.artist}`
     if (navigator.share) await navigator.share({ title: text, url: song.youtubeUrl })
     else { await navigator.clipboard.writeText(song.youtubeUrl); showToast('링크가 복사됐어요!') }
   }
 
   return (
-    <div className="recommend-container">
+    <div className="frame" data-screen="saved">
       {toast && <div className="toast">{toast}</div>}
 
-      <header className="main-header">
-        <button className="back-btn" onClick={() => navigate('/')}>← 뒤로</button>
-        <div className="logo" style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>🎵 멜로디약국</div>
-        <div />
-      </header>
+      <AppHeader />
 
+      <section className="hero">
+        <p className="eyebrow">My Cabinet · 약장</p>
+        <h1 className="h1">내 약장</h1>
+        <p className="subtitle">저장한 처방전 {savedSongs.length}곡</p>
+      </section>
+
+      {/* 플레이어 */}
       {playingSong && (
-        <div className="now-playing">
-          <div className="now-playing-row">
-            {playingSong.thumbnailUrl && (
-              <img src={playingSong.thumbnailUrl} alt="" className="now-playing-thumb" />
-            )}
-            <div className="now-playing-info">
-              <p className="now-playing-title">{playingSong.title}</p>
-              <p className="now-playing-artist">{playingSong.artist}</p>
+        <div className="player">
+          <div className="player-main">
+            <div className="song-thumb" style={{ width: 48, height: 48, flexShrink: 0 }}>
+              {playingSong.thumbnailUrl && <img src={playingSong.thumbnailUrl} alt="" onError={handleThumbError} />}
             </div>
-            <button className="now-playing-stop" onClick={() => setPlayingId(null)}>■ 정지</button>
+            <div className="player-info">
+              <p className="player-title">{playingSong.title}</p>
+              <p className="player-artist">{playingSong.artist}</p>
+            </div>
+            <button className="player-btn" onClick={() => setPlayingId(null)}>■</button>
           </div>
           <div className="youtube-embed">
             <iframe
@@ -142,78 +156,140 @@ export default function SavedPage() {
         </div>
       )}
 
-      <div className="tab-bar">
-        <button className={tab === 'saved' ? 'active' : ''} onClick={() => setTab('saved')}>
-          저장소 {savedSongs.length > 0 && <span className="badge">{savedSongs.length}</span>}
+      {/* 탭 */}
+      <div className="tabs">
+        <button className={`tab ${tab === 'saved' ? 'active' : ''}`} onClick={() => setTab('saved')}>
+          ♥ 저장소 {savedSongs.length > 0 && <span className="badge">{savedSongs.length}</span>}
         </button>
-        <button className={tab === 'history' ? 'active' : ''} onClick={() => setTab('history')}>
-          최근 재생
+        <button className={`tab ${tab === 'history' ? 'active' : ''}`} onClick={() => setTab('history')}>
+          ⏱ 최근 재생
         </button>
       </div>
 
-      <div className="autoplay-row">
-        <button
-          className={`autoplay-btn ${autoPlay ? 'active' : ''}`}
-          onClick={() => setAutoPlay(p => !p)}
-        >⏭ 자동재생 {autoPlay ? 'ON' : 'OFF'}</button>
+      <div className="controls">
+        <button className={`toggle ${autoPlay ? 'on' : ''}`} onClick={() => setAutoPlay(p => !p)}>
+          <span className="toggle-track"><span className="toggle-thumb" /></span>
+          자동재생
+        </button>
       </div>
 
       {error && (
         <div className="page-error">
-          불러오기 실패했어요 😢<br />
+          불러오기 실패했어요<br />
           <button onClick={load}>다시 시도</button>
         </div>
       )}
 
-      <div className="song-list">
-        {loading && Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="skeleton skeleton-song" />
-        ))}
-        {!loading && !error && currentSongs.length === 0 && (
-          <div className="empty">
-            {tab === 'saved'
-              ? <><p>아직 저장한 노래가 없어요.</p><button className="empty-btn" onClick={() => navigate('/')}>노래 추천받기</button></>
-              : <><p>아직 들은 노래가 없어요.</p><button className="empty-btn" onClick={() => navigate('/')}>노래 추천받기</button></>
-            }
+      {/* 저장 목록 */}
+      {tab === 'saved' && !loading && !error && savedSongs.length === 0 ? (
+        <div className="empty empty-lg">
+          <MascotIllustration src={mascotLab} size={130} alt="약사 캐릭터" />
+          <p>아직 약장이 비어있어요.</p>
+          <button className="btn" onClick={() => navigate('/')}>처방전 받으러 가기</button>
+        </div>
+      ) : tab === 'saved' && !loading && (() => {
+        const situations = [...new Set(savedSongs.map(s => s.savedSituationName).filter(Boolean))] as string[]
+        const filtered = filterSit ? savedSongs.filter(s => s.savedSituationName === filterSit) : savedSongs
+        return (
+        <>
+          {situations.length > 1 && (
+            <div className="chip-row" style={{ marginBottom: 14 }}>
+              <button
+                className="chip"
+                style={{ background: !filterSit ? 'var(--accent)' : undefined, color: !filterSit ? 'white' : undefined }}
+                onClick={() => setFilterSit(null)}
+              >전체 {savedSongs.length}</button>
+              {situations.map(sit => (
+                <button
+                  key={sit}
+                  className="chip"
+                  style={{ background: filterSit === sit ? 'var(--accent)' : undefined, color: filterSit === sit ? 'white' : undefined }}
+                  onClick={() => setFilterSit(sit)}
+                >{sit}</button>
+              ))}
+            </div>
+          )}
+          <div className="shelf">
+            <p className="shelf-title">상비약 · ALWAYS ON HAND</p>
+            <div className="song-list">
+              {filtered.map((song, idx) => (
+              <button
+                key={song.id}
+                id={`song-${song.id}`}
+                className={`song-card ${playingId === song.id ? 'playing' : ''}`}
+                onClick={() => handlePlay(song)}
+              >
+                <span className="song-num">{String(idx + 1).padStart(2, '0')}</span>
+                <div className="song-thumb">
+                  {song.thumbnailUrl && <img src={song.thumbnailUrl} alt={song.title} onError={handleThumbError} />}
+                </div>
+                <div className="song-info">
+                  <p className="song-title">{song.title}</p>
+                  <p className="song-artist">{song.artist}</p>
+                  {song.savedSituationName && (
+                    <span className="dose-chip" style={{ marginTop: 4 }}>
+                      {song.savedSituationIcon} {song.savedSituationName} · {song.savedConceptIcon} {song.savedConceptName}
+                    </span>
+                  )}
+                </div>
+                <div className="song-actions">
+                  <span className={`play-btn ${playingId === song.id ? 'playing' : ''}`}>
+                    {playingId === song.id ? '❚❚' : '▶'}
+                  </span>
+                  <span className="save-btn saved" onClick={e => handleSave(song, e)}>♥</span>
+                  <span className="share-btn" onClick={e => handleShare(song, e)}>📤</span>
+                </div>
+              </button>
+            ))}
           </div>
-        )}
-        {currentSongs.map(song => (
-          <div
-            key={song.id}
-            id={`song-${song.id}`}
-            className={`song-card ${playingId === song.id ? 'playing' : ''}`}
-            onClick={() => handlePlay(song)}
-          >
-            <div className="song-row">
-              {song.thumbnailUrl && (
-                <img src={song.thumbnailUrl} alt={song.title} className="song-thumbnail" />
-              )}
+        </div>
+        </>
+        )
+      })()}
+
+      {/* 히스토리 탭 */}
+      {tab === 'history' && (
+        <div className="song-list">
+          {loading && Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="skel skel-song" />
+          ))}
+          {!loading && historySongs.length === 0 && (
+            <div className="empty">
+              <p>아직 들은 노래가 없어요.</p>
+              <button className="btn-ghost-sm" onClick={() => navigate('/')}>노래 추천받기</button>
+            </div>
+          )}
+          {historySongs.map((song, idx) => (
+            <button
+              key={song.id}
+              id={`song-${song.id}`}
+              className={`song-card ${playingId === song.id ? 'playing' : ''}`}
+              onClick={() => handlePlay(song)}
+            >
+              <span className="song-num">{String(idx + 1).padStart(2, '0')}</span>
+              <div className="song-thumb">
+                {song.thumbnailUrl && <img src={song.thumbnailUrl} alt={song.title} onError={handleThumbError} />}
+              </div>
               <div className="song-info">
                 <p className="song-title">{song.title}</p>
                 <p className="song-artist">{song.artist}</p>
-                {tab === 'saved' && song.savedSituationName && (
-                  <p className="song-context">
-                    {song.savedSituationIcon} {song.savedSituationName} · {song.savedConceptIcon} {song.savedConceptName}
-                  </p>
-                )}
               </div>
               <div className="song-actions">
-                <button className={`play-btn ${playingId === song.id ? 'playing' : ''}`}>
-                  {playingId === song.id ? '■' : '▶'}
-                </button>
-                <button
+                <span className={`play-btn ${playingId === song.id ? 'playing' : ''}`}>
+                  {playingId === song.id ? '❚❚' : '▶'}
+                </span>
+                <span
                   className={`save-btn ${song.saved ? 'saved' : ''}`}
-                  onClick={e => { e.stopPropagation(); handleSave(song) }}
-                  disabled={savingIds.has(song.id)}
+                  onClick={e => handleSave(song, e)}
                 >
                   {song.saved ? '♥' : '♡'}
-                </button>
-                <button className="share-btn" onClick={e => { e.stopPropagation(); handleShare(song) }}>📤</button>
+                </span>
+                <span className="share-btn" onClick={e => handleShare(song, e)}>📤</span>
               </div>
-            </div>
-          </div>
-        ))}
-      </div>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

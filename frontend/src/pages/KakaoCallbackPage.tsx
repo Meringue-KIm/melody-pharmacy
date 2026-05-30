@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { kakaoLogin } from '../api/authApi'
-import '../styles/Auth.css'
+import MascotHead from '../components/MascotHead'
 
 export default function KakaoCallbackPage() {
   const navigate = useNavigate()
@@ -23,14 +23,15 @@ export default function KakaoCallbackPage() {
   }, [])
 
   if (error) return (
-    <div className="auth-container">
-      <div className="auth-box">
-        <div className="auth-logo">🎵 멜로디약국</div>
-        <p style={{ color: '#f87171', margin: '20px 0' }}>{error}</p>
-        <button
-          style={{ padding: '12px 24px', background: '#7c3aed', border: 'none', borderRadius: '10px', color: '#fff', cursor: 'pointer' }}
-          onClick={() => navigate('/login')}
-        >
+    <div className="frame" data-screen="login">
+      <div className="auth-box" style={{ textAlign: 'center' }}>
+        <div className="auth-header">
+          <div className="brand brand-lg" style={{ justifyContent: 'center' }}>
+            <span>멜로디약국</span>
+          </div>
+        </div>
+        <p className="auth-error" style={{ margin: '20px 0' }}>{error}</p>
+        <button className="btn btn-block" onClick={() => navigate('/login')}>
           로그인으로 돌아가기
         </button>
       </div>
@@ -38,10 +39,17 @@ export default function KakaoCallbackPage() {
   )
 
   return (
-    <div className="auth-container">
-      <div className="auth-box">
-        <div className="auth-logo">🎵 멜로디약국</div>
-        <p style={{ color: 'rgba(255,255,255,0.6)', marginTop: '20px' }}>카카오 로그인 처리 중...</p>
+    <div className="frame" data-screen="login">
+      <div className="auth-box" style={{ textAlign: 'center' }}>
+        <div className="auth-mascot">
+          <MascotHead size={100} />
+        </div>
+        <div className="auth-header">
+          <div className="brand brand-lg" style={{ justifyContent: 'center' }}>
+            <span>멜로디약국</span>
+          </div>
+          <p className="auth-sub">카카오 로그인 처리 중…</p>
+        </div>
       </div>
     </div>
   )

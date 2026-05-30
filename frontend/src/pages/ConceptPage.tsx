@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { getConcepts, getSituations } from '../api/songApi'
 import type { Concept, Situation } from '../api/songApi'
-import '../styles/Main.css'
+import AppHeader from '../components/AppHeader'
+import Doodle from '../components/Doodle'
 
 export default function ConceptPage() {
   const navigate = useNavigate()
@@ -49,40 +50,47 @@ export default function ConceptPage() {
   }
 
   return (
-    <div className="main-container">
-      <header className="main-header">
-        <button className="back-btn" onClick={() => navigate('/')}>← 뒤로</button>
-        <div className="logo" style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>🎵 멜로디약국</div>
-        <div />
-      </header>
+    <div className="frame" data-screen="concept">
+      <AppHeader
+        leftSlot={
+          <button className="iconbtn" onClick={() => navigate('/')}>← 상황 바꾸기</button>
+        }
+      />
 
-      <main className="main-content">
-        <h1 className="main-title">
-          {situation ? `${situation.icon} ${situation.name}` : ' '}<br />
-          <span>지금 어떤 느낌의 노래가 필요한가요?</span>
-        </h1>
-
-        {error && (
-          <div className="page-error">
-            불러오기 실패했어요 😢<br />
-            <button onClick={load}>다시 시도</button>
-          </div>
+      <section className="hero">
+        <p className="eyebrow">STEP 2 · 느낌 선택</p>
+        {situation && (
+          <p className="hero-tag">
+            <Doodle name={situation.icon} size={28} style={{ marginRight: 8, verticalAlign: 'middle' }} />
+            {situation.name}
+          </p>
         )}
+        <h1 className="h1">지금 어떤 느낌이 좋을까요?</h1>
+        <p className="subtitle">선택한 느낌에 맞춰 처방전을 만들어드릴게요.</p>
+      </section>
 
-        <div className="concept-grid">
+      {error && (
+        <div className="page-error">
+          불러오기 실패했어요<br />
+          <button onClick={load}>다시 시도</button>
+        </div>
+      )}
+
+      <section className="section">
+        <div className="grid grid-3">
           {loading
-            ? Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="skeleton skeleton-concept" />
+            ? Array.from({ length: 9 }).map((_, i) => (
+                <div key={i} className="skel" style={{ height: 120, borderRadius: 'var(--r)' }} />
               ))
             : concepts.map(c => (
-                <button key={c.id} className="concept-card" onClick={() => handleSelect(c)}>
-                  <span className="concept-icon">{c.icon}</span>
-                  <span className="concept-name">{c.name}</span>
+                <button key={c.id} className="tile" onClick={() => handleSelect(c)}>
+                  <Doodle name={c.icon} size={52} />
+                  <span className="tile-name">{c.name}</span>
                 </button>
               ))
           }
         </div>
-      </main>
+      </section>
     </div>
   )
 }

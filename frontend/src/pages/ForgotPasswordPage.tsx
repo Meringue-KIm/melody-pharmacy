@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { resetPassword } from '../api/authApi'
-import '../styles/Auth.css'
+import mascotLab from '../assets/mascot-lab.png'
 
 export default function ForgotPasswordPage() {
   const [form, setForm] = useState({ email: '', newPassword: '', confirm: '' })
@@ -12,14 +12,8 @@ export default function ForgotPasswordPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (form.newPassword !== form.confirm) {
-      setError('비밀번호가 일치하지 않아요.')
-      return
-    }
-    if (form.newPassword.length < 6) {
-      setError('비밀번호는 6자 이상이어야 해요.')
-      return
-    }
+    if (form.newPassword !== form.confirm) { setError('비밀번호가 일치하지 않아요.'); return }
+    if (form.newPassword.length < 6) { setError('비밀번호는 6자 이상이어야 해요.'); return }
     setLoading(true)
     setError('')
     try {
@@ -38,14 +32,17 @@ export default function ForgotPasswordPage() {
 
   if (success) {
     return (
-      <div className="auth-container">
-        <div className="auth-box">
-          <div className="auth-logo">🎵 멜로디약국</div>
-          <p className="auth-subtitle" style={{ marginBottom: 24 }}>비밀번호가 변경됐어요!</p>
-          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14, marginBottom: 28 }}>
-            새 비밀번호로 로그인해주세요.
-          </p>
-          <Link to="/login" style={{ display: 'block', textAlign: 'center', color: '#a78bfa', fontSize: 15, fontWeight: 600 }}>
+      <div className="frame" data-screen="forgot">
+        <div className="auth-box" style={{ textAlign: 'center' }}>
+          <div className="auth-header">
+            <div className="brand brand-lg" style={{ justifyContent: 'center' }}>
+              <span className="rx">Rx</span>
+              <span>멜로디약국</span>
+            </div>
+            <p className="auth-sub" style={{ marginTop: 8 }}>비밀번호가 변경됐어요!</p>
+          </div>
+          <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 28 }}>새 비밀번호로 로그인해주세요.</p>
+          <Link to="/login" className="btn btn-block" style={{ display: 'flex' }}>
             로그인하러 가기 →
           </Link>
         </div>
@@ -54,25 +51,34 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="auth-container">
+    <div className="frame" data-screen="forgot">
       <div className="auth-box">
-        <div className="auth-logo">🎵 멜로디약국</div>
-        <p className="auth-subtitle">비밀번호를 재설정해드릴게요</p>
+        <div className="auth-mascot">
+          <img src={mascotLab} alt="멜로디약국 약사" style={{ width: 120, height: 120, objectFit: 'contain' }} />
+        </div>
+        <div className="auth-header">
+          <div className="brand brand-lg" style={{ justifyContent: 'center' }}>
+            <span>멜로디약국</span>
+          </div>
+          <p className="auth-sub">비밀번호를 재설정해드릴게요</p>
+        </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
           <input
+            className="input"
             type="email"
             placeholder="가입한 이메일"
             value={form.email}
-            onChange={e => setForm({ ...form, email: e.target.value })}
+            onChange={e => { setForm(p => ({ ...p, email: e.target.value })); setError('') }}
             required
           />
-          <div className="password-wrap">
+          <div className="pw-wrap">
             <input
+              className="input"
               type={showPw ? 'text' : 'password'}
               placeholder="새 비밀번호 (6자 이상)"
               value={form.newPassword}
-              onChange={e => setForm({ ...form, newPassword: e.target.value })}
+              onChange={e => { setForm(p => ({ ...p, newPassword: e.target.value })); setError('') }}
               required
             />
             <button type="button" className="pw-toggle" onClick={() => setShowPw(p => !p)}>
@@ -80,15 +86,16 @@ export default function ForgotPasswordPage() {
             </button>
           </div>
           <input
+            className="input"
             type="password"
             placeholder="새 비밀번호 확인"
             value={form.confirm}
-            onChange={e => setForm({ ...form, confirm: e.target.value })}
+            onChange={e => { setForm(p => ({ ...p, confirm: e.target.value })); setError('') }}
             required
           />
           {error && <p className="auth-error">{error}</p>}
-          <button type="submit" disabled={loading}>
-            {loading ? '변경 중...' : '비밀번호 변경'}
+          <button type="submit" className="btn btn-block" disabled={loading}>
+            {loading ? '변경 중…' : '비밀번호 변경'}
           </button>
         </form>
 

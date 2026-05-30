@@ -48,6 +48,7 @@ public class DataInitializer implements ApplicationRunner {
     }
 
     private void initSituationsAndConcepts() {
+        if (situationRepository.count() > 0) return;
         findOrCreateSituation("출근길",    "🚌");
         findOrCreateSituation("퇴근길",    "🌆");
         findOrCreateSituation("운동",      "🏋️");
@@ -68,6 +69,7 @@ public class DataInitializer implements ApplicationRunner {
     }
 
     private void initSongs() {
+        if (songTagRepository.count() > 0) return;
         Situation sit1 = situationRepository.findByName("출근길").orElseThrow();
         Situation sit2 = situationRepository.findByName("퇴근길").orElseThrow();
         Situation sit3 = situationRepository.findByName("운동").orElseThrow();

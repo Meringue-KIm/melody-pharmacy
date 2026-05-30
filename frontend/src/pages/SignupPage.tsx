@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { signup, login } from '../api/authApi'
-import '../styles/Auth.css'
+import mascotPresent from '../assets/mascot-present.png'
 
 const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID
 const KAKAO_REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI || 'http://localhost:5173/oauth/kakao'
@@ -13,11 +13,6 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false)
   const [showPw, setShowPw] = useState(false)
 
-  const handleChange = (field: string, value: string) => {
-    setForm(prev => ({ ...prev, [field]: value }))
-    setError('')
-  }
-
   const handleKakaoLogin = () => {
     window.location.href =
       `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${encodeURIComponent(KAKAO_REDIRECT_URI)}&response_type=code`
@@ -25,18 +20,9 @@ export default function SignupPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (form.password.length < 6) {
-      setError('비밀번호는 6자 이상이어야 합니다.')
-      return
-    }
-    if (form.nickname.trim().length < 2) {
-      setError('닉네임은 2자 이상으로 입력해주세요.')
-      return
-    }
-    if (form.nickname.length > 20) {
-      setError('닉네임은 20자 이하로 입력해주세요.')
-      return
-    }
+    if (form.password.length < 6) { setError('비밀번호는 6자 이상이어야 합니다.'); return }
+    if (form.nickname.trim().length < 2) { setError('닉네임은 2자 이상으로 입력해주세요.'); return }
+    if (form.nickname.length > 20) { setError('닉네임은 20자 이하로 입력해주세요.'); return }
     setLoading(true)
     setError('')
     try {
@@ -58,25 +44,34 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="auth-container">
+    <div className="frame" data-screen="signup">
       <div className="auth-box">
-        <div className="auth-logo">🎵 멜로디약국</div>
-        <p className="auth-subtitle">가입하고 나만의 처방전을 받아보세요</p>
+        <div className="auth-mascot">
+          <img src={mascotPresent} alt="멜로디약국 약사" style={{ width: 140, height: 140, objectFit: 'contain' }} />
+        </div>
+        <div className="auth-header">
+          <div className="brand brand-lg" style={{ justifyContent: 'center' }}>
+            <span>멜로디약국</span>
+          </div>
+          <p className="auth-sub">가입하고 나만의 처방전을 받아보세요</p>
+        </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
           <input
+            className="input"
             type="email"
             placeholder="이메일"
             value={form.email}
-            onChange={e => handleChange('email', e.target.value)}
+            onChange={e => { setForm(p => ({ ...p, email: e.target.value })); setError('') }}
             required
           />
-          <div className="password-wrap">
+          <div className="pw-wrap">
             <input
+              className="input"
               type={showPw ? 'text' : 'password'}
               placeholder="비밀번호 (6자 이상)"
               value={form.password}
-              onChange={e => handleChange('password', e.target.value)}
+              onChange={e => { setForm(p => ({ ...p, password: e.target.value })); setError('') }}
               required
             />
             <button type="button" className="pw-toggle" onClick={() => setShowPw(p => !p)}>
@@ -84,21 +79,22 @@ export default function SignupPage() {
             </button>
           </div>
           <input
+            className="input"
             type="text"
             placeholder="닉네임 (2~20자)"
             value={form.nickname}
-            onChange={e => handleChange('nickname', e.target.value)}
+            onChange={e => { setForm(p => ({ ...p, nickname: e.target.value })); setError('') }}
             required
           />
           {error && <p className="auth-error">{error}</p>}
-          <button type="submit" disabled={loading}>
-            {loading ? '가입 중...' : '회원가입'}
+          <button type="submit" className="btn btn-block" disabled={loading}>
+            {loading ? '가입 중…' : '회원가입'}
           </button>
         </form>
 
-        <div className="auth-divider"><span>또는</span></div>
+        <div className="divider"><span>또는</span></div>
         <button type="button" className="kakao-btn" onClick={handleKakaoLogin}>
-          카카오로 시작하기
+          <span className="kakao-icon">💬</span> 카카오로 시작하기
         </button>
 
         <p className="auth-link">
