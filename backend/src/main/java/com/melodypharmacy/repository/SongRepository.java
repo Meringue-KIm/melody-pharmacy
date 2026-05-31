@@ -30,4 +30,11 @@ public interface SongRepository extends JpaRepository<Song, Long> {
     void updateViewCount(@Param("id") Long id,
                          @Param("viewCount") Long viewCount,
                          @Param("updatedAt") LocalDateTime updatedAt);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Song s SET s.youtubeUrl = :youtubeUrl, s.thumbnailUrl = :thumbnailUrl WHERE s.id = :id")
+    void updateYoutubeInfo(@Param("id") Long id,
+                           @Param("youtubeUrl") String youtubeUrl,
+                           @Param("thumbnailUrl") String thumbnailUrl);
 }
