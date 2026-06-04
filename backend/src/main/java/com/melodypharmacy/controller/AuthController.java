@@ -1,7 +1,6 @@
 package com.melodypharmacy.controller;
 
 import com.melodypharmacy.dto.LoginRequest;
-import com.melodypharmacy.dto.ResetPasswordRequest;
 import com.melodypharmacy.dto.SignupRequest;
 import com.melodypharmacy.dto.TokenResponse;
 import com.melodypharmacy.service.AuthService;
@@ -28,8 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordRequest request) {
-        authService.resetPassword(request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> resetPassword() {
+        return ResponseEntity.status(503).body("이메일 인증 서비스 준비 중입니다.");
     }
 }

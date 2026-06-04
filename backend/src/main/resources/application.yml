@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/melody_pharmacy?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root
-    password: DB_PASSWORD_REMOVED
+    url: ${DB_URL:jdbc:mysql://localhost:3306/melody_pharmacy?serverTimezone=Asia/Seoul&characterEncoding=UTF-8}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -18,23 +18,23 @@ server:
   port: 8081
 
 jwt:
-  secret: JWT_SECRET_REMOVED
-  expiration: 86400000  # 24시간 (밀리초)
+  secret: ${JWT_SECRET}
+  expiration: 86400000
 
 kakao:
-  client-id: KAKAO_CLIENT_ID_REMOVED
-  redirect-uri: http://localhost:5173/oauth/kakao
+  client-id: ${KAKAO_CLIENT_ID}
+  redirect-uri: ${KAKAO_REDIRECT_URI:http://localhost:5173/oauth/kakao}
 
 gemini:
-  api-key: GEMINI_API_KEY_REMOVED
+  api-key: ${GEMINI_API_KEY}
 
 youtube:
-  api-key: YOUTUBE_API_KEY_REMOVED
+  api-key: ${YOUTUBE_API_KEY}
 
 song-pool:
   target-size: 100
-  min-views-to-keep: 1000000   # 100만 뷰 미만이면 제거 후보
-  grace-period-days: 30        # 추가 후 이 기간은 제거 안 함
+  min-views-to-keep: 1000000
+  grace-period-days: 30
 
 admin:
-  secret-key: ADMIN_SECRET_REMOVED
+  secret-key: ${ADMIN_SECRET_KEY}
