@@ -1,6 +1,7 @@
 package com.melodypharmacy.controller;
 
 import com.melodypharmacy.dto.LoginRequest;
+import com.melodypharmacy.dto.ResetPasswordRequest;
 import com.melodypharmacy.dto.SignupRequest;
 import com.melodypharmacy.dto.TokenResponse;
 import com.melodypharmacy.service.AuthService;
@@ -24,5 +25,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordRequest request) {
+        authService.resetPassword(request);
+        return ResponseEntity.ok().build();
     }
 }

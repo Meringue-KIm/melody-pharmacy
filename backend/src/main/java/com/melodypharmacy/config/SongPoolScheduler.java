@@ -5,6 +5,7 @@ import com.melodypharmacy.entity.Situation;
 import com.melodypharmacy.repository.ConceptRepository;
 import com.melodypharmacy.repository.SituationRepository;
 import com.melodypharmacy.repository.SongTagRepository;
+import com.melodypharmacy.service.GeminiService;
 import com.melodypharmacy.service.SongPoolService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -79,41 +80,55 @@ public class SongPoolScheduler {
     }
 
     /**
-     * 곡 수 오름차순으로 조합을 정렬해 maxCalls 이내에서 Gemini 호출.
-     * 이미 가득 찬 조합은 건너뛰고, 한도 도달 시 즉시 중단.
+     * 매 호출마다 DB에서 현재 곡 수가 가장 적은 조합을 선택해 채운다.
+     * 이전 fill로 바뀐 곡 수를 즉시 반영하므로 항상 최솟값 조합을 우선 처리.
      */
     public int fillSorted(int maxCalls) {
-        record Combo(Situation sit, Concept con, long cnt) {}
-
         var situations = situationRepository.findAll();
         var concepts   = conceptRepository.findAll();
 
-        List<Combo> combos = new ArrayList<>();
-        for (var sit : situations) {
-            for (var con : concepts) {
-                long cnt = songTagRepository.countBySituationIdAndConceptId(sit.getId(), con.getId());
-                combos.add(new Combo(sit, con, cnt));
-            }
-        }
-        combos.sort(Comparator.comparingLong(Combo::cnt));
-
         int calls = 0;
-        for (var combo : combos) {
-            if (combo.cnt() >= targetSize) continue;
-            if (calls >= maxCalls) {
-                log.info("[스케줄러] 일일 한도 {}회 도달, 오늘 종료 (남은 조합 내일 처리)", maxCalls);
+        while (calls < maxCalls) {
+            // 매 회 DB 재조회 → 현재 곡이 가장 적고 목표 미달인 조합 선택
+            Situation minSit = null;
+            Concept   minCon = null;
+            long      minCnt = Long.MAX_VALUE;
+
+            for (var sit : situations) {
+                for (var con : concepts) {
+                    long cnt = songTagRepository.countBySituationIdAndConceptId(sit.getId(), con.getId());
+                    if (cnt < targetSize && cnt < minCnt) {
+                        minCnt = cnt;
+                        minSit = sit;
+                        minCon = con;
+                    }
+                }
+            }
+
+            if (minSit == null) {
+                log.info("[스케줄러] 모든 조합이 목표치({})에 도달했습니다.", targetSize);
                 break;
             }
+
+            log.info("[스케줄러] ({}/{}) [{}/{}] {}곡 → 채우기 시작",
+                    calls + 1, maxCalls, minSit.getName(), minCon.getName(), minCnt);
             try {
-                songPoolService.fillCombination(combo.sit(), combo.con());
+                songPoolService.fillCombination(minSit, minCon);
                 calls++;
                 Thread.sleep(4500);
+            } catch (GeminiService.QuotaExceededException e) {
+                log.warn("[스케줄러] Gemini 한도 초과 — 오늘 채우기 중단 ({}회 완료)", calls);
+                return calls;
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 return calls;
             } catch (Exception e) {
-                log.error("[{}/{}] 채우기 실패: {}", combo.sit().getName(), combo.con().getName(), e.getMessage());
+                log.error("[{}/{}] 채우기 실패: {}", minSit.getName(), minCon.getName(), e.getMessage());
             }
+        }
+
+        if (calls >= maxCalls) {
+            log.info("[스케줄러] 일일 한도 {}회 도달, 오늘 종료.", maxCalls);
         }
         return calls;
     }

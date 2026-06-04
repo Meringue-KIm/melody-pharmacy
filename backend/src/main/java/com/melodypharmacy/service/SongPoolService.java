@@ -22,6 +22,8 @@ public class SongPoolService {
     private final YouTubeService youTubeService;
     private final SongRepository songRepository;
     private final SongTagRepository songTagRepository;
+    private final UserSongRepository userSongRepository;
+    private final PlayHistoryRepository playHistoryRepository;
 
     @Value("${song-pool.target-size:100}")
     private int targetSize;
@@ -251,6 +253,50 @@ public class SongPoolService {
 
     public record YoutubeValidationResult(
             int total, int valid, int fixed, int failed, List<String> failedSongs) {}
+
+    /**
+     * YouTube ID 무효 곡을 song_tags에서 제거하고, 아무도 저장/재생한 적 없으면 songs에서도 삭제.
+     */
+    @Transactional
+    public RemoveInvalidResult removeInvalidSongs() {
+        List<Song> songs = songRepository.findAll();
+
+        List<String> allIds = songs.stream()
+                .map(s -> extractVideoId(s.getYoutubeUrl()))
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+
+        Set<String> validIds = youTubeService.batchGetViewCounts(allIds).keySet();
+
+        List<Song> invalids = songs.stream()
+                .filter(s -> {
+                    String vid = extractVideoId(s.getYoutubeUrl());
+                    return vid == null || !validIds.contains(vid);
+                })
+                .collect(Collectors.toList());
+
+        int removedTags = 0, removedSongs = 0, kept = 0;
+        for (Song song : invalids) {
+            songTagRepository.deleteBySong(song);
+            removedTags++;
+
+            boolean inUserSongs = userSongRepository.existsBySongId(song.getId());
+            boolean inHistory   = playHistoryRepository.existsBySongId(song.getId());
+            if (!inUserSongs && !inHistory) {
+                songRepository.delete(song);
+                removedSongs++;
+            } else {
+                kept++;
+            }
+        }
+
+        log.info("[Admin] 무효 곡 제거 완료: 총 {}곡 / song_tags {}건 삭제 / songs {}곡 삭제 / {}곡 유지(유저 데이터)",
+                invalids.size(), removedTags, removedSongs, kept);
+        return new RemoveInvalidResult(invalids.size(), removedTags, removedSongs, kept);
+    }
+
+    public record RemoveInvalidResult(int invalidCount, int removedTags, int removedSongs, int keptForUserData) {}
 
     private String extractVideoId(String url) {
         if (url == null) return null;

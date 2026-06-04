@@ -11,6 +11,8 @@ import java.util.Set;
 public interface PlayHistoryRepository extends JpaRepository<PlayHistory, Long> {
     List<PlayHistory> findByUserIdOrderByPlayedAtDesc(Long userId);
 
+    boolean existsBySongId(Long songId);
+
     @Query("SELECT DISTINCT ph.song.id FROM PlayHistory ph WHERE ph.user.id = :userId AND ph.playedAt >= :since")
     Set<Long> findRecentSongIdsByUserId(@Param("userId") Long userId, @Param("since") LocalDateTime since);
 }

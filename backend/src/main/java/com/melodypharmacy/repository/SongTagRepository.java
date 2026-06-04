@@ -15,6 +15,8 @@ public interface SongTagRepository extends JpaRepository<SongTag, Long> {
 
     boolean existsBySongAndSituationAndConcept(Song song, Situation situation, Concept concept);
 
+    void deleteBySong(Song song);
+
     long countBySituationIdAndConceptId(Long situationId, Long conceptId);
 
     @Query("SELECT st FROM SongTag st " +

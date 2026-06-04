@@ -19,8 +19,10 @@ export interface Song {
   youtubeUrl: string
   thumbnailUrl: string
   saved: boolean
+  savedSituationId?: number
   savedSituationIcon?: string
   savedSituationName?: string
+  savedConceptId?: number
   savedConceptIcon?: string
   savedConceptName?: string
 }

@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -18,6 +19,10 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class GeminiService {
+
+    public static class QuotaExceededException extends RuntimeException {
+        public QuotaExceededException() { super("Gemini API 일일 한도 초과"); }
+    }
 
     private static final String URL =
             "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=";
@@ -32,6 +37,7 @@ public class GeminiService {
         return apiKey != null && !apiKey.startsWith("YOUR_");
     }
 
+    /** @throws QuotaExceededException Gemini 일일 한도 초과 시 */
     public List<GeminiSongDto> recommend(String situation, String concept, int count) {
         if (!isConfigured()) {
             log.warn("Gemini API key not configured");
@@ -54,6 +60,13 @@ public class GeminiService {
                 URL + apiKey, new HttpEntity<>(body, headers), String.class);
 
             return parseResponse(res.getBody());
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.TOO_MANY_REQUESTS) {
+                log.warn("[Gemini] 429 한도 초과 — 오늘 채우기 중단");
+                throw new QuotaExceededException();
+            }
+            log.error("Gemini HTTP 오류 [{}/{}]: {}", situation, concept, e.getMessage());
+            return List.of();
         } catch (Exception e) {
             log.error("Gemini 호출 실패 [{}/{}]: {}", situation, concept, e.getMessage());
             return List.of();
@@ -62,13 +75,18 @@ public class GeminiService {
 
     private List<GeminiSongDto> parseResponse(String body) throws Exception {
         JsonNode root = objectMapper.readTree(body);
-        String text = root.path("candidates").get(0)
-                .path("content").path("parts").get(0)
-                .path("text").asText();
-
-        // 마크다운 코드블록 제거
+        JsonNode candidates = root.path("candidates");
+        if (!candidates.isArray() || candidates.isEmpty()) {
+            log.warn("[Gemini] candidates 비어있음. 응답: {}", body);
+            return List.of();
+        }
+        JsonNode parts = candidates.get(0).path("content").path("parts");
+        if (!parts.isArray() || parts.isEmpty()) {
+            log.warn("[Gemini] parts 비어있음");
+            return List.of();
+        }
+        String text = parts.get(0).path("text").asText();
         text = text.replaceAll("(?s)```json\\s*", "").replaceAll("```", "").trim();
-
         return objectMapper.readValue(text, new TypeReference<List<GeminiSongDto>>() {});
     }
 

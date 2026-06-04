@@ -57,6 +57,7 @@ export default function ProfilePage() {
       await updateNickname(trimmed)
       localStorage.setItem('nickname', trimmed)
       setNickname(trimmed)
+      window.dispatchEvent(new CustomEvent('nicknameChanged', { detail: trimmed }))
       setEditingNickname(false)
       setNicknameSuccess(true)
       showToast('닉네임이 변경됐어요!')

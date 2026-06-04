@@ -11,8 +11,10 @@ public class SongResponse {
     private final String youtubeUrl;
     private final String thumbnailUrl;
     private boolean saved;
+    private Long savedSituationId;
     private String savedSituationIcon;
     private String savedSituationName;
+    private Long savedConceptId;
     private String savedConceptIcon;
     private String savedConceptName;
 
@@ -25,9 +27,11 @@ public class SongResponse {
         this.saved = saved;
     }
 
-    public SongResponse withSavedContext(String sitIcon, String sitName, String conIcon, String conName) {
+    public SongResponse withSavedContext(Long sitId, String sitIcon, String sitName, Long conId, String conIcon, String conName) {
+        this.savedSituationId = sitId;
         this.savedSituationIcon = sitIcon;
         this.savedSituationName = sitName;
+        this.savedConceptId = conId;
         this.savedConceptIcon = conIcon;
         this.savedConceptName = conName;
         return this;

@@ -2,6 +2,7 @@ package com.melodypharmacy.service;
 
 import com.melodypharmacy.dto.ChangePasswordRequest;
 import com.melodypharmacy.dto.LoginRequest;
+import com.melodypharmacy.dto.ResetPasswordRequest;
 import com.melodypharmacy.dto.SignupRequest;
 import com.melodypharmacy.dto.TokenResponse;
 import com.melodypharmacy.entity.User;
@@ -55,6 +56,19 @@ public class AuthService {
             throw new IllegalArgumentException("현재 비밀번호가 올바르지 않아요.");
         }
         userRepository.updatePasswordByEmail(email, passwordEncoder.encode(request.getNewPassword()));
+    }
+
+    @Transactional
+    public void resetPassword(ResetPasswordRequest request) {
+        if (request.getNewPassword() == null || request.getNewPassword().length() < 6) {
+            throw new IllegalArgumentException("비밀번호는 6자 이상이어야 합니다.");
+        }
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일이에요."));
+        if (user.getKakaoId() != null) {
+            throw new IllegalArgumentException("카카오 계정은 비밀번호를 재설정할 수 없어요.");
+        }
+        userRepository.updatePasswordByEmail(request.getEmail(), passwordEncoder.encode(request.getNewPassword()));
     }
 
     @Transactional(readOnly = true)

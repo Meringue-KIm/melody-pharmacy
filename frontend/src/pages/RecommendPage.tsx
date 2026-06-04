@@ -38,13 +38,13 @@ export default function RecommendPage() {
   const [excludePlayed, setExcludePlayed] = useState(false)
   const [autoPlay, setAutoPlay]   = useState(false)
   const [savingIds, setSavingIds] = useState<Set<number>>(new Set())
-  const [savedCount, setSavedCount] = useState(0)
+  const [, setSavedCount] = useState(0)
   const [toast, setToast]         = useState('')
   const autoplaySongsRef = useRef<Song[]>([])
   const shareCardRef = useRef<HTMLDivElement>(null)
 
   const today = new Date().toISOString().slice(0, 10).replace(/-/g, '.')
-  const nickname = localStorage.getItem('nickname') || '환자'
+  const [nickname, setNickname] = useState(localStorage.getItem('nickname') || '환자')
 
   const rxTagline = (() => {
     if (!situation || !concept) return '지금 기분에 딱 맞는 음악 처방'
@@ -78,6 +78,22 @@ export default function RecommendPage() {
     loadRecommend()
     loadHistory()
   }, [situationId, conceptId])
+
+  // 닉네임 변경 이벤트 수신
+  useEffect(() => {
+    const handler = (e: Event) => setNickname((e as CustomEvent<string>).detail)
+    window.addEventListener('nicknameChanged', handler)
+    return () => window.removeEventListener('nicknameChanged', handler)
+  }, [])
+
+  // 탭 전환 후 돌아올 때 저장 카운트 재조회
+  useEffect(() => {
+    const onVisible = () => {
+      if (!document.hidden) getSaved().then(res => setSavedCount(res.data.length)).catch(() => {})
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => document.removeEventListener('visibilitychange', onVisible)
+  }, [])
 
   const loadRecommend = async (exclude = excludePlayed) => {
     setPlayingId(null)
@@ -117,8 +133,10 @@ export default function RecommendPage() {
       setSongs(toggle)
       setHistorySongs(toggle)
       showToast(song.saved ? '저장 해제됐어요' : '저장됐어요 ♥')
-    } catch {
-      showToast('저장에 실패했어요. 다시 시도해주세요.')
+    } catch (err: any) {
+      if (err.response?.status === 409) showToast('이미 저장된 곡이에요.')
+      else if (!err.response) showToast('네트워크 오류예요. 연결을 확인해주세요.')
+      else showToast('저장에 실패했어요.')
     } finally {
       setSavingIds(prev => { const n = new Set(prev); n.delete(song.id); return n })
     }
@@ -218,7 +236,6 @@ export default function RecommendPage() {
       {toast && <div className="toast">{toast}</div>}
 
       <AppHeader
-        savedCount={savedCount}
         leftSlot={
           <button className="iconbtn" onClick={() => navigate(`/concept?situationId=${situationId}`)}>
             ← 분위기 바꾸기
@@ -345,7 +362,7 @@ export default function RecommendPage() {
           <div className="youtube-embed">
             <iframe
               key={playingSong.id}
-              src={`https://www.youtube.com/embed/${getVideoId(playingSong.youtubeUrl)}?enablejsapi=1`}
+              src={`https://www.youtube.com/embed/${getVideoId(playingSong.youtubeUrl)}?enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`}
               title={playingSong.title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -441,8 +458,9 @@ export default function RecommendPage() {
               <span
                 className={`save-btn ${song.saved ? 'saved' : ''}`}
                 onClick={e => handleSave(song, e)}
+                style={savingIds.has(song.id) ? { opacity: 0.4, cursor: 'wait' } : undefined}
               >
-                {song.saved ? '♥' : '♡'}
+                {savingIds.has(song.id) ? '…' : song.saved ? '♥' : '♡'}
               </span>
               <span className="share-btn" onClick={e => handleShare(song, e)}>📤</span>
             </div>

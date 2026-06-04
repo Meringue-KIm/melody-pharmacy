@@ -14,6 +14,8 @@ public interface UserSongRepository extends JpaRepository<UserSong, Long> {
     Optional<UserSong> findByUserIdAndSongId(Long userId, Long songId);
     boolean existsByUserIdAndSongId(Long userId, Long songId);
 
+    boolean existsBySongId(Long songId);
+
     @Query("SELECT us.song.id FROM UserSong us WHERE us.user.id = :userId")
     Set<Long> findSongIdsByUserId(@Param("userId") Long userId);
 }

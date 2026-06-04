@@ -105,8 +105,8 @@ public class SongService {
                     SongResponse resp = new SongResponse(us.getSong(), true);
                     if (us.getSituation() != null && us.getConcept() != null) {
                         return resp.withSavedContext(
-                                us.getSituation().getIcon(), us.getSituation().getName(),
-                                us.getConcept().getIcon(),   us.getConcept().getName());
+                                us.getSituation().getId(),   us.getSituation().getIcon(), us.getSituation().getName(),
+                                us.getConcept().getId(),     us.getConcept().getIcon(),   us.getConcept().getName());
                     }
                     return resp;
                 })
@@ -116,12 +116,24 @@ public class SongService {
     @Transactional(readOnly = true)
     public List<SongResponse> getHistory(Long userId) {
         Set<Long> savedIds = userSongRepository.findSongIdsByUserId(userId);
-        return playHistoryRepository.findByUserIdOrderByPlayedAtDesc(userId)
-                .stream()
-                .map(h -> h.getSong())
-                .distinct()
-                .limit(20)
-                .map(song -> new SongResponse(song, savedIds.contains(song.getId())))
+
+        // 곡별 가장 최근 재생 기록 유지 (순서: 최신순)
+        Map<Long, PlayHistory> latestBySong = new LinkedHashMap<>();
+        for (PlayHistory h : playHistoryRepository.findByUserIdOrderByPlayedAtDesc(userId)) {
+            latestBySong.putIfAbsent(h.getSong().getId(), h);
+            if (latestBySong.size() >= 20) break;
+        }
+
+        return latestBySong.values().stream()
+                .map(h -> {
+                    SongResponse resp = new SongResponse(h.getSong(), savedIds.contains(h.getSong().getId()));
+                    if (h.getSituation() != null && h.getConcept() != null) {
+                        resp.withSavedContext(
+                                h.getSituation().getId(),  h.getSituation().getIcon(), h.getSituation().getName(),
+                                h.getConcept().getId(),    h.getConcept().getIcon(),   h.getConcept().getName());
+                    }
+                    return resp;
+                })
                 .toList();
     }
 

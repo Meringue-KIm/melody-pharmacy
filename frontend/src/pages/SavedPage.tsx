@@ -15,7 +15,14 @@ function getVideoId(url: string) {
 export default function SavedPage() {
   const navigate = useNavigate()
   const [tab, setTab] = useState<Tab>('saved')
-  const [filterSit, setFilterSit] = useState<string | null>(null)
+  const [filterSit, setFilterSit] = useState<string | null>(() =>
+    sessionStorage.getItem('savedFilterSit') || null
+  )
+  const updateFilter = (sit: string | null) => {
+    setFilterSit(sit)
+    if (sit) sessionStorage.setItem('savedFilterSit', sit)
+    else sessionStorage.removeItem('savedFilterSit')
+  }
   const [savedSongs, setSavedSongs] = useState<Song[]>([])
   const [historySongs, setHistorySongs] = useState<Song[]>([])
   const [loading, setLoading] = useState(true)
@@ -99,13 +106,15 @@ export default function SavedPage() {
         setHistorySongs(prev => prev.map(s => s.id === song.id ? { ...s, saved: false } : s))
         showToast('저장 해제됐어요')
       } else {
-        await saveSong(song.id)
+        await saveSong(song.id, song.savedSituationId, song.savedConceptId)
         setSavedSongs(prev => [...prev, { ...song, saved: true }])
         setHistorySongs(prev => prev.map(s => s.id === song.id ? { ...s, saved: true } : s))
         showToast('저장됐어요 ♥')
       }
-    } catch {
-      showToast('저장에 실패했어요.')
+    } catch (err: any) {
+      if (err.response?.status === 409) showToast('이미 저장된 곡이에요.')
+      else if (!err.response) showToast('네트워크 오류예요. 연결을 확인해주세요.')
+      else showToast('저장에 실패했어요.')
     } finally {
       setSavingIds(prev => { const n = new Set(prev); n.delete(song.id); return n })
     }
@@ -146,7 +155,7 @@ export default function SavedPage() {
           <div className="youtube-embed">
             <iframe
               key={playingSong.id}
-              src={`https://www.youtube.com/embed/${getVideoId(playingSong.youtubeUrl)}?enablejsapi=1`}
+              src={`https://www.youtube.com/embed/${getVideoId(playingSong.youtubeUrl)}?enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`}
               title={playingSong.title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -197,14 +206,14 @@ export default function SavedPage() {
               <button
                 className="chip"
                 style={{ background: !filterSit ? 'var(--accent)' : undefined, color: !filterSit ? 'white' : undefined }}
-                onClick={() => setFilterSit(null)}
+                onClick={() => updateFilter(null)}
               >전체 {savedSongs.length}</button>
               {situations.map(sit => (
                 <button
                   key={sit}
                   className="chip"
                   style={{ background: filterSit === sit ? 'var(--accent)' : undefined, color: filterSit === sit ? 'white' : undefined }}
-                  onClick={() => setFilterSit(sit)}
+                  onClick={() => updateFilter(sit)}
                 >{sit}</button>
               ))}
             </div>
@@ -236,7 +245,10 @@ export default function SavedPage() {
                   <span className={`play-btn ${playingId === song.id ? 'playing' : ''}`}>
                     {playingId === song.id ? '❚❚' : '▶'}
                   </span>
-                  <span className="save-btn saved" onClick={e => handleSave(song, e)}>♥</span>
+                  <span className="save-btn saved" onClick={e => handleSave(song, e)}
+                    style={savingIds.has(song.id) ? { opacity: 0.4, cursor: 'wait' } : undefined}>
+                    {savingIds.has(song.id) ? '…' : '♥'}
+                  </span>
                   <span className="share-btn" onClick={e => handleShare(song, e)}>📤</span>
                 </div>
               </button>
@@ -281,8 +293,9 @@ export default function SavedPage() {
                 <span
                   className={`save-btn ${song.saved ? 'saved' : ''}`}
                   onClick={e => handleSave(song, e)}
+                  style={savingIds.has(song.id) ? { opacity: 0.4, cursor: 'wait' } : undefined}
                 >
-                  {song.saved ? '♥' : '♡'}
+                  {savingIds.has(song.id) ? '…' : song.saved ? '♥' : '♡'}
                 </span>
                 <span className="share-btn" onClick={e => handleShare(song, e)}>📤</span>
               </div>
