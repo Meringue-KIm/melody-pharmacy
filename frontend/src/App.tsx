@@ -10,10 +10,11 @@ import RecommendPage from './pages/RecommendPage'
 import SavedPage from './pages/SavedPage'
 import ProfilePage from './pages/ProfilePage'
 import KakaoCallbackPage from './pages/KakaoCallbackPage'
+import { isGuest } from './utils/guestMode'
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const token = localStorage.getItem('token')
-  return token ? <>{children}</> : <Navigate to="/login" replace />
+  return (token || isGuest()) ? <>{children}</> : <Navigate to="/login" replace />
 }
 
 function PublicOnlyRoute({ children }: { children: React.ReactNode }) {

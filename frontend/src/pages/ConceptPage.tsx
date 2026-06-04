@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { getConcepts, getSituations, getComboCounts } from '../api/songApi'
+import { guestGetConcepts, guestGetSituations, guestGetComboCounts } from '../api/guestApi'
+import { isGuest } from '../utils/guestMode'
 import type { Concept, Situation } from '../api/songApi'
 import AppHeader from '../components/AppHeader'
 import Doodle from '../components/Doodle'
@@ -24,7 +26,10 @@ export default function ConceptPage() {
   const load = () => {
     setLoading(true)
     setError(false)
-    Promise.all([getSituations(), getConcepts(), getComboCounts(situationId)])
+    Promise.all(isGuest()
+      ? [guestGetSituations(), guestGetConcepts(), guestGetComboCounts(situationId)]
+      : [getSituations(), getConcepts(), getComboCounts(situationId)]
+    )
       .then(([sitRes, conRes, countRes]) => {
         const found = sitRes.data.find(s => s.id === situationId)
         if (!found) { navigate('/'); return }

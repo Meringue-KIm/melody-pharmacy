@@ -2,6 +2,8 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import html2canvas from 'html2canvas'
 import { recommend, saveSong, unsaveSong, recordPlay, getSituations, getConcepts, getHistory, getSaved } from '../api/songApi'
+import { guestRecommend, guestSaveSong, guestUnsaveSong, guestRecordPlay, guestGetSituations, guestGetConcepts, guestGetHistory, guestGetSaved } from '../api/guestApi'
+import { isGuest } from '../utils/guestMode'
 import type { Song, Situation, Concept } from '../api/songApi'
 import AppHeader from '../components/AppHeader'
 
@@ -72,9 +74,10 @@ export default function RecommendPage() {
 
   useEffect(() => {
     if (!situationId || !conceptId) { navigate('/'); return }
-    getSituations().then(res => setSituation(res.data.find(s => s.id === situationId) ?? null))
-    getConcepts().then(res => setConcept(res.data.find(c => c.id === conceptId) ?? null))
-    getSaved().then(res => setSavedCount(res.data.length)).catch(() => {})
+    const api = isGuest() ? { getSituations: guestGetSituations, getConcepts: guestGetConcepts, getSaved: guestGetSaved } : { getSituations, getConcepts, getSaved }
+    api.getSituations().then(res => setSituation(res.data.find((s: any) => s.id === situationId) ?? null))
+    api.getConcepts().then(res => setConcept(res.data.find((c: any) => c.id === conceptId) ?? null))
+    api.getSaved().then(res => setSavedCount(res.data.length)).catch(() => {})
     loadRecommend()
     loadHistory()
   }, [situationId, conceptId])
@@ -100,7 +103,7 @@ export default function RecommendPage() {
     setLoading(true)
     setError(false)
     try {
-      const res = await recommend(situationId, conceptId, exclude)
+      const res = await (isGuest() ? guestRecommend(situationId, conceptId) : recommend(situationId, conceptId, exclude))
       setSongs(shuffle(res.data))
     } catch {
       setError(true)
@@ -111,7 +114,7 @@ export default function RecommendPage() {
   }
 
   const loadHistory = async () => {
-    try { const r = await getHistory(); setHistorySongs(r.data) } catch {}
+    try { const r = await (isGuest() ? guestGetHistory() : getHistory()); setHistorySongs(r.data) } catch {}
   }
 
   const handleShuffle = () => setSongs(prev => shuffle(prev))
@@ -122,10 +125,10 @@ export default function RecommendPage() {
     setSavingIds(prev => new Set(prev).add(song.id))
     try {
       if (song.saved) {
-        await unsaveSong(song.id)
+        await (isGuest() ? guestUnsaveSong(song.id) : unsaveSong(song.id))
         setSavedCount(c => { const n = Math.max(0, c - 1); window.dispatchEvent(new CustomEvent('savedCountChanged', { detail: n })); return n })
       } else {
-        await saveSong(song.id, situationId, conceptId)
+        await (isGuest() ? guestSaveSong(song.id, situationId, conceptId) : saveSong(song.id, situationId, conceptId))
         setSavedCount(c => { const n = c + 1; window.dispatchEvent(new CustomEvent('savedCountChanged', { detail: n })); return n })
       }
       const toggle = (list: Song[]) =>
@@ -149,7 +152,7 @@ export default function RecommendPage() {
     setPlayingId(prev => prev === song.id ? null : song.id)
     if (isOpening) {
       autoplaySongsRef.current = currentSongs
-      recordPlay(song.id, situationId, conceptId)
+      isGuest() ? guestRecordPlay(song.id, situationId, conceptId) : recordPlay(song.id, situationId, conceptId)
       setHistorySongs(prev => [song, ...prev.filter(s => s.id !== song.id)].slice(0, 20))
       setTimeout(() => {
         document.getElementById(`song-${song.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })

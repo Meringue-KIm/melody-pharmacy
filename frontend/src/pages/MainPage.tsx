@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getSituations } from '../api/songApi'
+import { guestGetSituations } from '../api/guestApi'
+import { isGuest } from '../utils/guestMode'
 import type { Situation } from '../api/songApi'
 import AppHeader from '../components/AppHeader'
 import Doodle from '../components/Doodle'
@@ -41,7 +43,7 @@ export default function MainPage() {
   const load = () => {
     setLoading(true)
     setError(false)
-    getSituations()
+    (isGuest() ? guestGetSituations() : getSituations())
       .then(res => setSituations(res.data))
       .catch(() => setError(true))
       .finally(() => setLoading(false))

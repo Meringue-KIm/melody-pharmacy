@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { login } from '../api/authApi'
+import { enterGuestMode } from '../utils/guestMode'
 import mascotPrescribe from '../assets/mascot-prescribe.png'
 
 const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID
@@ -112,6 +113,16 @@ export default function LoginPage() {
         <p className="auth-link">
           계정이 없으신가요? <Link to="/signup">회원가입</Link>
         </p>
+
+        <div style={{ marginTop: 16, textAlign: 'center' }}>
+          <button
+            type="button"
+            onClick={() => { enterGuestMode(); navigate('/') }}
+            style={{ background: 'none', border: 'none', color: 'var(--muted)', fontSize: 13, cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: 3 }}
+          >
+            로그인 없이 둘러보기 →
+          </button>
+        </div>
       </div>
     </div>
   )

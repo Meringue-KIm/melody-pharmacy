@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { getSaved } from '../api/songApi'
+import { guestGetSaved } from '../api/guestApi'
+import { isGuest } from '../utils/guestMode'
 
 export default function BottomNav() {
   const navigate = useNavigate()
@@ -12,7 +14,7 @@ export default function BottomNav() {
   const isProfile = pathname === '/profile'
 
   useEffect(() => {
-    getSaved().then(r => setSavedCount(r.data.length)).catch(() => {})
+    (isGuest() ? guestGetSaved() : getSaved()).then(r => setSavedCount(r.data.length)).catch(() => {})
   }, [])
 
   useEffect(() => {

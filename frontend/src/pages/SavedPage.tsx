@@ -1,6 +1,8 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getSaved, getHistory, saveSong, unsaveSong, recordPlay } from '../api/songApi'
+import { guestGetSaved, guestGetHistory, guestSaveSong, guestUnsaveSong, guestRecordPlay } from '../api/guestApi'
+import { isGuest } from '../utils/guestMode'
 import type { Song } from '../api/songApi'
 import AppHeader from '../components/AppHeader'
 import mascotLab from '../assets/mascot-lab.png'
@@ -45,7 +47,7 @@ export default function SavedPage() {
   const load = () => {
     setLoading(true)
     setError(false)
-    Promise.all([getSaved(), getHistory()])
+    Promise.all(isGuest() ? [guestGetSaved(), guestGetHistory()] : [getSaved(), getHistory()])
       .then(([s, h]) => { setSavedSongs(s.data); setHistorySongs(h.data) })
       .catch(() => setError(true))
       .finally(() => setLoading(false))
@@ -67,7 +69,7 @@ export default function SavedPage() {
     setPlayingId(prev => prev === song.id ? null : song.id)
     if (isOpening) {
       autoplaySongsRef.current = currentSongs
-      recordPlay(song.id)
+      isGuest() ? guestRecordPlay(song.id) : recordPlay(song.id)
       setHistorySongs(prev => [song, ...prev.filter(s => s.id !== song.id)].slice(0, 20))
       setTimeout(() => {
         document.getElementById(`song-${song.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
@@ -105,7 +107,7 @@ export default function SavedPage() {
     setSavingIds(prev => new Set(prev).add(song.id))
     try {
       if (song.saved) {
-        await unsaveSong(song.id)
+        await (isGuest() ? guestUnsaveSong(song.id) : unsaveSong(song.id))
         setSavedSongs(prev => {
           const next = prev.filter(s => s.id !== song.id)
           window.dispatchEvent(new CustomEvent('savedCountChanged', { detail: next.length }))
@@ -114,7 +116,7 @@ export default function SavedPage() {
         setHistorySongs(prev => prev.map(s => s.id === song.id ? { ...s, saved: false } : s))
         showToast('저장 해제됐어요', song)
       } else {
-        await saveSong(song.id, song.savedSituationId, song.savedConceptId)
+        await (isGuest() ? guestSaveSong(song.id, song.savedSituationId, song.savedConceptId) : saveSong(song.id, song.savedSituationId, song.savedConceptId))
         setSavedSongs(prev => {
           const next = [...prev, { ...song, saved: true }]
           window.dispatchEvent(new CustomEvent('savedCountChanged', { detail: next.length }))

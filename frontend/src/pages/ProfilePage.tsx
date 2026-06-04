@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { changePassword, updateNickname } from '../api/authApi'
 import { getSaved, getHistory } from '../api/songApi'
+import { isGuest, exitGuestMode, getGuestSaved, getGuestHistory } from '../utils/guestMode'
 import { useTheme, type ThemeName } from '../context/ThemeContext'
 import AppHeader from '../components/AppHeader'
 import MascotHead from '../components/MascotHead'
@@ -44,8 +45,13 @@ export default function ProfilePage() {
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(''), 2000) }
 
   useEffect(() => {
-    getSaved().then(r => setSavedCount(r.data.length)).catch(() => {})
-    getHistory().then(r => setHistoryCount(r.data.length)).catch(() => {})
+    if (isGuest()) {
+      setSavedCount(getGuestSaved().length)
+      setHistoryCount(getGuestHistory().length)
+    } else {
+      getSaved().then(r => setSavedCount(r.data.length)).catch(() => {})
+      getHistory().then(r => setHistoryCount(r.data.length)).catch(() => {})
+    }
   }, [])
 
   const handleNicknameSave = async () => {
@@ -94,6 +100,41 @@ export default function ProfilePage() {
     localStorage.removeItem('lastSelection')
     localStorage.removeItem('provider')
     navigate('/login')
+  }
+
+  if (isGuest()) {
+    return (
+      <div className="frame" data-screen="profile">
+        <AppHeader />
+        <section className="hero">
+          <p className="eyebrow">Guest · 게스트</p>
+          <h1 className="h1">둘러보는 중이에요</h1>
+          <p className="subtitle">로그인하면 처방 기록이 저장되고<br />어디서든 약장을 확인할 수 있어요.</p>
+        </section>
+        <div className="section" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div className="stat-grid">
+            <div className="stat">
+              <p className="stat-value">{historyCount}<span>곡</span></p>
+              <p className="stat-label">들은 노래</p>
+            </div>
+            <div className="stat">
+              <p className="stat-value">{savedCount}<span>곡</span></p>
+              <p className="stat-label">저장한 노래</p>
+            </div>
+          </div>
+          <button className="btn btn-block" onClick={() => { exitGuestMode(); navigate('/login') }}>
+            로그인하고 기록 저장하기
+          </button>
+          <button
+            className="btn-ghost-sm"
+            style={{ width: '100%', padding: '12px 0' }}
+            onClick={() => navigate('/signup')}
+          >
+            회원가입
+          </button>
+        </div>
+      </div>
+    )
   }
 
   return (
