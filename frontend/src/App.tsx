@@ -16,6 +16,11 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
   return token ? <>{children}</> : <Navigate to="/login" replace />
 }
 
+function PublicOnlyRoute({ children }: { children: React.ReactNode }) {
+  const token = localStorage.getItem('token')
+  return token ? <Navigate to="/" replace /> : <>{children}</>
+}
+
 const NO_NAV = ['/login', '/signup', '/forgot-password', '/oauth/kakao']
 
 function AppLayout({ children }: { children: React.ReactNode }) {
@@ -36,8 +41,8 @@ export default function App() {
         <BrowserRouter>
           <AppLayout>
             <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/signup" element={<SignupPage />} />
+              <Route path="/login" element={<PublicOnlyRoute><LoginPage /></PublicOnlyRoute>} />
+              <Route path="/signup" element={<PublicOnlyRoute><SignupPage /></PublicOnlyRoute>} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/" element={<PrivateRoute><MainPage /></PrivateRoute>} />
               <Route path="/concept" element={<PrivateRoute><ConceptPage /></PrivateRoute>} />

@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class SongService {
     private final SongRepository songRepository;
     private final SituationRepository situationRepository;
     private final ConceptRepository conceptRepository;
+    private final SongTagRepository songTagRepository;
     private final UserRepository userRepository;
     private final UserSongRepository userSongRepository;
     private final PlayHistoryRepository playHistoryRepository;
@@ -135,6 +137,15 @@ public class SongService {
                     return resp;
                 })
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public Map<Long, Long> getComboCountsBySituation(Long situationId) {
+        return conceptRepository.findAll().stream()
+                .collect(Collectors.toMap(
+                        Concept::getId,
+                        c -> songTagRepository.countBySituationIdAndConceptId(situationId, c.getId())
+                ));
     }
 
     @Transactional

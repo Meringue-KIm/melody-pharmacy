@@ -52,3 +52,6 @@ export const recordPlay = (songId: number, situationId?: number, conceptId?: num
 
 export const getHistory = () =>
   api.get<Song[]>('/api/songs/history')
+
+export const getComboCounts = (situationId: number) =>
+  api.get<Record<number, number>>('/api/songs/combo-counts', { params: { situationId } })

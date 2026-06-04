@@ -63,7 +63,7 @@ export default function LoginPage() {
         <div className="auth-features">
           <span>💊 기분별 처방</span>
           <span className="dot">·</span>
-          <span>♪ 큐레이션 50곡</span>
+          <span>♪ 200곡+ 큐레이션</span>
           <span className="dot">·</span>
           <span>♡ 저장 &amp; 기록</span>
         </div>

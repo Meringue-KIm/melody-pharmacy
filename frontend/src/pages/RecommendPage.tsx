@@ -123,10 +123,10 @@ export default function RecommendPage() {
     try {
       if (song.saved) {
         await unsaveSong(song.id)
-        setSavedCount(c => Math.max(0, c - 1))
+        setSavedCount(c => { const n = Math.max(0, c - 1); window.dispatchEvent(new CustomEvent('savedCountChanged', { detail: n })); return n })
       } else {
         await saveSong(song.id, situationId, conceptId)
-        setSavedCount(c => c + 1)
+        setSavedCount(c => { const n = c + 1; window.dispatchEvent(new CustomEvent('savedCountChanged', { detail: n })); return n })
       }
       const toggle = (list: Song[]) =>
         list.map(s => s.id === song.id ? { ...s, saved: !s.saved } : s)
@@ -384,6 +384,11 @@ export default function RecommendPage() {
           </button>
         </div>
 
+        {tab === 'recommend' && songs.length > 0 && songs.length < 12 && (
+          <div style={{ width: '100%', fontSize: 12, color: 'var(--muted)', padding: '6px 10px', background: 'var(--surface-2)', borderRadius: 8, marginBottom: 4 }}>
+            🌱 이 처방전은 계속 채워지고 있어요. 더 다양한 곡이 곧 추가돼요.
+          </div>
+        )}
         {tab === 'recommend' && (
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             <button className="btn-ghost-sm" disabled={loading} onClick={() => loadRecommend()} title="새 처방전">🔄</button>

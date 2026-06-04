@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { getConcepts, getSituations } from '../api/songApi'
+import { getConcepts, getSituations, getComboCounts } from '../api/songApi'
 import type { Concept, Situation } from '../api/songApi'
 import AppHeader from '../components/AppHeader'
 import Doodle from '../components/Doodle'
@@ -12,6 +12,7 @@ export default function ConceptPage() {
 
   const [situation, setSituation] = useState<Situation | null>(null)
   const [concepts, setConcepts] = useState<Concept[]>([])
+  const [comboCounts, setComboCounts] = useState<Record<number, number>>({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
 
@@ -23,12 +24,13 @@ export default function ConceptPage() {
   const load = () => {
     setLoading(true)
     setError(false)
-    Promise.all([getSituations(), getConcepts()])
-      .then(([sitRes, conRes]) => {
+    Promise.all([getSituations(), getConcepts(), getComboCounts(situationId)])
+      .then(([sitRes, conRes, countRes]) => {
         const found = sitRes.data.find(s => s.id === situationId)
         if (!found) { navigate('/'); return }
         setSituation(found)
         setConcepts(conRes.data)
+        setComboCounts(countRes.data)
       })
       .catch(() => setError(true))
       .finally(() => setLoading(false))
@@ -86,6 +88,11 @@ export default function ConceptPage() {
                 <button key={c.id} className="tile" onClick={() => handleSelect(c)}>
                   <Doodle name={c.icon} size={52} />
                   <span className="tile-name">{c.name}</span>
+                  {comboCounts[c.id] !== undefined && (
+                    <span style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>
+                      {comboCounts[c.id]}곡
+                    </span>
+                  )}
                 </button>
               ))
           }

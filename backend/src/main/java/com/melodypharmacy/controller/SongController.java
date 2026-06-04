@@ -63,6 +63,12 @@ public class SongController {
         return ResponseEntity.ok(songService.getHistory(userId));
     }
 
+    @GetMapping("/combo-counts")
+    public ResponseEntity<java.util.Map<Long, Long>> comboCounts(
+            @RequestParam Long situationId) {
+        return ResponseEntity.ok(songService.getComboCountsBySituation(situationId));
+    }
+
     @PostMapping("/{songId}/play")
     public ResponseEntity<Void> recordPlay(
             @PathVariable Long songId,

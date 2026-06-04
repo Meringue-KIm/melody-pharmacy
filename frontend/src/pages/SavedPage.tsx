@@ -106,12 +106,20 @@ export default function SavedPage() {
     try {
       if (song.saved) {
         await unsaveSong(song.id)
-        setSavedSongs(prev => prev.filter(s => s.id !== song.id))
+        setSavedSongs(prev => {
+          const next = prev.filter(s => s.id !== song.id)
+          window.dispatchEvent(new CustomEvent('savedCountChanged', { detail: next.length }))
+          return next
+        })
         setHistorySongs(prev => prev.map(s => s.id === song.id ? { ...s, saved: false } : s))
         showToast('저장 해제됐어요', song)
       } else {
         await saveSong(song.id, song.savedSituationId, song.savedConceptId)
-        setSavedSongs(prev => [...prev, { ...song, saved: true }])
+        setSavedSongs(prev => {
+          const next = [...prev, { ...song, saved: true }]
+          window.dispatchEvent(new CustomEvent('savedCountChanged', { detail: next.length }))
+          return next
+        })
         setHistorySongs(prev => prev.map(s => s.id === song.id ? { ...s, saved: true } : s))
         showToast('저장됐어요 ♥')
       }
