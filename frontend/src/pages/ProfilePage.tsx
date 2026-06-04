@@ -87,6 +87,7 @@ export default function ProfilePage() {
   }
 
   const handleLogout = () => {
+    if (!window.confirm('로그아웃 할까요?')) return
     localStorage.removeItem('token')
     localStorage.removeItem('nickname')
     localStorage.removeItem('lastSelections')

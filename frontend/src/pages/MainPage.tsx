@@ -12,7 +12,7 @@ interface LastSelection {
 
 export default function MainPage() {
   const navigate = useNavigate()
-  const nickname = localStorage.getItem('nickname') || '환자'
+  const [nickname, setNickname] = useState(localStorage.getItem('nickname') || '환자')
   const [situations, setSituations] = useState<Situation[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -20,6 +20,12 @@ export default function MainPage() {
 
   const today = new Date().toISOString().slice(2, 10).replace(/-/g, '.')
   const rxNo = String(Date.now()).slice(-6)
+
+  useEffect(() => {
+    const handler = (e: Event) => setNickname((e as CustomEvent<string>).detail)
+    window.addEventListener('nicknameChanged', handler)
+    return () => window.removeEventListener('nicknameChanged', handler)
+  }, [])
 
   useEffect(() => {
     const saved = localStorage.getItem('lastSelections')

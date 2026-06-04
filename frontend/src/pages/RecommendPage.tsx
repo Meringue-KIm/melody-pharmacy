@@ -35,7 +35,7 @@ export default function RecommendPage() {
   const [loading, setLoading]     = useState(false)
   const [error, setError]         = useState(false)
   const [playingId, setPlayingId] = useState<number | null>(null)
-  const [excludePlayed, setExcludePlayed] = useState(false)
+  const [excludePlayed, setExcludePlayed] = useState(() => sessionStorage.getItem('excludePlayed') === 'true')
   const [autoPlay, setAutoPlay]   = useState(false)
   const [savingIds, setSavingIds] = useState<Set<number>>(new Set())
   const [, setSavedCount] = useState(0)
@@ -226,6 +226,7 @@ export default function RecommendPage() {
   const handleToggleExclude = () => {
     const next = !excludePlayed
     setExcludePlayed(next)
+    sessionStorage.setItem('excludePlayed', String(next))
     loadRecommend(next)
   }
 

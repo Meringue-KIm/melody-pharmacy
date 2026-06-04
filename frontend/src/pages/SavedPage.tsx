@@ -31,11 +31,15 @@ export default function SavedPage() {
   const [autoPlay, setAutoPlay] = useState(false)
   const [savingIds, setSavingIds] = useState<Set<number>>(new Set())
   const [toast, setToast] = useState('')
+  const [undoSong, setUndoSong] = useState<Song | null>(null)
   const autoplaySongsRef = useRef<Song[]>([])
+  const undoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const showToast = (msg: string) => {
+  const showToast = (msg: string, undo?: Song) => {
     setToast(msg)
-    setTimeout(() => setToast(''), 2000)
+    setUndoSong(undo ?? null)
+    if (undoTimerRef.current) clearTimeout(undoTimerRef.current)
+    undoTimerRef.current = setTimeout(() => { setToast(''); setUndoSong(null) }, 3000)
   }
 
   const load = () => {
@@ -104,7 +108,7 @@ export default function SavedPage() {
         await unsaveSong(song.id)
         setSavedSongs(prev => prev.filter(s => s.id !== song.id))
         setHistorySongs(prev => prev.map(s => s.id === song.id ? { ...s, saved: false } : s))
-        showToast('저장 해제됐어요')
+        showToast('저장 해제됐어요', song)
       } else {
         await saveSong(song.id, song.savedSituationId, song.savedConceptId)
         setSavedSongs(prev => [...prev, { ...song, saved: true }])
@@ -127,9 +131,32 @@ export default function SavedPage() {
     else { await navigator.clipboard.writeText(song.youtubeUrl); showToast('링크가 복사됐어요!') }
   }
 
+  const handleUndo = async () => {
+    if (!undoSong) return
+    setUndoSong(null)
+    setToast('')
+    try {
+      await saveSong(undoSong.id, undoSong.savedSituationId, undoSong.savedConceptId)
+      setSavedSongs(prev => [...prev, { ...undoSong, saved: true }])
+      setHistorySongs(prev => prev.map(s => s.id === undoSong.id ? { ...s, saved: true } : s))
+      showToast('다시 저장됐어요 ♥')
+    } catch {
+      showToast('복구에 실패했어요.')
+    }
+  }
+
   return (
     <div className="frame" data-screen="saved">
-      {toast && <div className="toast">{toast}</div>}
+      {toast && (
+        <div className="toast" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span>{toast}</span>
+          {undoSong && (
+            <button onClick={handleUndo} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.5)', color: 'inherit', borderRadius: 6, padding: '2px 8px', cursor: 'pointer', fontSize: 12, flexShrink: 0 }}>
+              되돌리기
+            </button>
+          )}
+        </div>
+      )}
 
       <AppHeader />
 
@@ -285,6 +312,11 @@ export default function SavedPage() {
               <div className="song-info">
                 <p className="song-title">{song.title}</p>
                 <p className="song-artist">{song.artist}</p>
+                {song.savedSituationName && (
+                  <span className="dose-chip" style={{ marginTop: 4 }}>
+                    {song.savedSituationIcon} {song.savedSituationName} · {song.savedConceptIcon} {song.savedConceptName}
+                  </span>
+                )}
               </div>
               <div className="song-actions">
                 <span className={`play-btn ${playingId === song.id ? 'playing' : ''}`}>
