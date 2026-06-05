@@ -32,6 +32,15 @@ export const getGuestHistory = (): GuestSong[] => {
   try { return JSON.parse(localStorage.getItem(GUEST_HISTORY_KEY) || '[]') } catch { return [] }
 }
 
+export const migrateGuestDataToServer = async (saveFn: (id: number, sitId?: number, conId?: number) => Promise<any>) => {
+  const saved = getGuestSaved()
+  if (saved.length === 0) { exitGuestMode(); return }
+  await Promise.allSettled(saved.map(s => saveFn(s.id, s.savedSituationId, s.savedConceptId)))
+  localStorage.removeItem(GUEST_SAVED_KEY)
+  localStorage.removeItem(GUEST_HISTORY_KEY)
+  exitGuestMode()
+}
+
 export const addGuestHistory = (song: GuestSong, situationId?: number, conceptId?: number, situations?: any[], concepts?: any[]) => {
   const sit = situations?.find((s: any) => s.id === situationId)
   const con = concepts?.find((c: any) => c.id === conceptId)

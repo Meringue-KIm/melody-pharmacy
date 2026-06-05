@@ -146,8 +146,14 @@ export default function SavedPage() {
     setUndoSong(null)
     setToast('')
     try {
-      await saveSong(undoSong.id, undoSong.savedSituationId, undoSong.savedConceptId)
-      setSavedSongs(prev => [...prev, { ...undoSong, saved: true }])
+      await (isGuest()
+        ? guestSaveSong(undoSong.id, undoSong.savedSituationId, undoSong.savedConceptId)
+        : saveSong(undoSong.id, undoSong.savedSituationId, undoSong.savedConceptId))
+      setSavedSongs(prev => {
+        const next = [...prev, { ...undoSong, saved: true }]
+        window.dispatchEvent(new CustomEvent('savedCountChanged', { detail: next.length }))
+        return next
+      })
       setHistorySongs(prev => prev.map(s => s.id === undoSong.id ? { ...s, saved: true } : s))
       showToast('다시 저장됐어요 ♥')
     } catch {

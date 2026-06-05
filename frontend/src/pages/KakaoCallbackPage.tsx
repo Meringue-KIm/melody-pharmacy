@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { kakaoLogin } from '../api/authApi'
+import { saveSong } from '../api/songApi'
+import { isGuest, migrateGuestDataToServer } from '../utils/guestMode'
 import MascotHead from '../components/MascotHead'
 
 export default function KakaoCallbackPage() {
@@ -13,10 +15,11 @@ export default function KakaoCallbackPage() {
     if (!code) { navigate('/login'); return }
 
     kakaoLogin(code)
-      .then(res => {
+      .then(async res => {
         localStorage.setItem('token', res.data.accessToken)
         localStorage.setItem('nickname', res.data.nickname)
         localStorage.setItem('provider', 'kakao')
+        if (isGuest()) await migrateGuestDataToServer(saveSong)
         navigate('/')
       })
       .catch(() => setError('카카오 로그인에 실패했어요. 다시 시도해주세요.'))

@@ -29,12 +29,15 @@ export const guestGetComboCounts = (situationId: number) => {
   return Promise.resolve({ data: counts })
 }
 
-export const guestRecommend = (situationId: number, conceptId: number) => {
+export const guestRecommend = (situationId: number, conceptId: number, excludePlayed = false) => {
   const savedIds = new Set(getGuestSaved().map(s => s.id))
+  const playedIds = excludePlayed ? new Set(getGuestHistory().map(s => s.id)) : new Set<number>()
   const taggedIds = new Set(
     SONG_TAGS.filter(t => t.situationId === situationId && t.conceptId === conceptId).map(t => t.songId)
   )
-  const songs = shuffle(SONGS.filter(s => taggedIds.has(s.id))).map(s => toSong(s, savedIds.has(s.id)))
+  const candidates = SONGS.filter(s => taggedIds.has(s.id) && !playedIds.has(s.id))
+  const pool = candidates.length > 0 ? candidates : SONGS.filter(s => taggedIds.has(s.id))
+  const songs = shuffle(pool).map(s => toSong(s, savedIds.has(s.id)))
   return Promise.resolve({ data: songs })
 }
 

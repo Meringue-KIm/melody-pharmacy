@@ -46,7 +46,7 @@ export default function RecommendPage() {
   const shareCardRef = useRef<HTMLDivElement>(null)
 
   const today = new Date().toISOString().slice(0, 10).replace(/-/g, '.')
-  const [nickname, setNickname] = useState(localStorage.getItem('nickname') || '환자')
+  const [nickname, setNickname] = useState(localStorage.getItem('nickname') || (isGuest() ? '게스트' : '환자'))
 
   const rxTagline = (() => {
     if (!situation || !concept) return '지금 기분에 딱 맞는 음악 처방'
@@ -92,7 +92,9 @@ export default function RecommendPage() {
   // 탭 전환 후 돌아올 때 저장 카운트 재조회
   useEffect(() => {
     const onVisible = () => {
-      if (!document.hidden) getSaved().then(res => setSavedCount(res.data.length)).catch(() => {})
+      if (!document.hidden) {
+        (isGuest() ? guestGetSaved() : getSaved()).then(res => setSavedCount(res.data.length)).catch(() => {})
+      }
     }
     document.addEventListener('visibilitychange', onVisible)
     return () => document.removeEventListener('visibilitychange', onVisible)
@@ -103,7 +105,7 @@ export default function RecommendPage() {
     setLoading(true)
     setError(false)
     try {
-      const res = await (isGuest() ? guestRecommend(situationId, conceptId) : recommend(situationId, conceptId, exclude))
+      const res = await (isGuest() ? guestRecommend(situationId, conceptId, exclude) : recommend(situationId, conceptId, exclude))
       setSongs(shuffle(res.data))
     } catch {
       setError(true)
