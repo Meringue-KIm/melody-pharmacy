@@ -23,6 +23,15 @@ export default function MainPage() {
   const today = new Date().toISOString().slice(2, 10).replace(/-/g, '.')
   const rxNo = String(Date.now()).slice(-6)
 
+  const load = () => {
+    setLoading(true)
+    setError(false)
+    const api = isGuest() ? guestGetSituations() : getSituations()
+    api.then(res => setSituations(res.data))
+       .catch(() => setError(true))
+       .finally(() => setLoading(false))
+  }
+
   useEffect(() => {
     const handler = (e: Event) => setNickname((e as CustomEvent<string>).detail)
     window.addEventListener('nicknameChanged', handler)
@@ -39,15 +48,6 @@ export default function MainPage() {
     }
     load()
   }, [])
-
-  const load = () => {
-    setLoading(true)
-    setError(false)
-    (isGuest() ? guestGetSituations() : getSituations())
-      .then(res => setSituations(res.data))
-      .catch(() => setError(true))
-      .finally(() => setLoading(false))
-  }
 
   return (
     <div className="frame" data-screen="main">
