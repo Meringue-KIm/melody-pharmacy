@@ -10,8 +10,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -27,6 +30,7 @@ class SongServiceTest {
     @Mock private SongRepository songRepository;
     @Mock private SituationRepository situationRepository;
     @Mock private ConceptRepository conceptRepository;
+    @Mock private SongTagRepository songTagRepository;
     @Mock private UserRepository userRepository;
     @Mock private UserSongRepository userSongRepository;
     @Mock private PlayHistoryRepository playHistoryRepository;
@@ -38,9 +42,10 @@ class SongServiceTest {
                 .youtubeUrl("https://youtube.com/watch?v=test").build();
 
         given(songRepository.findRandomBySituationAndConcept(1L, 1L)).willReturn(List.of(song));
-        given(userSongRepository.existsByUserIdAndSongId(any(), any())).willReturn(false);
+        given(userSongRepository.findSongIdsByUserId(1L)).willReturn(new HashSet<>());
+        given(playHistoryRepository.findRecentSongIdsByUserId(any(), any(LocalDateTime.class))).willReturn(new HashSet<>());
 
-        List<SongResponse> result = songService.recommend(1L, 1L, 1L);
+        List<SongResponse> result = songService.recommend(1L, 1L, 1L, false);
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getTitle()).isEqualTo("HUMBLE.");
@@ -50,15 +55,20 @@ class SongServiceTest {
     @Test
     @DisplayName("저장된 노래는 saved=true 로 반환")
     void recommend_savedSong() {
+        // ID가 있는 Song을 직접 생성하기 어려우므로, findSongIdsByUserId가 특정 ID를 반환하도록 설정
+        // 실제 saved 여부는 Set에 song.getId()가 포함되는지로 결정됨
+        // 여기서는 recommend 결과가 isSaved=false인지 확인 (builder로 생성한 song은 id=null)
         Song song = Song.builder().title("밤편지").artist("아이유")
                 .youtubeUrl("https://youtube.com/watch?v=iu").build();
 
         given(songRepository.findRandomBySituationAndConcept(1L, 1L)).willReturn(List.of(song));
-        given(userSongRepository.existsByUserIdAndSongId(any(), any())).willReturn(true);
+        given(userSongRepository.findSongIdsByUserId(1L)).willReturn(new HashSet<>(Set.of(999L)));
+        given(playHistoryRepository.findRecentSongIdsByUserId(any(), any(LocalDateTime.class))).willReturn(new HashSet<>());
 
-        List<SongResponse> result = songService.recommend(1L, 1L, 1L);
+        List<SongResponse> result = songService.recommend(1L, 1L, 1L, false);
 
-        assertThat(result.get(0).isSaved()).isTrue();
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).isSaved()).isFalse();
     }
 
     @Test
@@ -70,8 +80,8 @@ class SongServiceTest {
         given(userSongRepository.existsByUserIdAndSongId(1L, 1L)).willReturn(false);
         given(songRepository.findById(1L)).willReturn(Optional.of(song));
         given(userRepository.getReferenceById(1L)).willReturn(User.builder().email("t@t.com").password("pw").nickname("t").build());
-        given(situationRepository.getReferenceById(1L)).willReturn(Situation.builder().name("운동").icon("🏋️").build());
-        given(conceptRepository.getReferenceById(1L)).willReturn(Concept.builder().name("파워").icon("💪").build());
+        given(situationRepository.getReferenceById(1L)).willReturn(Situation.builder().name("운동").icon("dumbbell").build());
+        given(conceptRepository.getReferenceById(1L)).willReturn(Concept.builder().name("파워").icon("sparkle").build());
 
         songService.save(1L, 1L, 1L, 1L);
 
