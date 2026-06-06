@@ -125,13 +125,15 @@ export default function ProfilePage() {
           <button className="btn btn-block" onClick={() => { exitGuestMode(); navigate('/login') }}>
             로그인하고 기록 저장하기
           </button>
-          <button
-            className="btn-ghost-sm"
-            style={{ width: '100%', padding: '12px 0' }}
-            onClick={() => navigate('/signup')}
-          >
-            회원가입
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
+            <span style={{ fontSize: 13, color: 'var(--muted)' }}>계정이 없으신가요?</span>
+            <button
+              className="btn-ghost-sm"
+              onClick={() => navigate('/signup')}
+            >
+              회원가입
+            </button>
+          </div>
         </div>
       </div>
     )
