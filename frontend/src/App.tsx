@@ -10,6 +10,7 @@ import RecommendPage from './pages/RecommendPage'
 import SavedPage from './pages/SavedPage'
 import ProfilePage from './pages/ProfilePage'
 import KakaoCallbackPage from './pages/KakaoCallbackPage'
+import AdminPage from './pages/AdminPage'
 import { isGuest } from './utils/guestMode'
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
@@ -22,7 +23,7 @@ function PublicOnlyRoute({ children }: { children: React.ReactNode }) {
   return token ? <Navigate to="/" replace /> : <>{children}</>
 }
 
-const NO_NAV = ['/login', '/signup', '/forgot-password', '/oauth/kakao']
+const NO_NAV = ['/login', '/signup', '/forgot-password', '/oauth/kakao', '/admin']
 
 function AppLayout({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation()
@@ -51,6 +52,7 @@ export default function App() {
               <Route path="/saved" element={<PrivateRoute><SavedPage /></PrivateRoute>} />
               <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
               <Route path="/oauth/kakao" element={<KakaoCallbackPage />} />
+              <Route path="/admin" element={<AdminPage />} />
             </Routes>
           </AppLayout>
         </BrowserRouter>

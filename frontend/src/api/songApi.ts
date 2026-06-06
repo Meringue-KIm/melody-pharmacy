@@ -55,3 +55,13 @@ export const getHistory = () =>
 
 export const getComboCounts = (situationId: number) =>
   api.get<Record<number, number>>('/api/songs/combo-counts', { params: { situationId } })
+
+export interface PlaylistVideo {
+  id: number
+  youtubeVideoId: string
+  title: string
+  thumbnailUrl: string
+}
+
+export const getPlaylists = (situationId: number, conceptId: number) =>
+  api.get<PlaylistVideo[]>('/api/playlists', { params: { situationId, conceptId } })

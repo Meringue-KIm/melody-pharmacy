@@ -1,7 +1,8 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import html2canvas from 'html2canvas'
-import { recommend, saveSong, unsaveSong, recordPlay, getSituations, getConcepts, getHistory, getSaved } from '../api/songApi'
+import { recommend, saveSong, unsaveSong, recordPlay, getSituations, getConcepts, getHistory, getSaved, getPlaylists } from '../api/songApi'
+import type { PlaylistVideo } from '../api/songApi'
 import { guestRecommend, guestSaveSong, guestUnsaveSong, guestRecordPlay, guestGetSituations, guestGetConcepts, guestGetHistory, guestGetSaved } from '../api/guestApi'
 import { isGuest } from '../utils/guestMode'
 import type { Song, Situation, Concept } from '../api/songApi'
@@ -41,6 +42,7 @@ export default function RecommendPage() {
   const [autoPlay, setAutoPlay]   = useState(false)
   const [savingIds, setSavingIds] = useState<Set<number>>(new Set())
   const [, setSavedCount] = useState(0)
+  const [playlists, setPlaylists] = useState<PlaylistVideo[]>([])
   const [toast, setToast]         = useState('')
   const autoplaySongsRef = useRef<Song[]>([])
   const shareCardRef = useRef<HTMLDivElement>(null)
@@ -80,6 +82,7 @@ export default function RecommendPage() {
     api.getSaved().then(res => setSavedCount(res.data.length)).catch(() => {})
     loadRecommend()
     loadHistory()
+    if (!isGuest()) getPlaylists(situationId, conceptId).then(r => setPlaylists(r.data)).catch(() => {})
   }, [situationId, conceptId])
 
   // 닉네임 변경 이벤트 수신
@@ -478,6 +481,38 @@ export default function RecommendPage() {
           </button>
         ))}
       </div>
+
+      {/* 플레이리스트 추천 */}
+      {playlists.length > 0 && (
+        <div style={{ marginTop: 28 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+            <span style={{ fontSize: 15, fontWeight: 700 }}>📺 플레이리스트 처방</span>
+            <span style={{ fontSize: 12, color: 'var(--muted)' }}>틀어놓고 싶을 때</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {playlists.map(pv => (
+              <button
+                key={pv.id}
+                onClick={() => setPlayingId(null) || window.open(`https://www.youtube.com/watch?v=${pv.youtubeVideoId}`, '_blank')}
+                style={{ display: 'flex', gap: 12, alignItems: 'center', background: 'var(--surface-2)', border: '1px solid var(--line)', borderRadius: 12, padding: 12, cursor: 'pointer', textAlign: 'left', width: '100%' }}
+              >
+                <img
+                  src={pv.thumbnailUrl}
+                  alt={pv.title}
+                  style={{ width: 80, height: 56, objectFit: 'cover', borderRadius: 8, flexShrink: 0 }}
+                  onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+                />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: 'var(--ink)', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    {pv.title}
+                  </p>
+                  <p style={{ margin: '4px 0 0', fontSize: 12, color: 'var(--muted)' }}>YouTube에서 열기 →</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
