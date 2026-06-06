@@ -34,3 +34,6 @@ scripts/
 
 # ===== 서버 로그 =====
 backend/server.log.err
+
+# ===== 임시 파일 =====
+.git-replace.txt
