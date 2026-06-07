@@ -20,7 +20,7 @@ export default function MainPage() {
   const [error, setError] = useState(false)
   const [lastSelections, setLastSelections] = useState<LastSelection[]>([])
 
-  const today = new Date().toISOString().slice(2, 10).replace(/-/g, '.')
+  const today = new Date().toLocaleDateString('ko-KR', { year: '2-digit', month: '2-digit', day: '2-digit' }).replace(/\. /g, '.').replace(/\.$/, '')
   const rxNo = String(Date.now()).slice(-6)
 
   const load = () => {

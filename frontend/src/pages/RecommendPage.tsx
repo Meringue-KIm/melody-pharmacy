@@ -78,8 +78,11 @@ export default function RecommendPage() {
     api.getSaved().then(res => setSavedCount(res.data.length)).catch(() => {})
     loadRecommend()
     loadHistory()
-    ;(isGuest() ? guestGetPlaylists(situationId, conceptId) : getPlaylists(situationId, conceptId))
-      .then(r => setPlaylists(r.data)).catch(() => {})
+    getPlaylists(situationId, conceptId)
+      .then(r => setPlaylists(r.data))
+      .catch(() => {
+        if (isGuest()) guestGetPlaylists(situationId, conceptId).then(r => setPlaylists(r.data)).catch(() => {})
+      })
   }, [situationId, conceptId])
 
   // 닉네임 변경 이벤트 수신

@@ -13,6 +13,7 @@ export default function SignupPage() {
   const [form, setForm] = useState({ email: '', password: '', nickname: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [migrating, setMigrating] = useState(false)
   const [showPw, setShowPw] = useState(false)
 
   const handleKakaoLogin = () => {
@@ -33,7 +34,10 @@ export default function SignupPage() {
       localStorage.setItem('token', res.data.accessToken)
       localStorage.setItem('nickname', res.data.nickname)
       localStorage.setItem('provider', 'email')
-      if (isGuest()) await migrateGuestDataToServer(saveSong)
+      if (isGuest()) {
+        setMigrating(true)
+        await migrateGuestDataToServer(saveSong)
+      }
       navigate('/')
     } catch (err: any) {
       if (err.response?.status === 400) {
@@ -90,8 +94,8 @@ export default function SignupPage() {
             required
           />
           {error && <p className="auth-error">{error}</p>}
-          <button type="submit" className="btn btn-block" disabled={loading}>
-            {loading ? '가입 중…' : '회원가입'}
+          <button type="submit" className="btn btn-block" disabled={loading || migrating}>
+            {migrating ? '저장 기록 옮기는 중…' : loading ? '가입 중…' : '회원가입'}
           </button>
         </form>
 
