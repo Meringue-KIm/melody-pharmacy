@@ -38,13 +38,13 @@ public class GeminiService {
     }
 
     /** @throws QuotaExceededException Gemini 일일 한도 초과 시 */
-    public List<GeminiSongDto> recommend(String situation, String concept, int count) {
+    public List<GeminiSongDto> recommend(String situation, String concept, int count, List<String> existingSongs) {
         if (!isConfigured()) {
             log.warn("Gemini API key not configured");
             return List.of();
         }
         try {
-            String prompt = buildPrompt(situation, concept, count);
+            String prompt = buildPrompt(situation, concept, count, existingSongs);
             Map<String, Object> body = Map.of(
                 "contents", List.of(Map.of("parts", List.of(Map.of("text", prompt)))),
                 "generationConfig", Map.of(
@@ -90,14 +90,22 @@ public class GeminiService {
         return objectMapper.readValue(text, new TypeReference<List<GeminiSongDto>>() {});
     }
 
-    private String buildPrompt(String situation, String concept, int count) {
+    private String buildPrompt(String situation, String concept, int count, List<String> existingSongs) {
         String sitDesc = situationDesc(situation);
         String conDesc = conceptDesc(concept);
+
+        String excludeSection = "";
+        if (existingSongs != null && !existingSongs.isEmpty()) {
+            excludeSection = "\n아래 곡들은 이미 있으니 절대 추천하지 마세요:\n"
+                    + existingSongs.stream().map(s -> "- " + s).collect(java.util.stream.Collectors.joining("\n"))
+                    + "\n";
+        }
+
         return String.format("""
                 상황: %s (%s)
                 분위기: %s (%s)
-
-                위 상황과 분위기에 딱 어울리는 노래 %d곡을 추천해주세요.
+                %s
+                위 상황과 분위기에 딱 어울리는 새로운 노래 %d곡을 추천해주세요.
 
                 조건:
                 - 실제로 존재하는 유명한 곡 (스트리밍 서비스에서 들을 수 있는 곡)
@@ -108,7 +116,7 @@ public class GeminiService {
                 반드시 아래 JSON 배열 형식으로만 응답:
                 [{"title":"곡명","artist":"아티스트명","youtube_id":"영상ID"}]
                 """,
-                situation, sitDesc, concept, conDesc, count);
+                situation, sitDesc, concept, conDesc, excludeSection, count);
     }
 
     private String situationDesc(String s) {

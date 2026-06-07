@@ -74,11 +74,15 @@ public class SongPoolService {
         int needed = (int) (targetSize - current);
         int toRequest = Math.min(needed + 5, 15);
 
+        // 기존 곡 목록 조회 → Gemini에 중복 제외 지시
+        List<String> existingSongs = songTagRepository
+                .findSongNamesBySituationIdAndConceptId(situation.getId(), concept.getId());
+
         List<GeminiSongDto> recommendations =
-                geminiService.recommend(situation.getName(), concept.getName(), toRequest);
+                geminiService.recommend(situation.getName(), concept.getName(), toRequest, existingSongs);
         if (recommendations.isEmpty()) return;
 
-        // Gemini가 준 ID를 배치 검증 (videos API: 1 unit/50개)
+        // Gemini가 준 ID를 배치 검증 (videos.list: 1 unit/50개, 저렴)
         List<String> ytIds = recommendations.stream()
                 .map(GeminiSongDto::getYoutubeId)
                 .filter(Objects::nonNull)
@@ -94,14 +98,8 @@ public class SongPoolService {
 
             String videoId = dto.getYoutubeId();
 
-            // Gemini ID가 유효하지 않으면 search API로 폴백
-            if (videoId == null || !viewCounts.containsKey(videoId)) {
-                videoId = youTubeService.searchVideoId(dto.getTitle(), dto.getArtist())
-                        .orElse(null);
-                if (videoId == null) continue;
-                Long vc = youTubeService.batchGetViewCounts(List.of(videoId)).get(videoId);
-                if (vc != null) viewCounts.put(videoId, vc);
-            }
+            // ID가 없거나 유효하지 않으면 스킵 (search.list 폴백 제거)
+            if (videoId == null || !viewCounts.containsKey(videoId)) continue;
 
             final String finalVideoId = videoId;
             Long viewCount = viewCounts.get(finalVideoId);

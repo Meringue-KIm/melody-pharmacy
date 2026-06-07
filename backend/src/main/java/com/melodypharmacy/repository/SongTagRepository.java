@@ -19,6 +19,11 @@ public interface SongTagRepository extends JpaRepository<SongTag, Long> {
 
     long countBySituationIdAndConceptId(Long situationId, Long conceptId);
 
+    @Query("SELECT CONCAT(st.song.title, ' (', st.song.artist, ')') FROM SongTag st " +
+           "WHERE st.situation.id = :situationId AND st.concept.id = :conceptId")
+    List<String> findSongNamesBySituationIdAndConceptId(@Param("situationId") Long situationId,
+                                                        @Param("conceptId") Long conceptId);
+
     @Query("SELECT st FROM SongTag st " +
            "WHERE st.situation.id = :sitId AND st.concept.id = :conId " +
            "AND st.addedAt IS NOT NULL AND st.addedAt < :cutoff " +
