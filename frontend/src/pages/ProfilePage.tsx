@@ -42,7 +42,7 @@ export default function ProfilePage() {
   const lastSelections = (() => { try { return JSON.parse(localStorage.getItem('lastSelections') || '[]') } catch { return [] } })()
 
   const [toast, setToast] = useState('')
-  const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(''), 2000) }
+  const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(''), 3000) }
 
   const loadStats = () => {
     if (isGuest()) {
@@ -97,6 +97,7 @@ export default function ProfilePage() {
       await changePassword(form.oldPassword, form.newPassword)
       setSuccess(true)
       showToast('비밀번호가 변경됐어요!')
+      setTimeout(() => { setSuccess(false); setPwOpen(false); setForm({ oldPassword: '', newPassword: '', confirm: '' }) }, 2000)
     } catch (err: any) {
       setError(err.response?.data?.message || '비밀번호 변경에 실패했어요.')
     } finally {
@@ -111,6 +112,7 @@ export default function ProfilePage() {
     localStorage.removeItem('lastSelections')
     localStorage.removeItem('lastSelection')
     localStorage.removeItem('provider')
+    exitGuestMode()
     navigate('/login')
   }
 

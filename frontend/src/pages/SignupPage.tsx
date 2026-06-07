@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { signup, login } from '../api/authApi'
+import { saveSong } from '../api/songApi'
+import { isGuest, migrateGuestDataToServer } from '../utils/guestMode'
 import mascotPresent from '../assets/mascot-present.png'
 
 const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID
@@ -31,6 +33,7 @@ export default function SignupPage() {
       localStorage.setItem('token', res.data.accessToken)
       localStorage.setItem('nickname', res.data.nickname)
       localStorage.setItem('provider', 'email')
+      if (isGuest()) await migrateGuestDataToServer(saveSong)
       navigate('/')
     } catch (err: any) {
       if (err.response?.status === 400) {

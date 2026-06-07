@@ -47,23 +47,19 @@ export default function RecommendPage() {
   const autoplaySongsRef = useRef<Song[]>([])
   const shareCardRef = useRef<HTMLDivElement>(null)
 
-  const today = new Date().toISOString().slice(0, 10).replace(/-/g, '.')
+  const today = new Date().toLocaleDateString('ko-KR', { year: '2-digit', month: '2-digit', day: '2-digit' }).replace(/\. /g, '.').replace(/\.$/, '')
   const [nickname, setNickname] = useState(localStorage.getItem('nickname') || (isGuest() ? '게스트' : '환자'))
 
   const rxTagline = (() => {
     if (!situation || !concept) return '지금 기분에 딱 맞는 음악 처방'
     const conName = concept.name
     const tagMap: Record<string, string> = {
-      '잔잔': '포근하게 감싸주는 처방',
       '신나': '에너지 충전용 강력 처방',
-      '감성': '감정을 살살 건드려주는 처방',
-      '파워': '힘이 팍팍 넘치는 처방',
-      '힐링': '마음의 피로를 씻어주는 처방',
-      '집중': '잡념 차단 집중력 처방',
-      '설레': '두근두근 설레게 하는 처방',
-      '슬픔': '감정을 함께 나눠주는 처방',
-      '슬픈': '감정을 함께 나눠주는 처방',
-      '그루브': '몸이 절로 움직이는 처방',
+      '새로운': '설레는 첫 만남 같은 처방',
+      '슬프': '감정을 함께 나눠주는 처방',
+      '추억': '그때 그 시절로 데려가는 처방',
+      '잔잔': '포근하게 감싸주는 처방',
+      '위로': '마음의 피로를 씻어주는 처방',
     }
     const key = Object.keys(tagMap).find(k => conName.includes(k))
     return `${situation.name} 중 ${key ? tagMap[key] : conName + ' 처방'}`

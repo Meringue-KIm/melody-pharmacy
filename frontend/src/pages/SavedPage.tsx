@@ -223,12 +223,14 @@ export default function SavedPage() {
         </button>
       </div>
 
-      <div className="controls">
-        <button className={`toggle ${autoPlay ? 'on' : ''}`} onClick={() => setAutoPlay(p => !p)}>
-          <span className="toggle-track"><span className="toggle-thumb" /></span>
-          자동재생
-        </button>
-      </div>
+      {tab === 'history' && (
+        <div className="controls">
+          <button className={`toggle ${autoPlay ? 'on' : ''}`} onClick={() => setAutoPlay(p => !p)}>
+            <span className="toggle-track"><span className="toggle-thumb" /></span>
+            자동재생
+          </button>
+        </div>
+      )}
 
       {error && (
         <div className="page-error">

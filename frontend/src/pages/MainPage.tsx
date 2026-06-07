@@ -102,9 +102,11 @@ export default function MainPage() {
         </div>
         <div className="grid grid-3 grid-4">
           {loading
-            ? Array.from({ length: 7 }).map((_, i) => (
+            ? Array.from({ length: 8 }).map((_, i) => (
                 <div key={i} className="skel" style={{ height: 120, borderRadius: 'var(--r)' }} />
               ))
+            : situations.length === 0 && !error
+            ? <p style={{ color: 'var(--muted)', fontSize: 14, gridColumn: '1/-1', textAlign: 'center', padding: '32px 0' }}>상황 목록을 불러오지 못했어요.<br /><button className="btn-ghost-sm" style={{ marginTop: 8 }} onClick={load}>다시 시도</button></p>
             : situations.map(s => (
                 <button
                   key={s.id}
