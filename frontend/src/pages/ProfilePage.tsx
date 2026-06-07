@@ -43,6 +43,7 @@ export default function ProfilePage() {
 
   const [toast, setToast] = useState('')
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(''), 3000) }
+  const [confirmLogout, setConfirmLogout] = useState(false)
 
   const loadStats = () => {
     if (isGuest()) {
@@ -106,12 +107,12 @@ export default function ProfilePage() {
   }
 
   const handleLogout = () => {
-    if (!window.confirm('로그아웃 할까요?')) return
     localStorage.removeItem('token')
     localStorage.removeItem('nickname')
     localStorage.removeItem('lastSelections')
     localStorage.removeItem('lastSelection')
     localStorage.removeItem('provider')
+    localStorage.removeItem('excludePlayed')
     exitGuestMode()
     navigate('/login')
   }
@@ -316,9 +317,17 @@ export default function ProfilePage() {
           )}
 
           {/* 로그아웃 */}
-          <button className="menu-item menu-danger" onClick={handleLogout}>
-            <span>로그아웃</span>
-          </button>
+          {confirmLogout ? (
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '12px 16px', background: 'var(--surface)', border: 'var(--border-width) var(--border-style) var(--line)', borderRadius: 'var(--r)' }}>
+              <span style={{ flex: 1, fontSize: 14, color: 'var(--ink)' }}>정말 로그아웃할까요?</span>
+              <button className="btn-ghost-sm" style={{ color: 'var(--warn)', borderColor: 'var(--warn)' }} onClick={handleLogout}>로그아웃</button>
+              <button className="btn-ghost-sm" onClick={() => setConfirmLogout(false)}>취소</button>
+            </div>
+          ) : (
+            <button className="menu-item menu-danger" onClick={() => setConfirmLogout(true)}>
+              <span>로그아웃</span>
+            </button>
+          )}
         </div>
       </section>
     </div>

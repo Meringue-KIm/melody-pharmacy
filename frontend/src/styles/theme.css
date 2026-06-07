@@ -579,7 +579,7 @@ a { color: var(--accent); text-decoration: none; }
 .toast {
   position: fixed;
   left: 50%;
-  bottom: 28px;
+  bottom: calc(max(env(safe-area-inset-bottom, 0px), 8px) + 70px);
   transform: translateX(-50%);
   background: var(--ink);
   color: var(--surface);

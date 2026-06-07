@@ -89,17 +89,27 @@ export default function ConceptPage() {
             ? Array.from({ length: 9 }).map((_, i) => (
                 <div key={i} className="skel" style={{ height: 120, borderRadius: 'var(--r)' }} />
               ))
-            : concepts.map(c => (
-                <button key={c.id} className="tile" onClick={() => handleSelect(c)}>
-                  <Doodle name={c.icon} size={52} />
-                  <span className="tile-name">{c.name}</span>
-                  {comboCounts[c.id] !== undefined && (
-                    <span style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>
-                      {comboCounts[c.id]}곡
-                    </span>
-                  )}
-                </button>
-              ))
+            : concepts.map(c => {
+                const count = comboCounts[c.id]
+                const empty = count !== undefined && count === 0
+                return (
+                  <button
+                    key={c.id}
+                    className="tile"
+                    onClick={() => !empty && handleSelect(c)}
+                    style={empty ? { opacity: 0.4, cursor: 'not-allowed' } : undefined}
+                    title={empty ? '아직 준비 중인 처방전이에요' : undefined}
+                  >
+                    <Doodle name={c.icon} size={52} />
+                    <span className="tile-name">{c.name}</span>
+                    {count !== undefined && (
+                      <span style={{ fontSize: 11, color: empty ? 'var(--warn)' : 'var(--muted)', marginTop: 2 }}>
+                        {empty ? '준비 중' : `${count}곡`}
+                      </span>
+                    )}
+                  </button>
+                )
+              })
           }
         </div>
       </section>

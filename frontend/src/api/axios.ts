@@ -20,6 +20,8 @@ api.interceptors.response.use(
       localStorage.removeItem('token')
       localStorage.removeItem('nickname')
       localStorage.removeItem('lastSelection')
+      localStorage.removeItem('lastSelections')
+      localStorage.removeItem('provider')
       if (wasLoggedIn && !window.location.pathname.startsWith('/login')) {
         sessionStorage.setItem('sessionExpired', '1')
         window.location.href = '/login'

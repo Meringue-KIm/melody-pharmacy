@@ -38,7 +38,7 @@ export default function RecommendPage() {
   const [loading, setLoading]     = useState(false)
   const [error, setError]         = useState(false)
   const [playingId, setPlayingId] = useState<number | null>(null)
-  const [excludePlayed, setExcludePlayed] = useState(() => sessionStorage.getItem('excludePlayed') === 'true')
+  const [excludePlayed, setExcludePlayed] = useState(() => localStorage.getItem('excludePlayed') === 'true')
   const [autoPlay, setAutoPlay]   = useState(false)
   const [savingIds, setSavingIds] = useState<Set<number>>(new Set())
   const [, setSavedCount] = useState(0)
@@ -46,6 +46,7 @@ export default function RecommendPage() {
   const [toast, setToast]         = useState('')
   const autoplaySongsRef = useRef<Song[]>([])
   const shareCardRef = useRef<HTMLDivElement>(null)
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const today = new Date().toLocaleDateString('ko-KR', { year: '2-digit', month: '2-digit', day: '2-digit' }).replace(/\. /g, '.').replace(/\.$/, '')
   const [nickname, setNickname] = useState(localStorage.getItem('nickname') || (isGuest() ? '게스트' : '환자'))
@@ -67,7 +68,8 @@ export default function RecommendPage() {
 
   const showToast = (msg: string) => {
     setToast(msg)
-    setTimeout(() => setToast(''), 3000)
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current)
+    toastTimerRef.current = setTimeout(() => setToast(''), 3000)
   }
 
   useEffect(() => {
@@ -78,11 +80,9 @@ export default function RecommendPage() {
     api.getSaved().then(res => setSavedCount(res.data.length)).catch(() => {})
     loadRecommend()
     loadHistory()
-    getPlaylists(situationId, conceptId)
+    ;(isGuest() ? guestGetPlaylists(situationId, conceptId) : getPlaylists(situationId, conceptId))
       .then(r => setPlaylists(r.data))
-      .catch(() => {
-        if (isGuest()) guestGetPlaylists(situationId, conceptId).then(r => setPlaylists(r.data)).catch(() => {})
-      })
+      .catch(() => {})
   }, [situationId, conceptId])
 
   // 닉네임 변경 이벤트 수신
@@ -254,7 +254,7 @@ export default function RecommendPage() {
   const handleToggleExclude = () => {
     const next = !excludePlayed
     setExcludePlayed(next)
-    sessionStorage.setItem('excludePlayed', String(next))
+    localStorage.setItem('excludePlayed', String(next))
     loadRecommend(next)
   }
 
@@ -274,7 +274,7 @@ export default function RecommendPage() {
 
       {/* 공유용 히든 카드 */}
       <div ref={shareCardRef} style={{
-        position: 'fixed', left: '-9999px', top: 0, width: 360,
+        position: 'absolute', left: '-9999px', top: 0, width: 360,
         background: 'var(--surface)', padding: 28, borderRadius: 20,
         fontFamily: 'system-ui, sans-serif'
       }}>
@@ -304,10 +304,13 @@ export default function RecommendPage() {
 
       {/* 처방전 슬립 — 기본 접힘 */}
       <section className="rx-slip">
-        <button
+        <div
           className="rx-slip-head"
-          style={{ width: '100%', cursor: 'pointer', background: 'none', border: 'none', padding: 0, textAlign: 'left' }}
+          style={{ cursor: 'pointer' }}
           onClick={() => setRxOpen(p => !p)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setRxOpen(p => !p) } }}
         >
           <div>
             <div className="brand" style={{ fontSize: 15 }}>
@@ -331,7 +334,7 @@ export default function RecommendPage() {
               {songs.length}곡 {rxOpen ? '▲' : '▼'}
             </span>
           </div>
-        </button>
+        </div>
 
         {rxOpen && (
           <>
@@ -417,20 +420,26 @@ export default function RecommendPage() {
             🌱 이 처방전은 계속 채워지고 있어요. 더 다양한 곡이 곧 추가돼요.
           </div>
         )}
-        {tab === 'recommend' && (
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            <button className="btn-ghost-sm" disabled={loading} onClick={() => loadRecommend()} title="새 처방전">🔄</button>
-            <button className="btn-ghost-sm" disabled={loading || songs.length === 0} onClick={handleShuffle} title="순서 섞기">🔀</button>
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+          {tab === 'recommend' && (
+            <>
+              <button className="btn-ghost-sm" disabled={loading} onClick={() => loadRecommend()} title="새 처방전">🔄</button>
+              <button className="btn-ghost-sm" disabled={loading || songs.length === 0} onClick={handleShuffle} title="순서 섞기">🔀</button>
+            </>
+          )}
+          {currentSongs.length > 0 && (
             <button className={`toggle ${autoPlay ? 'on' : ''}`} onClick={() => setAutoPlay(p => !p)}>
               <span className="toggle-track"><span className="toggle-thumb" /></span>
-              자동
+              자동재생
             </button>
+          )}
+          {tab === 'recommend' && (
             <button className={`toggle ${excludePlayed ? 'on' : ''}`} onClick={handleToggleExclude}>
               <span className="toggle-track"><span className="toggle-thumb" /></span>
               들은 곡 제외
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {error && (
@@ -489,14 +498,16 @@ export default function RecommendPage() {
               <span className={`play-btn ${playingId === song.id ? 'playing' : ''}`}>
                 {playingId === song.id ? '❚❚' : '▶'}
               </span>
-              <span
+              <button
+                type="button"
                 className={`save-btn ${song.saved ? 'saved' : ''}`}
                 onClick={e => handleSave(song, e)}
                 style={savingIds.has(song.id) ? { opacity: 0.4, cursor: 'wait' } : undefined}
+                aria-label={song.saved ? '저장 해제' : '저장'}
               >
                 {savingIds.has(song.id) ? '…' : song.saved ? '♥' : '♡'}
-              </span>
-              <span className="share-btn" onClick={e => handleShare(song, e)}>📤</span>
+              </button>
+              <button type="button" className="share-btn" onClick={e => handleShare(song, e)} aria-label="공유">📤</button>
             </div>
           </button>
         ))}

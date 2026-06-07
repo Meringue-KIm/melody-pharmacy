@@ -25,6 +25,13 @@ export default function SavedPage() {
     if (sit) sessionStorage.setItem('savedFilterSit', sit)
     else sessionStorage.removeItem('savedFilterSit')
   }
+
+  // 저장 목록이 바뀌어 현재 필터 상황이 사라지면 전체 보기로 초기화
+  useEffect(() => {
+    if (!filterSit) return
+    const situations = new Set(savedSongs.map(s => s.savedSituationName).filter(Boolean))
+    if (!situations.has(filterSit)) updateFilter(null)
+  }, [savedSongs])
   const [savedSongs, setSavedSongs] = useState<Song[]>([])
   const [historySongs, setHistorySongs] = useState<Song[]>([])
   const [loading, setLoading] = useState(true)
@@ -184,7 +191,7 @@ export default function SavedPage() {
       <section className="hero">
         <p className="eyebrow">My Cabinet · 약장</p>
         <h1 className="h1">내 약장</h1>
-        <p className="subtitle">저장한 처방전 {savedSongs.length}곡</p>
+        <p className="subtitle">{loading ? '불러오는 중…' : `저장한 처방전 ${savedSongs.length}곡`}</p>
       </section>
 
       {/* 플레이어 */}
@@ -219,11 +226,11 @@ export default function SavedPage() {
           ♥ 저장소 {savedSongs.length > 0 && <span className="badge">{savedSongs.length}</span>}
         </button>
         <button className={`tab ${tab === 'history' ? 'active' : ''}`} onClick={() => setTab('history')}>
-          ⏱ 최근 재생
+          ⏱ 최근 재생 {historySongs.length > 0 && <span className="badge">{historySongs.length}</span>}
         </button>
       </div>
 
-      {tab === 'history' && (
+      {(tab === 'history' ? historySongs.length > 0 : savedSongs.length > 0) && (
         <div className="controls">
           <button className={`toggle ${autoPlay ? 'on' : ''}`} onClick={() => setAutoPlay(p => !p)}>
             <span className="toggle-track"><span className="toggle-thumb" /></span>
@@ -300,11 +307,16 @@ export default function SavedPage() {
                   <span className={`play-btn ${playingId === song.id ? 'playing' : ''}`}>
                     {playingId === song.id ? '❚❚' : '▶'}
                   </span>
-                  <span className="save-btn saved" onClick={e => handleSave(song, e)}
-                    style={savingIds.has(song.id) ? { opacity: 0.4, cursor: 'wait' } : undefined}>
+                  <button
+                    type="button"
+                    className="save-btn saved"
+                    onClick={e => handleSave(song, e)}
+                    style={savingIds.has(song.id) ? { opacity: 0.4, cursor: 'wait' } : undefined}
+                    aria-label="저장 해제"
+                  >
                     {savingIds.has(song.id) ? '…' : '♥'}
-                  </span>
-                  <span className="share-btn" onClick={e => handleShare(song, e)}>📤</span>
+                  </button>
+                  <button type="button" className="share-btn" onClick={e => handleShare(song, e)} aria-label="공유">📤</button>
                 </div>
               </button>
             ))}
@@ -350,14 +362,16 @@ export default function SavedPage() {
                 <span className={`play-btn ${playingId === song.id ? 'playing' : ''}`}>
                   {playingId === song.id ? '❚❚' : '▶'}
                 </span>
-                <span
+                <button
+                  type="button"
                   className={`save-btn ${song.saved ? 'saved' : ''}`}
                   onClick={e => handleSave(song, e)}
                   style={savingIds.has(song.id) ? { opacity: 0.4, cursor: 'wait' } : undefined}
+                  aria-label={song.saved ? '저장 해제' : '저장'}
                 >
                   {savingIds.has(song.id) ? '…' : song.saved ? '♥' : '♡'}
-                </span>
-                <span className="share-btn" onClick={e => handleShare(song, e)}>📤</span>
+                </button>
+                <button type="button" className="share-btn" onClick={e => handleShare(song, e)} aria-label="공유">📤</button>
               </div>
             </button>
           ))}
