@@ -14,7 +14,7 @@ interface LastSelection {
 
 export default function MainPage() {
   const navigate = useNavigate()
-  const [nickname, setNickname] = useState(localStorage.getItem('nickname') || '환자')
+  const [nickname, setNickname] = useState(localStorage.getItem('nickname') || (isGuest() ? '게스트' : '환자'))
   const [situations, setSituations] = useState<Situation[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -90,7 +90,7 @@ export default function MainPage() {
 
       {error && (
         <div className="page-error">
-          네트워크 오류가 발생했어요<br />
+          불러오기 실패했어요<br />
           <button onClick={load}>다시 시도</button>
         </div>
       )}

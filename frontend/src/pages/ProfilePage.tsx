@@ -44,13 +44,25 @@ export default function ProfilePage() {
   const [toast, setToast] = useState('')
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(''), 2000) }
 
-  useEffect(() => {
+  const loadStats = () => {
     if (isGuest()) {
       setSavedCount(getGuestSaved().length)
       setHistoryCount(getGuestHistory().length)
     } else {
       getSaved().then(r => setSavedCount(r.data.length)).catch(() => {})
       getHistory().then(r => setHistoryCount(r.data.length)).catch(() => {})
+    }
+  }
+
+  useEffect(() => {
+    loadStats()
+    const onVisible = () => { if (!document.hidden) loadStats() }
+    document.addEventListener('visibilitychange', onVisible)
+    const onSaved = () => loadStats()
+    window.addEventListener('savedCountChanged', onSaved)
+    return () => {
+      document.removeEventListener('visibilitychange', onVisible)
+      window.removeEventListener('savedCountChanged', onSaved)
     }
   }, [])
 

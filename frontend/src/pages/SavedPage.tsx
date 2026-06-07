@@ -59,6 +59,7 @@ export default function SavedPage() {
     const img = e.currentTarget
     if (img.src.includes('hqdefault')) img.src = img.src.replace('hqdefault', 'mqdefault')
     else if (img.src.includes('mqdefault')) img.src = img.src.replace('mqdefault', 'default')
+    else img.style.display = 'none'
   }
 
   const currentSongs = tab === 'saved' ? savedSongs : historySongs
@@ -137,8 +138,12 @@ export default function SavedPage() {
   const handleShare = async (song: Song, e: React.MouseEvent) => {
     e.stopPropagation()
     const text = `🎵 ${song.title} - ${song.artist}`
-    if (navigator.share) await navigator.share({ title: text, url: song.youtubeUrl })
-    else { await navigator.clipboard.writeText(song.youtubeUrl); showToast('링크가 복사됐어요!') }
+    try {
+      if (navigator.share) await navigator.share({ title: text, url: song.youtubeUrl })
+      else { await navigator.clipboard.writeText(song.youtubeUrl); showToast('링크가 복사됐어요!') }
+    } catch {
+      showToast('공유에 실패했어요.')
+    }
   }
 
   const handleUndo = async () => {

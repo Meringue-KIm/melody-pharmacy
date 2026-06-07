@@ -7,7 +7,10 @@ import { isGuest } from '../utils/guestMode'
 export default function BottomNav() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const [savedCount, setSavedCount] = useState(0)
+  const initialCount = isGuest()
+    ? (typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('guestSaved') || '[]').length : 0)
+    : 0
+  const [savedCount, setSavedCount] = useState(initialCount)
 
   const isHome    = pathname === '/' || pathname.startsWith('/concept') || pathname.startsWith('/recommend')
   const isSaved   = pathname === '/saved'

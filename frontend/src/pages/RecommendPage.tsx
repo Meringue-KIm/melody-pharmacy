@@ -71,7 +71,7 @@ export default function RecommendPage() {
 
   const showToast = (msg: string) => {
     setToast(msg)
-    setTimeout(() => setToast(''), 2000)
+    setTimeout(() => setToast(''), 3000)
   }
 
   useEffect(() => {
@@ -82,7 +82,7 @@ export default function RecommendPage() {
     api.getSaved().then(res => setSavedCount(res.data.length)).catch(() => {})
     loadRecommend()
     loadHistory()
-    if (!isGuest()) getPlaylists(situationId, conceptId).then(r => setPlaylists(r.data)).catch(() => {})
+    getPlaylists(situationId, conceptId).then(r => setPlaylists(r.data)).catch(() => {})
   }, [situationId, conceptId])
 
   // 닉네임 변경 이벤트 수신
@@ -119,7 +119,8 @@ export default function RecommendPage() {
   }
 
   const loadHistory = async () => {
-    try { const r = await (isGuest() ? guestGetHistory() : getHistory()); setHistorySongs(r.data) } catch {}
+    try { const r = await (isGuest() ? guestGetHistory() : getHistory()); setHistorySongs(r.data) }
+    catch { showToast('최근 기록을 불러오지 못했어요.') }
   }
 
   const handleShuffle = () => setSongs(prev => shuffle(prev))
@@ -192,11 +193,15 @@ export default function RecommendPage() {
   const handleShare = async (song: Song, e: React.MouseEvent) => {
     e.stopPropagation()
     const text = `🎵 ${song.title} - ${song.artist}`
-    if (navigator.share) {
-      await navigator.share({ title: text, url: song.youtubeUrl })
-    } else {
-      await navigator.clipboard.writeText(song.youtubeUrl)
-      showToast('링크가 복사됐어요!')
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: text, url: song.youtubeUrl })
+      } else {
+        await navigator.clipboard.writeText(song.youtubeUrl)
+        showToast('링크가 복사됐어요!')
+      }
+    } catch {
+      showToast('공유에 실패했어요.')
     }
   }
 
@@ -206,6 +211,8 @@ export default function RecommendPage() {
       img.src = img.src.replace('hqdefault', 'mqdefault')
     } else if (img.src.includes('mqdefault')) {
       img.src = img.src.replace('mqdefault', 'default')
+    } else {
+      img.style.display = 'none'
     }
   }
 

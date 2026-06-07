@@ -19,7 +19,11 @@ export default function KakaoCallbackPage() {
         localStorage.setItem('token', res.data.accessToken)
         localStorage.setItem('nickname', res.data.nickname)
         localStorage.setItem('provider', 'kakao')
-        if (isGuest()) await migrateGuestDataToServer(saveSong)
+        if (isGuest()) {
+          const el = document.getElementById('kakao-status')
+          if (el) el.textContent = '저장 기록 옮기는 중…'
+          await migrateGuestDataToServer(saveSong)
+        }
         navigate('/')
       })
       .catch(() => setError('카카오 로그인에 실패했어요. 다시 시도해주세요.'))
@@ -51,7 +55,7 @@ export default function KakaoCallbackPage() {
           <div className="brand brand-lg" style={{ justifyContent: 'center' }}>
             <span>멜로디약국</span>
           </div>
-          <p className="auth-sub">카카오 로그인 처리 중…</p>
+          <p className="auth-sub" id="kakao-status">카카오 로그인 처리 중…</p>
         </div>
       </div>
     </div>
