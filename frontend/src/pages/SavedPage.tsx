@@ -238,6 +238,11 @@ export default function SavedPage() {
       )}
 
       {/* 저장 목록 */}
+      {tab === 'saved' && loading && (
+        <div className="song-list">
+          {Array.from({ length: 4 }).map((_, i) => <div key={i} className="skel skel-song" />)}
+        </div>
+      )}
       {tab === 'saved' && !loading && !error && savedSongs.length === 0 ? (
         <div className="empty empty-lg">
           <MascotIllustration src={mascotLab} size={130} alt="약사 캐릭터" />

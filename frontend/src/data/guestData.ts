@@ -1,5 +1,6 @@
 import songsJson from './songs.json'
 import songTagsJson from './songTags.json'
+import playlistsJson from './playlists.json'
 
 export const SITUATIONS = [
   { id: 1, icon: 'subway',   name: '출근길' },
@@ -23,3 +24,4 @@ export const CONCEPTS = [
 
 export const SONGS = songsJson as { id: number; title: string; artist: string; youtubeUrl: string; thumbnailUrl: string }[]
 export const SONG_TAGS = songTagsJson as { songId: number; situationId: number; conceptId: number }[]
+export const PLAYLISTS = playlistsJson as { id: number; situationId: number; conceptId: number; youtubeVideoId: string; title: string; thumbnailUrl: string }[]

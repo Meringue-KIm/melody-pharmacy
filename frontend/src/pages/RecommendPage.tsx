@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import html2canvas from 'html2canvas'
 import { recommend, saveSong, unsaveSong, recordPlay, getSituations, getConcepts, getHistory, getSaved, getPlaylists } from '../api/songApi'
 import type { PlaylistVideo } from '../api/songApi'
-import { guestRecommend, guestSaveSong, guestUnsaveSong, guestRecordPlay, guestGetSituations, guestGetConcepts, guestGetHistory, guestGetSaved } from '../api/guestApi'
+import { guestRecommend, guestSaveSong, guestUnsaveSong, guestRecordPlay, guestGetSituations, guestGetConcepts, guestGetHistory, guestGetSaved, guestGetPlaylists } from '../api/guestApi'
 import { isGuest } from '../utils/guestMode'
 import type { Song, Situation, Concept } from '../api/songApi'
 import AppHeader from '../components/AppHeader'
@@ -82,7 +82,8 @@ export default function RecommendPage() {
     api.getSaved().then(res => setSavedCount(res.data.length)).catch(() => {})
     loadRecommend()
     loadHistory()
-    getPlaylists(situationId, conceptId).then(r => setPlaylists(r.data)).catch(() => {})
+    ;(isGuest() ? guestGetPlaylists(situationId, conceptId) : getPlaylists(situationId, conceptId))
+      .then(r => setPlaylists(r.data)).catch(() => {})
   }, [situationId, conceptId])
 
   // 닉네임 변경 이벤트 수신
@@ -220,7 +221,20 @@ export default function RecommendPage() {
     if (!shareCardRef.current) return
     showToast('처방전 이미지 생성 중…')
     try {
-      const canvas = await html2canvas(shareCardRef.current, { scale: 2, useCORS: true, backgroundColor: null })
+      const root = getComputedStyle(document.documentElement)
+      const getVar = (v: string) => root.getPropertyValue(v).trim() || undefined
+      const canvas = await html2canvas(shareCardRef.current, {
+        scale: 2, useCORS: true, backgroundColor: getVar('--surface') ?? '#fff',
+        onclone: (_doc, el) => {
+          el.style.background = getVar('--surface') ?? '#fff'
+          el.querySelectorAll<HTMLElement>('[style]').forEach(node => {
+            const s = node.style
+            if (s.color?.includes('var(--ink)')) s.color = getVar('--ink') ?? '#000'
+            if (s.color?.includes('var(--ink-soft)')) s.color = getVar('--ink-soft') ?? '#444'
+            if (s.color?.includes('var(--muted)')) s.color = getVar('--muted') ?? '#999'
+          })
+        }
+      })
       const dataUrl = canvas.toDataURL('image/png')
       const blob = await (await fetch(dataUrl)).blob()
       const file = new File([blob], 'melody-prescription.png', { type: 'image/png' })
@@ -500,7 +514,7 @@ export default function RecommendPage() {
             {playlists.map(pv => (
               <button
                 key={pv.id}
-                onClick={() => setPlayingId(null) || window.open(`https://www.youtube.com/watch?v=${pv.youtubeVideoId}`, '_blank')}
+                onClick={() => { setPlayingId(null); window.open(`https://www.youtube.com/watch?v=${pv.youtubeVideoId}`, '_blank') }}
                 style={{ display: 'flex', gap: 12, alignItems: 'center', background: 'var(--surface-2)', border: '1px solid var(--line)', borderRadius: 12, padding: 12, cursor: 'pointer', textAlign: 'left', width: '100%' }}
               >
                 <img

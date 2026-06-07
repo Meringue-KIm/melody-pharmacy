@@ -1,4 +1,4 @@
-import { SITUATIONS, CONCEPTS, SONGS, SONG_TAGS } from '../data/guestData'
+import { SITUATIONS, CONCEPTS, SONGS, SONG_TAGS, PLAYLISTS } from '../data/guestData'
 import { getGuestSaved, saveGuestSong, unsaveGuestSong, getGuestHistory, addGuestHistory } from '../utils/guestMode'
 import type { GuestSong } from '../utils/guestMode'
 
@@ -76,3 +76,6 @@ export const guestGetHistory = () => {
   const history = getGuestHistory().map(s => ({ ...s, saved: savedIds.has(s.id) }))
   return Promise.resolve({ data: history })
 }
+
+export const guestGetPlaylists = (situationId: number, conceptId: number) =>
+  Promise.resolve({ data: PLAYLISTS.filter(p => p.situationId === situationId && p.conceptId === conceptId) })
