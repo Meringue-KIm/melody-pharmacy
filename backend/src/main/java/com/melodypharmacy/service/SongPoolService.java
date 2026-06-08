@@ -41,6 +41,7 @@ public class SongPoolService {
     public void fillCombinationToTarget(Situation situation, Concept concept) throws InterruptedException {
         if (!geminiService.isConfigured()) return;
         final int maxAttempts = 20;
+        int[] searchBudget = {80};
         int attempts = 0;
         long prev = -1;
         while (songTagRepository.countBySituationIdAndConceptId(situation.getId(), concept.getId()) < targetSize) {
@@ -55,21 +56,23 @@ public class SongPoolService {
                 attempts = 0;
             }
             prev = current;
-            fillCombination(situation, concept);
-            Thread.sleep(4500);
+            fillCombination(situation, concept, searchBudget);
+            Thread.sleep(7000);
         }
     }
 
     /**
      * 조합의 풀이 targetSize 미만이면 AI로 보충한다.
+     * @param searchBudget 전역 search.list 잔여 횟수 (mutable, 사용 시 차감)
+     * @return 실제 추가된 곡 수
      */
     @Transactional
-    public void fillCombination(Situation situation, Concept concept) {
-        if (!geminiService.isConfigured()) return;
+    public int fillCombination(Situation situation, Concept concept, int[] searchBudget) {
+        if (!geminiService.isConfigured()) return 0;
 
         long current = songTagRepository.countBySituationIdAndConceptId(
                 situation.getId(), concept.getId());
-        if (current >= targetSize) return;
+        if (current >= targetSize) return 0;
 
         int needed = (int) (targetSize - current);
         int toRequest = Math.min(needed + 5, 15);
@@ -80,7 +83,7 @@ public class SongPoolService {
 
         List<GeminiSongDto> recommendations =
                 geminiService.recommend(situation.getName(), concept.getName(), toRequest, existingSongs);
-        if (recommendations.isEmpty()) return;
+        if (recommendations.isEmpty()) return 0;
 
         // Gemini가 준 ID를 배치 검증 (videos.list: 1 unit/50개, 저렴)
         List<String> ytIds = recommendations.stream()
@@ -98,8 +101,17 @@ public class SongPoolService {
 
             String videoId = dto.getYoutubeId();
 
-            // ID가 없거나 유효하지 않으면 스킵 (search.list 폴백 제거)
-            if (videoId == null || !viewCounts.containsKey(videoId)) continue;
+            // ID가 없거나 유효하지 않으면 전역 예산 내에서 search.list 폴백
+            if (videoId == null || !viewCounts.containsKey(videoId)) {
+                if (searchBudget[0] <= 0) continue;
+                Optional<String> found = youTubeService.searchVideoId(dto.getTitle(), dto.getArtist());
+                if (found.isEmpty()) continue;
+                videoId = found.get();
+                searchBudget[0]--;
+                Map<String, Long> extra = youTubeService.batchGetViewCounts(List.of(videoId));
+                viewCounts.putAll(extra);
+                if (!viewCounts.containsKey(videoId)) continue;
+            }
 
             final String finalVideoId = videoId;
             Long viewCount = viewCounts.get(finalVideoId);
@@ -124,9 +136,10 @@ public class SongPoolService {
         }
 
         if (added > 0) {
-            log.info("[{}/{}] {}곡 추가 → 현재 {}곡",
-                    situation.getName(), concept.getName(), added, current + added);
+            log.info("[{}/{}] {}곡 추가 → 현재 {}곡 (search잔여: {})",
+                    situation.getName(), concept.getName(), added, current + added, searchBudget[0]);
         }
+        return added;
     }
 
     /**

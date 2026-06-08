@@ -33,7 +33,7 @@ public class SongPoolScheduler {
     private static final int DAILY_GEMINI_LIMIT = 20;
 
     /**
-     * 매일 새벽 2시 - 곡 적은 조합 먼저, 일일 한도(20회) 내에서 보충
+     * 매일 새벽 2시 — 곡 적은 조합 먼저, Gemini 20회 + search.list 80회 예산 내 보충
      */
     @Scheduled(cron = "0 0 2 * * *", zone = "Asia/Seoul")
     public void nightly() {
@@ -83,13 +83,16 @@ public class SongPoolScheduler {
      * 매 호출마다 DB에서 현재 곡 수가 가장 적은 조합을 선택해 채운다.
      * 이전 fill로 바뀐 곡 수를 즉시 반영하므로 항상 최솟값 조합을 우선 처리.
      */
+    private static final int DAILY_SEARCH_BUDGET = 80; // search.list 전역 하루 예산 (8,000 units)
+    private static final int GEMINI_INTERVAL_MS  = 7000; // 7초 간격 → 분당 ~8회, RPM 10 이하 안전
+
     public int fillSorted(int maxCalls) {
         var situations = situationRepository.findAll();
         var concepts   = conceptRepository.findAll();
+        int[] searchBudget = {DAILY_SEARCH_BUDGET};
 
         int calls = 0;
         while (calls < maxCalls) {
-            // 매 회 DB 재조회 → 현재 곡이 가장 적고 목표 미달인 조합 선택
             Situation minSit = null;
             Concept   minCon = null;
             long      minCnt = Long.MAX_VALUE;
@@ -110,12 +113,12 @@ public class SongPoolScheduler {
                 break;
             }
 
-            log.info("[스케줄러] ({}/{}) [{}/{}] {}곡 → 채우기 시작",
-                    calls + 1, maxCalls, minSit.getName(), minCon.getName(), minCnt);
+            log.info("[스케줄러] ({}/{}) [{}/{}] {}곡 → 채우기 시작 (search잔여: {})",
+                    calls + 1, maxCalls, minSit.getName(), minCon.getName(), minCnt, searchBudget[0]);
             try {
-                songPoolService.fillCombination(minSit, minCon);
+                songPoolService.fillCombination(minSit, minCon, searchBudget);
                 calls++;
-                Thread.sleep(4500);
+                Thread.sleep(GEMINI_INTERVAL_MS);
             } catch (GeminiService.QuotaExceededException e) {
                 log.warn("[스케줄러] Gemini 한도 초과 — 오늘 채우기 중단 ({}회 완료)", calls);
                 return calls;
@@ -128,7 +131,7 @@ public class SongPoolScheduler {
         }
 
         if (calls >= maxCalls) {
-            log.info("[스케줄러] 일일 한도 {}회 도달, 오늘 종료.", maxCalls);
+            log.info("[스케줄러] 일일 한도 {}회 도달, search잔여: {}", maxCalls, searchBudget[0]);
         }
         return calls;
     }

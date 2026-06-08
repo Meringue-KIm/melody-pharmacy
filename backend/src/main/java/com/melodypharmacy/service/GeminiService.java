@@ -37,40 +37,51 @@ public class GeminiService {
         return apiKey != null && !apiKey.startsWith("YOUR_");
     }
 
+    private static final int MAX_RETRY = 3;
+    private static final long RETRY_WAIT_MS = 8000;
+
     /** @throws QuotaExceededException Gemini 일일 한도 초과 시 */
     public List<GeminiSongDto> recommend(String situation, String concept, int count, List<String> existingSongs) {
         if (!isConfigured()) {
             log.warn("Gemini API key not configured");
             return List.of();
         }
-        try {
-            String prompt = buildPrompt(situation, concept, count, existingSongs);
-            Map<String, Object> body = Map.of(
-                "contents", List.of(Map.of("parts", List.of(Map.of("text", prompt)))),
-                "generationConfig", Map.of(
-                    "responseMimeType", "application/json",
-                    "temperature", 0.9
-                )
-            );
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+        String prompt = buildPrompt(situation, concept, count, existingSongs);
+        Map<String, Object> body = Map.of(
+            "contents", List.of(Map.of("parts", List.of(Map.of("text", prompt)))),
+            "generationConfig", Map.of(
+                "responseMimeType", "application/json",
+                "temperature", 0.9
+            )
+        );
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-            ResponseEntity<String> res = restTemplate.postForEntity(
-                URL + apiKey, new HttpEntity<>(body, headers), String.class);
-
-            return parseResponse(res.getBody());
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.TOO_MANY_REQUESTS) {
-                log.warn("[Gemini] 429 한도 초과 — 오늘 채우기 중단");
-                throw new QuotaExceededException();
+        for (int attempt = 1; attempt <= MAX_RETRY; attempt++) {
+            try {
+                ResponseEntity<String> res = restTemplate.postForEntity(
+                    URL + apiKey, new HttpEntity<>(body, headers), String.class);
+                return parseResponse(res.getBody());
+            } catch (HttpClientErrorException e) {
+                if (e.getStatusCode() == HttpStatus.TOO_MANY_REQUESTS) {
+                    log.warn("[Gemini] 429 한도 초과 — 오늘 채우기 중단");
+                    throw new QuotaExceededException();
+                }
+                if (e.getStatusCode().value() == 503 && attempt < MAX_RETRY) {
+                    log.warn("[Gemini] 503 서버 과부하 [{}/{}] — {}초 후 재시도 ({}/{})",
+                            situation, concept, RETRY_WAIT_MS / 1000, attempt, MAX_RETRY);
+                    try { Thread.sleep(RETRY_WAIT_MS); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
+                    continue;
+                }
+                log.error("Gemini HTTP 오류 [{}/{}]: {}", situation, concept, e.getMessage());
+                return List.of();
+            } catch (Exception e) {
+                log.error("Gemini 호출 실패 [{}/{}]: {}", situation, concept, e.getMessage());
+                return List.of();
             }
-            log.error("Gemini HTTP 오류 [{}/{}]: {}", situation, concept, e.getMessage());
-            return List.of();
-        } catch (Exception e) {
-            log.error("Gemini 호출 실패 [{}/{}]: {}", situation, concept, e.getMessage());
-            return List.of();
         }
+        return List.of();
     }
 
     private List<GeminiSongDto> parseResponse(String body) throws Exception {
@@ -121,28 +132,26 @@ public class GeminiService {
 
     private String situationDesc(String s) {
         return switch (s) {
-            case "출근길"   -> "아침에 활기차게 하루를 시작하는";
-            case "퇴근길"   -> "하루를 마무리하며 집으로 돌아가는";
-            case "운동"     -> "고강도 운동 중 에너지를 높이는";
-            case "드라이브" -> "드라이브하며 창밖 풍경을 즐기는";
-            case "자기 전"  -> "밤에 잠들기 전 차분해지는";
-            case "집에서"   -> "집에서 편안하게 쉬는";
-            case "공부할 때"-> "집중력을 높이고 방해가 안 되는";
+            case "출근길"    -> "아침에 활기차게 하루를 시작하는";
+            case "비 오는 날" -> "비가 내리는 날 창가에서 감성에 젖는";
+            case "운동할 때"  -> "헬스장이나 야외 운동 중 에너지를 높이는";
+            case "드라이브"  -> "드라이브하며 창밖 풍경을 즐기는";
+            case "잠들기 전" -> "밤에 잠들기 전 차분하게 마음을 정리하는";
+            case "카페에서"  -> "카페에서 여유롭게 커피를 마시며 분위기를 즐기는";
+            case "공부할 때" -> "집중력을 높이고 공부 흐름을 방해하지 않는";
+            case "청소할 때" -> "집 청소나 설거지 등 집안일을 하며 흥을 돋우는";
             default -> s;
         };
     }
 
     private String conceptDesc(String c) {
         return switch (c) {
-            case "파워"   -> "강렬하고 에너지 넘치는";
-            case "산뜻"   -> "밝고 경쾌한 기분 좋은";
-            case "화남"   -> "분노와 강한 에너지를 표출하는";
-            case "발라드" -> "서정적이고 감성적인";
-            case "힙합"   -> "리듬감 있는 랩과 비트";
-            case "EDM"    -> "전자음악으로 흥을 돋우는";
-            case "잔잔한" -> "차분하고 평온한";
-            case "신남"   -> "신나고 흥겨운 업템포";
-            case "로맨틱" -> "달달하고 감미로운 사랑 노래";
+            case "신나게"   -> "신나고 흥겨운 업템포, 기분이 절로 업되는";
+            case "새로운"   -> "신선하고 트렌디한, 처음 듣는 느낌의";
+            case "슬프게"   -> "슬프고 감성적인, 눈물이 날 것 같은";
+            case "추억돋는" -> "옛날 생각이 나는 레트로하고 향수를 자극하는";
+            case "잔잔하게" -> "차분하고 평온한, 마음이 고요해지는";
+            case "위로받고" -> "따뜻하고 포근한, 지친 마음을 위로해주는";
             default -> c;
         };
     }
