@@ -116,7 +116,7 @@ public class SongPoolService {
             final String finalVideoId = videoId;
             Long viewCount = viewCounts.get(finalVideoId);
 
-            Song song = songRepository.findByTitleAndArtist(dto.getTitle(), dto.getArtist())
+            Song song = songRepository.findFirstByTitleAndArtist(dto.getTitle(), dto.getArtist())
                     .orElseGet(() -> songRepository.save(Song.builder()
                             .title(dto.getTitle())
                             .artist(dto.getArtist())

@@ -41,6 +41,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/situations/**").permitAll()
                 .requestMatchers("/api/concepts/**").permitAll()
                 .requestMatchers("/api/playlists/**").permitAll()
+                .requestMatchers("/api/songs/combo-counts").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated())
             .addFilterBefore(

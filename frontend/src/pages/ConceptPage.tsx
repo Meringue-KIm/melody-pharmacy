@@ -17,6 +17,7 @@ export default function ConceptPage() {
   const [comboCounts, setComboCounts] = useState<Record<number, number>>({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const isAdmin = localStorage.getItem('nickname') === '관리자'
 
   useEffect(() => {
     if (!situationId) { navigate('/'); return }
@@ -96,15 +97,13 @@ export default function ConceptPage() {
                   <button
                     key={c.id}
                     className="tile"
-                    onClick={() => !empty && handleSelect(c)}
-                    style={empty ? { opacity: 0.4, cursor: 'not-allowed' } : undefined}
-                    title={empty ? '아직 준비 중인 처방전이에요' : undefined}
+                    onClick={() => handleSelect(c)}
                   >
                     <Doodle name={c.icon} size={52} />
                     <span className="tile-name">{c.name}</span>
-                    {count !== undefined && (
-                      <span style={{ fontSize: 11, color: empty ? 'var(--warn)' : 'var(--muted)', marginTop: 2 }}>
-                        {empty ? '준비 중' : `${count}곡`}
+                    {isAdmin && count !== undefined && (
+                      <span style={{ fontSize: 11, color: count === 0 ? 'var(--warn)' : 'var(--muted)', marginTop: 2 }}>
+                        {count === 0 ? '준비 중' : `${count}곡`}
                       </span>
                     )}
                   </button>

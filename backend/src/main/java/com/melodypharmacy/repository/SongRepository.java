@@ -22,7 +22,7 @@ public interface SongRepository extends JpaRepository<Song, Long> {
                                          @Param("userId") Long userId);
 
     boolean existsByTitleAndArtist(String title, String artist);
-    java.util.Optional<Song> findByTitleAndArtist(String title, String artist);
+    java.util.Optional<Song> findFirstByTitleAndArtist(String title, String artist);
 
     @Transactional
     @Modifying

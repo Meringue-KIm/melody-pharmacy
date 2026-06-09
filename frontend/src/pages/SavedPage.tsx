@@ -26,12 +26,6 @@ export default function SavedPage() {
     else sessionStorage.removeItem('savedFilterSit')
   }
 
-  // 저장 목록이 바뀌어 현재 필터 상황이 사라지면 전체 보기로 초기화
-  useEffect(() => {
-    if (!filterSit) return
-    const situations = new Set(savedSongs.map(s => s.savedSituationName).filter(Boolean))
-    if (!situations.has(filterSit)) updateFilter(null)
-  }, [savedSongs])
   const [savedSongs, setSavedSongs] = useState<Song[]>([])
   const [historySongs, setHistorySongs] = useState<Song[]>([])
   const [loading, setLoading] = useState(true)
@@ -61,6 +55,13 @@ export default function SavedPage() {
   }
 
   useEffect(() => { load() }, [])
+
+  // 저장 목록이 바뀌어 현재 필터 상황이 사라지면 전체 보기로 초기화
+  useEffect(() => {
+    if (!filterSit) return
+    const situations = new Set(savedSongs.map(s => s.savedSituationName).filter(Boolean))
+    if (!situations.has(filterSit)) updateFilter(null)
+  }, [savedSongs])
 
   const handleThumbError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const img = e.currentTarget
