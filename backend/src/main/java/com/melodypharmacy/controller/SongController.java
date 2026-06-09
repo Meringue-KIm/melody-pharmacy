@@ -23,7 +23,7 @@ public class SongController {
             @RequestParam Long conceptId,
             @RequestParam(defaultValue = "false") boolean excludePlayed,
             @AuthenticationPrincipal UserDetails userDetails) {
-        Long userId = Long.parseLong(userDetails.getUsername());
+        Long userId = userDetails != null ? Long.parseLong(userDetails.getUsername()) : null;
         return ResponseEntity.ok(songService.recommend(situationId, conceptId, userId, excludePlayed));
     }
 

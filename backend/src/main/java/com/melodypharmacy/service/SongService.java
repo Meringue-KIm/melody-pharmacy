@@ -30,6 +30,13 @@ public class SongService {
 
     @Transactional(readOnly = true)
     public List<SongResponse> recommend(Long situationId, Long conceptId, Long userId, boolean excludePlayed) {
+        if (userId == null) {
+            List<Song> songs = songRepository.findRandomBySituationAndConcept(situationId, conceptId);
+            return diversifyByArtist(songs).stream()
+                    .map(song -> new SongResponse(song, false))
+                    .toList();
+        }
+
         List<Song> songs = excludePlayed
                 ? songRepository.findRandomExcludingPlayed(situationId, conceptId, userId)
                 : songRepository.findRandomBySituationAndConcept(situationId, conceptId);

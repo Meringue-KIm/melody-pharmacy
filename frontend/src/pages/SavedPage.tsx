@@ -148,10 +148,15 @@ export default function SavedPage() {
 
   const handleShare = async (song: Song, e: React.MouseEvent) => {
     e.stopPropagation()
-    const text = `🎵 ${song.title} - ${song.artist}`
+    const title = `${song.title} - ${song.artist}`
+    const appUrl = window.location.origin
     try {
-      if (navigator.share) await navigator.share({ title: text, url: song.youtubeUrl })
-      else { await navigator.clipboard.writeText(song.youtubeUrl); showToast('링크가 복사됐어요!') }
+      if (navigator.share) {
+        await navigator.share({ title, text: `🎵 멜로디약국에서 처방받은 노래예요`, url: appUrl })
+      } else {
+        await navigator.clipboard.writeText(`🎵 ${title}\n${song.youtubeUrl}\n\n멜로디약국 → ${appUrl}`)
+        showToast('링크가 복사됐어요!')
+      }
     } catch {
       showToast('공유에 실패했어요.')
     }

@@ -192,12 +192,17 @@ export default function RecommendPage() {
 
   const handleShare = async (song: Song, e: React.MouseEvent) => {
     e.stopPropagation()
-    const text = `🎵 ${song.title} - ${song.artist}`
+    const title = `${song.title} - ${song.artist}`
+    const appUrl = window.location.origin
     try {
       if (navigator.share) {
-        await navigator.share({ title: text, url: song.youtubeUrl })
+        await navigator.share({
+          title,
+          text: `🎵 멜로디약국에서 처방받은 노래예요`,
+          url: appUrl,
+        })
       } else {
-        await navigator.clipboard.writeText(song.youtubeUrl)
+        await navigator.clipboard.writeText(`🎵 ${title}\n${song.youtubeUrl}\n\n멜로디약국 → ${appUrl}`)
         showToast('링크가 복사됐어요!')
       }
     } catch {
@@ -302,7 +307,12 @@ export default function RecommendPage() {
             <p style={{ margin: 0, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>외 {songs.length - 8}곡 더</p>
           )}
         </div>
-        <p style={{ fontSize: 11, color: 'var(--muted)', margin: '16px 0 0', textAlign: 'right' }}>{today}</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 16 }}>
+          <p style={{ margin: 0, fontSize: 11, color: 'var(--accent)', fontFamily: 'var(--font-mono)', letterSpacing: '0.05em' }}>
+            {window.location.host}
+          </p>
+          <p style={{ margin: 0, fontSize: 11, color: 'var(--muted)' }}>{today}</p>
+        </div>
       </div>
 
       {/* 처방전 슬립 — 기본 접힘 */}
@@ -334,7 +344,7 @@ export default function RecommendPage() {
               >📤</button>
             )}
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted)' }}>
-              {songs.length}곡 {rxOpen ? '▲' : '▼'}
+              {loading ? '…' : `${songs.length}곡`} {rxOpen ? '▲' : '▼'}
             </span>
           </div>
         </div>
@@ -426,8 +436,8 @@ export default function RecommendPage() {
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           {tab === 'recommend' && (
             <>
-              <button className="btn-ghost-sm" disabled={loading} onClick={() => loadRecommend()} title="새 처방전">🔄</button>
-              <button className="btn-ghost-sm" disabled={loading || songs.length === 0} onClick={handleShuffle} title="순서 섞기">🔀</button>
+              <button className="btn-ghost-sm" disabled={loading} onClick={() => loadRecommend()}>🔄 새 처방전</button>
+              <button className="btn-ghost-sm" disabled={loading || songs.length === 0} onClick={handleShuffle}>🔀 섞기</button>
             </>
           )}
           {currentSongs.length > 0 && (

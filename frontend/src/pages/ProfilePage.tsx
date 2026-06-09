@@ -130,7 +130,7 @@ export default function ProfilePage() {
         <div className="section" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           <div className="stat-grid">
             <div className="stat">
-              <p className="stat-value">{historyCount}<span>곡</span></p>
+              <p className="stat-value">{historyCount >= 50 ? '50+' : historyCount}<span>곡</span></p>
               <p className="stat-label">들은 노래</p>
             </div>
             <div className="stat">
@@ -204,16 +204,14 @@ export default function ProfilePage() {
         <p className="eyebrow">처방 통계</p>
         <div className="stat-grid">
           <div className="stat">
-            <p className="stat-value">{historyCount}<span>곡</span></p>
+            <p className="stat-value">
+              {historyCount >= 50 ? '50+' : historyCount}<span>곡</span>
+            </p>
             <p className="stat-label">처방받은 노래</p>
           </div>
           <div className="stat">
             <p className="stat-value">{savedCount}<span>곡</span></p>
             <p className="stat-label">약장에 보관 중</p>
-          </div>
-          <div className="stat">
-            <p className="stat-value">{lastSelections.length}<span>건</span></p>
-            <p className="stat-label">최근 처방전</p>
           </div>
         </div>
       </section>
