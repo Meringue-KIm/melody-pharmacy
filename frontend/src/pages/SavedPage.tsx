@@ -9,6 +9,7 @@ import mascotLab from '../assets/mascot-lab.png'
 import MascotIllustration from '../components/MascotIllustration'
 
 type Tab = 'saved' | 'history'
+type SortMode = 'saved' | 'title' | 'artist'
 
 function getVideoId(url: string) {
   return url.match(/[?&]v=([^&]+)/)?.[1] ?? ''
@@ -33,6 +34,8 @@ export default function SavedPage() {
   const [playingId, setPlayingId] = useState<number | null>(null)
   const [autoPlay, setAutoPlay] = useState(false)
   const [savingIds, setSavingIds] = useState<Set<number>>(new Set())
+  const [sortMode, setSortMode] = useState<SortMode>('saved')
+  const [searchQuery, setSearchQuery] = useState('')
   const [toast, setToast] = useState('')
   const [undoSong, setUndoSong] = useState<Song | null>(null)
   const autoplaySongsRef = useRef<Song[]>([])
@@ -253,77 +256,131 @@ export default function SavedPage() {
           {Array.from({ length: 4 }).map((_, i) => <div key={i} className="skel skel-song" />)}
         </div>
       )}
-      {tab === 'saved' && !loading && !error && savedSongs.length === 0 ? (
+      {tab === 'saved' && !loading && !error && savedSongs.length === 0 && (
         <div className="empty empty-lg">
           <MascotIllustration src={mascotLab} size={130} alt="약사 캐릭터" />
           <p>아직 약장이 비어있어요.</p>
           <button className="btn" onClick={() => navigate('/')}>처방전 받으러 가기</button>
         </div>
-      ) : tab === 'saved' && !loading && (() => {
+      )}
+      {tab === 'saved' && !loading && !error && savedSongs.length > 0 && (() => {
         const situations = [...new Set(savedSongs.map(s => s.savedSituationName).filter(Boolean))] as string[]
         const filtered = filterSit ? savedSongs.filter(s => s.savedSituationName === filterSit) : savedSongs
+        const searched = searchQuery.trim()
+          ? filtered.filter(s => {
+              const q = searchQuery.toLowerCase()
+              return s.title.toLowerCase().includes(q) || s.artist.toLowerCase().includes(q)
+            })
+          : filtered
+        const sorted = sortMode === 'saved' ? searched : [...searched].sort((a, b) =>
+          sortMode === 'title'
+            ? a.title.localeCompare(b.title, 'ko')
+            : a.artist.localeCompare(b.artist, 'ko')
+        )
         return (
-        <>
-          {situations.length > 1 && (
-            <div className="chip-row" style={{ marginBottom: 14 }}>
-              <button
-                className="chip"
-                style={{ background: !filterSit ? 'var(--accent)' : undefined, color: !filterSit ? 'white' : undefined }}
-                onClick={() => updateFilter(null)}
-              >전체 {savedSongs.length}</button>
-              {situations.map(sit => (
-                <button
-                  key={sit}
-                  className="chip"
-                  style={{ background: filterSit === sit ? 'var(--accent)' : undefined, color: filterSit === sit ? 'white' : undefined }}
-                  onClick={() => updateFilter(sit)}
-                >{sit}</button>
-              ))}
-            </div>
-          )}
-          <div className="shelf">
-            <p className="shelf-title">상비약 · ALWAYS ON HAND</p>
-            <div className="song-list">
-              {filtered.map((song, idx) => (
-              <button
-                key={song.id}
-                id={`song-${song.id}`}
-                className={`song-card ${playingId === song.id ? 'playing' : ''}`}
-                onClick={() => handlePlay(song)}
-              >
-                <span className="song-num">{String(idx + 1).padStart(2, '0')}</span>
-                <div className="song-thumb">
-                  {song.thumbnailUrl && <img src={song.thumbnailUrl} alt={song.title} onError={handleThumbError} />}
-                </div>
-                <div className="song-info">
-                  <p className="song-title">{song.title}</p>
-                  <p className="song-artist">{song.artist}</p>
-                  {song.savedSituationName && (
-                    <span className="dose-chip" style={{ marginTop: 4 }}>
-                      {song.savedSituationIcon} {song.savedSituationName} · {song.savedConceptIcon} {song.savedConceptName}
-                    </span>
-                  )}
-                </div>
-                <div className="song-actions">
-                  <span className={`play-btn ${playingId === song.id ? 'playing' : ''}`}>
-                    {playingId === song.id ? '❚❚' : '▶'}
-                  </span>
+          <>
+            {/* 검색 */}
+            {savedSongs.length > 4 && (
+              <div style={{ position: 'relative', marginBottom: 10 }}>
+                <input
+                  className="input"
+                  type="search"
+                  placeholder="제목 또는 아티스트 검색"
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  style={{ paddingRight: searchQuery ? 40 : undefined }}
+                />
+                {searchQuery && (
                   <button
-                    type="button"
-                    className="save-btn saved"
-                    onClick={e => handleSave(song, e)}
-                    style={savingIds.has(song.id) ? { opacity: 0.4, cursor: 'wait' } : undefined}
-                    aria-label="저장 해제"
-                  >
-                    {savingIds.has(song.id) ? '…' : '♥'}
-                  </button>
-                  <button type="button" className="share-btn" onClick={e => handleShare(song, e)} aria-label="공유">📤</button>
+                    onClick={() => setSearchQuery('')}
+                    style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--muted)', cursor: 'pointer', fontSize: 16 }}
+                    aria-label="검색 초기화"
+                  >✕</button>
+                )}
+              </div>
+            )}
+
+            {/* 상황 필터 + 정렬 */}
+            <div className="chip-row" style={{ marginBottom: 14 }}>
+              {situations.length > 1 && (
+                <>
+                  <button
+                    className="chip"
+                    style={{ background: !filterSit ? 'var(--accent)' : undefined, color: !filterSit ? 'white' : undefined }}
+                    onClick={() => updateFilter(null)}
+                  >전체 {savedSongs.length}</button>
+                  {situations.map(sit => (
+                    <button
+                      key={sit}
+                      className="chip"
+                      style={{ background: filterSit === sit ? 'var(--accent)' : undefined, color: filterSit === sit ? 'white' : undefined }}
+                      onClick={() => updateFilter(sit)}
+                    >{sit}</button>
+                  ))}
+                </>
+              )}
+              <div style={{ marginLeft: 'auto', display: 'flex', gap: 4 }}>
+                {(['saved', 'title', 'artist'] as const).map(mode => (
+                  <button
+                    key={mode}
+                    className="chip"
+                    style={{ fontSize: 12, background: sortMode === mode ? 'var(--ink)' : undefined, color: sortMode === mode ? 'var(--surface)' : undefined }}
+                    onClick={() => setSortMode(mode)}
+                  >{mode === 'saved' ? '저장순' : mode === 'title' ? '제목순' : '아티스트'}</button>
+                ))}
+              </div>
+            </div>
+
+            {sorted.length === 0 ? (
+              <div className="empty">
+                <p>검색 결과가 없어요.</p>
+                <button className="btn-ghost-sm" onClick={() => setSearchQuery('')}>초기화</button>
+              </div>
+            ) : (
+              <div className="shelf">
+                <p className="shelf-title">상비약 · ALWAYS ON HAND</p>
+                <div className="song-list">
+                  {sorted.map((song, idx) => (
+                    <button
+                      key={song.id}
+                      id={`song-${song.id}`}
+                      className={`song-card ${playingId === song.id ? 'playing' : ''}`}
+                      onClick={() => handlePlay(song)}
+                    >
+                      <span className="song-num">{String(idx + 1).padStart(2, '0')}</span>
+                      <div className="song-thumb">
+                        {song.thumbnailUrl && <img src={song.thumbnailUrl} alt={song.title} onError={handleThumbError} />}
+                      </div>
+                      <div className="song-info">
+                        <p className="song-title">{song.title}</p>
+                        <p className="song-artist">{song.artist}</p>
+                        {song.savedSituationName && (
+                          <span className="dose-chip" style={{ marginTop: 4 }}>
+                            {song.savedSituationIcon} {song.savedSituationName} · {song.savedConceptIcon} {song.savedConceptName}
+                          </span>
+                        )}
+                      </div>
+                      <div className="song-actions">
+                        <span className={`play-btn ${playingId === song.id ? 'playing' : ''}`}>
+                          {playingId === song.id ? '❚❚' : '▶'}
+                        </span>
+                        <button
+                          type="button"
+                          className="save-btn saved"
+                          onClick={e => handleSave(song, e)}
+                          style={savingIds.has(song.id) ? { opacity: 0.4, cursor: 'wait' } : undefined}
+                          aria-label="저장 해제"
+                        >
+                          {savingIds.has(song.id) ? '…' : '♥'}
+                        </button>
+                        <button type="button" className="share-btn" onClick={e => handleShare(song, e)} aria-label="공유">📤</button>
+                      </div>
+                    </button>
+                  ))}
                 </div>
-              </button>
-            ))}
-          </div>
-        </div>
-        </>
+              </div>
+            )}
+          </>
         )
       })()}
 

@@ -16,7 +16,10 @@ public interface SongRepository extends JpaRepository<Song, Long> {
                                                @Param("conceptId") Long conceptId);
 
     @Query("SELECT st.song FROM SongTag st WHERE st.situation.id = :situationId AND st.concept.id = :conceptId " +
-           "AND st.song.id NOT IN (SELECT ph.song.id FROM PlayHistory ph WHERE ph.user.id = :userId) ORDER BY RAND()")
+           "AND st.song.id NOT IN (" +
+           "  SELECT ph.song.id FROM PlayHistory ph WHERE ph.user.id = :userId " +
+           "  AND ph.situation.id = :situationId AND ph.concept.id = :conceptId" +
+           ") ORDER BY RAND()")
     List<Song> findRandomExcludingPlayed(@Param("situationId") Long situationId,
                                          @Param("conceptId") Long conceptId,
                                          @Param("userId") Long userId);
