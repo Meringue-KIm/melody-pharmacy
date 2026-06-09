@@ -157,8 +157,8 @@ export default function SavedPage() {
         await navigator.clipboard.writeText(`🎵 ${title}\n${song.youtubeUrl}\n\n멜로디약국 → ${appUrl}`)
         showToast('링크가 복사됐어요!')
       }
-    } catch {
-      showToast('공유에 실패했어요.')
+    } catch (err: any) {
+      if (err?.name !== 'AbortError') showToast('공유에 실패했어요.')
     }
   }
 

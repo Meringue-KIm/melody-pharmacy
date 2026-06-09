@@ -15,6 +15,12 @@ function cacheSong(s: any): GuestSong {
   return entry
 }
 
+// 페이지 새로고침 후에도 저장/히스토리 곡을 캐시에서 찾을 수 있도록 초기화
+;(function initSongCache() {
+  for (const s of getGuestSaved())   songCache.set(s.id, s)
+  for (const s of getGuestHistory()) songCache.set(s.id, s)
+})()
+
 // 서버 API 직접 사용 (situations, concepts, playlists, recommend, combo-counts)
 export const guestGetSituations = () => api.get('/api/situations')
 export const guestGetConcepts   = () => api.get('/api/concepts')
@@ -33,7 +39,7 @@ export const guestRecommend = async (situationId: number, conceptId: number, _ex
 }
 
 export const guestGetPlaylists = (situationId: number, conceptId: number) =>
-  Promise.resolve({ data: PLAYLISTS.filter(p => p.situationId === situationId && p.conceptId === conceptId) })
+  api.get('/api/playlists', { params: { situationId, conceptId } })
 
 // 저장/히스토리는 localStorage 유지
 export const guestSaveSong = (songId: number, situationId?: number, conceptId?: number) => {
