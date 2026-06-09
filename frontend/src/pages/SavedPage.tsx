@@ -18,12 +18,12 @@ export default function SavedPage() {
   const navigate = useNavigate()
   const [tab, setTab] = useState<Tab>('saved')
   const [filterSit, setFilterSit] = useState<string | null>(() =>
-    sessionStorage.getItem('savedFilterSit') || null
+    localStorage.getItem('savedFilterSit') || null
   )
   const updateFilter = (sit: string | null) => {
     setFilterSit(sit)
-    if (sit) sessionStorage.setItem('savedFilterSit', sit)
-    else sessionStorage.removeItem('savedFilterSit')
+    if (sit) localStorage.setItem('savedFilterSit', sit)
+    else localStorage.removeItem('savedFilterSit')
   }
 
   const [savedSongs, setSavedSongs] = useState<Song[]>([])
@@ -327,9 +327,15 @@ export default function SavedPage() {
         )
       })()}
 
-      {/* 미니 플레이어 — 스크롤해도 하단 고정 */}
+      {/* 미니 플레이어 — 스크롤해도 하단 고정, 클릭하면 플레이어로 이동 */}
       {playingSong && (
-        <div className="mini-player">
+        <div
+          className="mini-player"
+          role="button"
+          tabIndex={0}
+          onClick={() => document.querySelector('.player')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+          onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') document.querySelector('.player')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}
+        >
           {playingSong.thumbnailUrl && (
             <img src={playingSong.thumbnailUrl} alt="" className="mini-player-thumb" onError={handleThumbError} />
           )}
@@ -337,7 +343,7 @@ export default function SavedPage() {
             <p className="mini-player-title">{playingSong.title}</p>
             <p className="mini-player-artist">{playingSong.artist}</p>
           </div>
-          <button className="mini-player-stop" onClick={() => setPlayingId(null)} aria-label="재생 중지">■</button>
+          <button className="mini-player-stop" onClick={e => { e.stopPropagation(); setPlayingId(null) }} aria-label="재생 중지">■</button>
         </div>
       )}
 

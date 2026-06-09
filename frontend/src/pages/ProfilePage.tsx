@@ -113,6 +113,7 @@ export default function ProfilePage() {
     localStorage.removeItem('lastSelection')
     localStorage.removeItem('provider')
     localStorage.removeItem('excludePlayed')
+    localStorage.removeItem('savedFilterSit')
     exitGuestMode()
     navigate('/login')
   }

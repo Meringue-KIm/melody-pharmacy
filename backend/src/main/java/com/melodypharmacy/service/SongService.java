@@ -123,7 +123,7 @@ public class SongService {
         Map<Long, PlayHistory> latestBySong = new LinkedHashMap<>();
         for (PlayHistory h : playHistoryRepository.findByUserIdOrderByPlayedAtDesc(userId)) {
             latestBySong.putIfAbsent(h.getSong().getId(), h);
-            if (latestBySong.size() >= 20) break;
+            if (latestBySong.size() >= 50) break;
         }
 
         return latestBySong.values().stream()

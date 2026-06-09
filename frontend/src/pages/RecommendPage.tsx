@@ -225,13 +225,16 @@ export default function RecommendPage() {
       const canvas = await html2canvas(shareCardRef.current, {
         scale: 2, useCORS: true, backgroundColor: getVar('--surface') ?? '#fff',
         onclone: (_doc, el) => {
-          el.style.background = getVar('--surface') ?? '#fff'
-          el.querySelectorAll<HTMLElement>('[style]').forEach(node => {
-            const s = node.style
-            if (s.color?.includes('var(--ink)')) s.color = getVar('--ink') ?? '#000'
-            if (s.color?.includes('var(--ink-soft)')) s.color = getVar('--ink-soft') ?? '#444'
-            if (s.color?.includes('var(--muted)')) s.color = getVar('--muted') ?? '#999'
+          // 다크모드 강제 해제 후 모든 CSS 변수 직접 치환
+          _doc.documentElement.removeAttribute('data-dark')
+          const resolveVars = (val: string) =>
+            val.replace(/var\((--[\w-]+)\)/g, (_, name) => getVar(name) ?? '')
+          el.querySelectorAll<HTMLElement>('*').forEach(node => {
+            if (!node.style?.cssText) return
+            const resolved = resolveVars(node.style.cssText)
+            if (resolved !== node.style.cssText) node.setAttribute('style', resolved)
           })
+          el.style.background = getVar('--surface') ?? '#fff'
         }
       })
       const dataUrl = canvas.toDataURL('image/png')
@@ -513,9 +516,15 @@ export default function RecommendPage() {
         ))}
       </div>
 
-      {/* 미니 플레이어 — 스크롤해도 하단 고정 */}
+      {/* 미니 플레이어 — 스크롤해도 하단 고정, 클릭하면 플레이어로 이동 */}
       {playingSong && (
-        <div className="mini-player">
+        <div
+          className="mini-player"
+          role="button"
+          tabIndex={0}
+          onClick={() => document.querySelector('.player')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+          onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') document.querySelector('.player')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}
+        >
           {playingSong.thumbnailUrl && (
             <img src={playingSong.thumbnailUrl} alt="" className="mini-player-thumb" onError={handleThumbError} />
           )}
@@ -523,7 +532,7 @@ export default function RecommendPage() {
             <p className="mini-player-title">{playingSong.title}</p>
             <p className="mini-player-artist">{playingSong.artist}</p>
           </div>
-          <button className="mini-player-stop" onClick={() => setPlayingId(null)} aria-label="재생 중지">■</button>
+          <button className="mini-player-stop" onClick={e => { e.stopPropagation(); setPlayingId(null) }} aria-label="재생 중지">■</button>
         </div>
       )}
 

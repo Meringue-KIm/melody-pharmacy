@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://localhost:8081',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8081',
 })
 
 api.interceptors.request.use((config: import('axios').InternalAxiosRequestConfig) => {
@@ -22,6 +22,8 @@ api.interceptors.response.use(
       localStorage.removeItem('lastSelection')
       localStorage.removeItem('lastSelections')
       localStorage.removeItem('provider')
+      localStorage.removeItem('excludePlayed')
+      localStorage.removeItem('savedFilterSit')
       if (wasLoggedIn && !window.location.pathname.startsWith('/login')) {
         sessionStorage.setItem('sessionExpired', '1')
         window.location.href = '/login'

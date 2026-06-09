@@ -50,5 +50,5 @@ export const addGuestHistory = (song: GuestSong, situationId?: number, conceptId
     savedConceptId: con?.id, savedConceptIcon: con?.icon, savedConceptName: con?.name,
   }
   const prev = getGuestHistory().filter(s => s.id !== song.id)
-  localStorage.setItem(GUEST_HISTORY_KEY, JSON.stringify([entry, ...prev].slice(0, 20)))
+  localStorage.setItem(GUEST_HISTORY_KEY, JSON.stringify([entry, ...prev].slice(0, 50)))
 }
