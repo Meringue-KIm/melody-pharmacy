@@ -432,6 +432,13 @@ a { color: var(--accent); text-decoration: none; }
   background: var(--accent-fade);
 }
 
+.tile:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  filter: grayscale(0.3);
+}
+
 .tile-icon {
   font-size: 36px;
   line-height: 1;
@@ -579,7 +586,7 @@ a { color: var(--accent); text-decoration: none; }
 .toast {
   position: fixed;
   left: 50%;
-  bottom: calc(max(env(safe-area-inset-bottom, 0px), 8px) + 70px);
+  bottom: calc(max(env(safe-area-inset-bottom, 0px), 8px) + 132px);
   transform: translateX(-50%);
   background: var(--ink);
   color: var(--surface);

@@ -97,14 +97,16 @@ export default function ConceptPage() {
                   <button
                     key={c.id}
                     className="tile"
+                    disabled={empty}
                     onClick={() => handleSelect(c)}
                   >
                     <Doodle name={c.icon} size={52} />
                     <span className="tile-name">{c.name}</span>
-                    {isAdmin && count !== undefined && (
-                      <span style={{ fontSize: 11, color: count === 0 ? 'var(--warn)' : 'var(--muted)', marginTop: 2 }}>
-                        {count === 0 ? '준비 중' : `${count}곡`}
-                      </span>
+                    {empty && (
+                      <span style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>준비 중</span>
+                    )}
+                    {isAdmin && count !== undefined && !empty && (
+                      <span style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>{count}곡</span>
                     )}
                   </button>
                 )

@@ -159,7 +159,7 @@ export default function RecommendPage() {
     if (isOpening) {
       autoplaySongsRef.current = currentSongs
       isGuest() ? guestRecordPlay(song.id, situationId, conceptId) : recordPlay(song.id, situationId, conceptId)
-      setHistorySongs(prev => [song, ...prev.filter(s => s.id !== song.id)].slice(0, 20))
+      setHistorySongs(prev => [song, ...prev.filter(s => s.id !== song.id)])
       setTimeout(() => {
         document.getElementById(`song-${song.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
       }, 50)
@@ -284,7 +284,7 @@ export default function RecommendPage() {
         </p>
         <p style={{ fontSize: 14, color: 'var(--ink-soft)', margin: '0 0 18px' }}>{rxTagline}</p>
         <div style={{ borderTop: '1px dashed var(--line)', paddingTop: 14, display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {songs.slice(0, 5).map((s, i) => (
+          {songs.slice(0, 8).map((s, i) => (
             <div key={s.id} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
               <span style={{ fontFamily: 'monospace', fontSize: 12, color: 'var(--muted)', minWidth: 20 }}>
                 {String(i + 1).padStart(2, '0')}
@@ -295,8 +295,8 @@ export default function RecommendPage() {
               </div>
             </div>
           ))}
-          {songs.length > 5 && (
-            <p style={{ margin: 0, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>외 {songs.length - 5}곡 더</p>
+          {songs.length > 8 && (
+            <p style={{ margin: 0, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>외 {songs.length - 8}곡 더</p>
           )}
         </div>
         <p style={{ fontSize: 11, color: 'var(--muted)', margin: '16px 0 0', textAlign: 'right' }}>{today}</p>
@@ -394,7 +394,7 @@ export default function RecommendPage() {
           <div className="youtube-embed">
             <iframe
               key={playingSong.id}
-              src={`https://www.youtube.com/embed/${getVideoId(playingSong.youtubeUrl)}?enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`}
+              src={`https://www.youtube.com/embed/${getVideoId(playingSong.youtubeUrl)}?enablejsapi=1&autoplay=1&origin=${encodeURIComponent(window.location.origin)}`}
               title={playingSong.title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -512,6 +512,20 @@ export default function RecommendPage() {
           </button>
         ))}
       </div>
+
+      {/* 미니 플레이어 — 스크롤해도 하단 고정 */}
+      {playingSong && (
+        <div className="mini-player">
+          {playingSong.thumbnailUrl && (
+            <img src={playingSong.thumbnailUrl} alt="" className="mini-player-thumb" onError={handleThumbError} />
+          )}
+          <div className="mini-player-info">
+            <p className="mini-player-title">{playingSong.title}</p>
+            <p className="mini-player-artist">{playingSong.artist}</p>
+          </div>
+          <button className="mini-player-stop" onClick={() => setPlayingId(null)} aria-label="재생 중지">■</button>
+        </div>
+      )}
 
       {/* 플레이리스트 추천 */}
       {playlists.length > 0 && (

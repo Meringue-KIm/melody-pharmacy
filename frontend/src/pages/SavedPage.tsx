@@ -79,7 +79,7 @@ export default function SavedPage() {
     if (isOpening) {
       autoplaySongsRef.current = currentSongs
       isGuest() ? guestRecordPlay(song.id) : recordPlay(song.id)
-      setHistorySongs(prev => [song, ...prev.filter(s => s.id !== song.id)].slice(0, 20))
+      setHistorySongs(prev => [song, ...prev.filter(s => s.id !== song.id)])
       setTimeout(() => {
         document.getElementById(`song-${song.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
       }, 50)
@@ -211,7 +211,7 @@ export default function SavedPage() {
           <div className="youtube-embed">
             <iframe
               key={playingSong.id}
-              src={`https://www.youtube.com/embed/${getVideoId(playingSong.youtubeUrl)}?enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`}
+              src={`https://www.youtube.com/embed/${getVideoId(playingSong.youtubeUrl)}?enablejsapi=1&autoplay=1&origin=${encodeURIComponent(window.location.origin)}`}
               title={playingSong.title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -326,6 +326,20 @@ export default function SavedPage() {
         </>
         )
       })()}
+
+      {/* 미니 플레이어 — 스크롤해도 하단 고정 */}
+      {playingSong && (
+        <div className="mini-player">
+          {playingSong.thumbnailUrl && (
+            <img src={playingSong.thumbnailUrl} alt="" className="mini-player-thumb" onError={handleThumbError} />
+          )}
+          <div className="mini-player-info">
+            <p className="mini-player-title">{playingSong.title}</p>
+            <p className="mini-player-artist">{playingSong.artist}</p>
+          </div>
+          <button className="mini-player-stop" onClick={() => setPlayingId(null)} aria-label="재생 중지">■</button>
+        </div>
+      )}
 
       {/* 히스토리 탭 */}
       {tab === 'history' && (
