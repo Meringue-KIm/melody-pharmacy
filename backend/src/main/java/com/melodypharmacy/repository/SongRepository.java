@@ -26,6 +26,7 @@ public interface SongRepository extends JpaRepository<Song, Long> {
 
     boolean existsByTitleAndArtist(String title, String artist);
     java.util.Optional<Song> findFirstByTitleAndArtist(String title, String artist);
+    java.util.Optional<Song> findFirstByTitleIgnoreCaseAndArtistIgnoreCase(String title, String artist);
 
     @Transactional
     @Modifying

@@ -1802,9 +1802,12 @@ public class DataInitializer implements ApplicationRunner {
 
     private void tag(String title, String artist, String videoId,
                      Situation[] situations, Concept[] concepts) {
-        Song song = songRepository.findFirstByTitleAndArtist(title, artist)
+        // 대소문자·공백 차이로 인한 중복 방지
+        String t = title.trim();
+        String a = artist.trim();
+        Song song = songRepository.findFirstByTitleIgnoreCaseAndArtistIgnoreCase(t, a)
                 .orElseGet(() -> songRepository.save(Song.builder()
-                        .title(title).artist(artist)
+                        .title(t).artist(a)
                         .youtubeUrl("https://www.youtube.com/watch?v=" + videoId)
                         .thumbnailUrl("https://i.ytimg.com/vi/" + videoId + "/hqdefault.jpg")
                         .build()));

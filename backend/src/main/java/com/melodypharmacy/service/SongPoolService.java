@@ -77,9 +77,10 @@ public class SongPoolService {
         int needed = (int) (targetSize - current);
         int toRequest = Math.min(needed + 5, 15);
 
-        // 기존 곡 목록 조회 → Gemini에 중복 제외 지시
-        List<String> existingSongs = songTagRepository
-                .findSongNamesBySituationIdAndConceptId(situation.getId(), concept.getId());
+        // 기존 곡 목록 조회 → Gemini에 중복 제외 지시 (전체 DB 기준으로 중복 방지)
+        List<String> existingSongs = songRepository.findAll().stream()
+                .map(s -> s.getTitle() + " (" + s.getArtist() + ")")
+                .collect(Collectors.toList());
 
         List<GeminiSongDto> recommendations =
                 geminiService.recommend(situation.getName(), concept.getName(), toRequest, existingSongs);
@@ -99,6 +100,11 @@ public class SongPoolService {
             if (added >= needed) break;
             if (dto.getTitle() == null || dto.getArtist() == null) continue;
 
+            // 공백 제거 + 정규화로 중복 방지
+            final String title = dto.getTitle().trim();
+            final String artist = dto.getArtist().trim();
+            if (title.isEmpty() || artist.isEmpty()) continue;
+
             String videoId = dto.getYoutubeId();
 
             // ID가 없거나 유효하지 않으면 전역 예산 내에서 search.list 폴백
@@ -116,10 +122,10 @@ public class SongPoolService {
             final String finalVideoId = videoId;
             Long viewCount = viewCounts.get(finalVideoId);
 
-            Song song = songRepository.findFirstByTitleAndArtist(dto.getTitle(), dto.getArtist())
+            Song song = songRepository.findFirstByTitleIgnoreCaseAndArtistIgnoreCase(title, artist)
                     .orElseGet(() -> songRepository.save(Song.builder()
-                            .title(dto.getTitle())
-                            .artist(dto.getArtist())
+                            .title(title)
+                            .artist(artist)
                             .youtubeUrl("https://www.youtube.com/watch?v=" + finalVideoId)
                             .thumbnailUrl("https://i.ytimg.com/vi/" + finalVideoId + "/hqdefault.jpg")
                             .youtubeViewCount(viewCount)
