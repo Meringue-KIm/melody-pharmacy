@@ -34,21 +34,32 @@ cd frontend && npm run dev
 - `VITE_API_URL` — 백엔드 배포 URL
 - `VITE_KAKAO_CLIENT_ID`, `VITE_KAKAO_REDIRECT_URI`
 
+## 데이터 현황 (2026-06-10)
+- songs: **1,009곡** (목표 달성) / song_tags: 4,028개
+- songs 테이블: `(title, artist)` UNIQUE constraint 적용
+
 ## 핵심 설계 결정
 - **게스트 모드**: situations/concepts/recommend/playlists는 서버 API 직접 호출, 저장/히스토리만 localStorage
 - **songCache**: `guestApi.ts` 모듈 로드 시 localStorage 데이터로 초기화 → 새로고침 후에도 저장/히스토리 복원
 - **들은 곡 제외**: 동일 상황×분위기 조합 기준 (전체 기준 아님)
 - **히스토리 제한**: 백엔드 50곡, 게스트 50곡
+- **노래 중복 방지 (3중 방어)**:
+  1. DB: `(title, artist)` UNIQUE constraint
+  2. Java: `findFirstByTitleIgnoreCaseAndArtistIgnoreCase` + `trim()`
+  3. Gemini: `existingSongs`를 **전체 DB 기준**으로 전달 (cross-combo 중복 방지)
 
 ## 중요 파일
 - `frontend/src/api/guestApi.ts` — 게스트 API (서버 API + localStorage 혼합)
 - `frontend/src/utils/guestMode.ts` — localStorage 저장/히스토리 관리
-- `backend/.../SongRepository.java` — `findRandomExcludingPlayed` 쿼리 (조합 기준)
+- `backend/.../SongRepository.java` — `findRandomExcludingPlayed`, `findFirstByTitleIgnoreCaseAndArtistIgnoreCase`
+- `backend/.../SongPoolService.java` — Gemini 자동채우기, existingSongs=전체DB, trim+IgnoreCase
 - `backend/.../SecurityConfig.java` — CORS 설정 (환경변수)
 - `backend/.../SongService.java` — recommend에서 userId null이면 게스트 처리
+- `backend/.../DataInitializer.java` — 시드 데이터 (addNewSongs 매 재시작 실행, IgnoreCase 멱등)
 
 ## 주의사항
 - Bash 툴에서 `java` 명령 안 됨 → 반드시 PowerShell 사용
 - `PLAYLISTS` 로컬 상수는 더 이상 guestApi에서 사용 안 함 (서버 API 사용)
-- DataInitializer: `addNewSongs()`는 매 재시작마다 실행 — 멱등성 보장
+- DataInitializer: `addNewSongs()`는 매 재시작마다 실행 — IgnoreCase로 멱등성 보장
 - git history에 API 키 노출 이력 → 배포 전 재발급 필수
+- 서버 재시작 시 ddl-auto:update가 unique constraint 자동 적용 (중복 없을 때만 안전)
