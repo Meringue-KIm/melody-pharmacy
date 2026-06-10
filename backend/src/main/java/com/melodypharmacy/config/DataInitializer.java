@@ -1273,6 +1273,379 @@ public class DataInitializer implements ApplicationRunner {
         // ── Frank Sinatra ─────────────────────────────────────────────────────
         tag("Fly Me to the Moon",  "Frank Sinatra",      "ZEcqHA7dbwM",   new Situation[]{s카페,s드라이브},                 new Concept[]{c잔잔,c추억});
         tag("New York, New York",  "Frank Sinatra",      "_pMtLaB4fOw",   new Situation[]{s드라이브,s출근},                 new Concept[]{c신나게,c추억});
+
+        // ══════════════════════════════════════════════════════════════════════
+        // ── 1000곡 시드 확장 (2026-06-10) ─────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════════════
+
+        // ── EXO ───────────────────────────────────────────────────────────────
+        tag("Monster",             "EXO",               "KSH-FVVtTf0",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게,c새로운});
+        tag("Ko Ko Bop",           "EXO",               "tnqcGVMGu2w",   new Situation[]{s출근,s청소},                     new Concept[]{c신나게,c새로운});
+        tag("Power",               "EXO",               "YwdMgs3cBOo",   new Situation[]{s출근,s청소,s운동},               new Concept[]{c신나게});
+        tag("Love Shot",           "EXO",               "hSQKlSICf7E",   new Situation[]{s드라이브,s카페},                 new Concept[]{c새로운,c신나게});
+        tag("Obsession",           "EXO",               "iwd8hK2PEOg",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게});
+        tag("Growl",               "EXO",               "iFo8PjxFDck",   new Situation[]{s출근,s카페},                     new Concept[]{c신나게,c새로운});
+        tag("Overdose",            "EXO",               "TI0DGvqKZTI",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게});
+        tag("Tempo",               "EXO",               "iXaPs7FL470",   new Situation[]{s드라이브,s출근},                 new Concept[]{c신나게,c새로운});
+
+        // ── GOT7 ──────────────────────────────────────────────────────────────
+        tag("Hard Carry",          "GOT7",              "kpSe-23Ln-M",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게,c새로운});
+        tag("Just Right",          "GOT7",              "UQHZ3sI-rXE",   new Situation[]{s출근,s청소},                     new Concept[]{c신나게,c새로운});
+        tag("Lullaby",             "GOT7",              "rFD7GaTRNAc",   new Situation[]{s드라이브,s카페},                 new Concept[]{c새로운,c잔잔});
+        tag("Not By The Moon",     "GOT7",              "5yE7SHyYtiI",   new Situation[]{s잠들기,s카페},                   new Concept[]{c잔잔,c위로});
+
+        // ── 소녀시대 ──────────────────────────────────────────────────────────
+        tag("Genie",               "소녀시대",           "auyNkWJpqCE",   new Situation[]{s출근,s청소},                     new Concept[]{c신나게,c추억});
+        tag("Oh!",                 "소녀시대",           "pFRGaT52XO8",   new Situation[]{s출근,s청소},                     new Concept[]{c신나게,c새로운});
+        tag("Gee",                 "소녀시대",           "U2quPRo3D-s",   new Situation[]{s출근,s청소},                     new Concept[]{c신나게,c추억});
+        tag("The Boys",            "소녀시대",           "zgSXrQmEqww",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게,c새로운});
+        tag("Into The New World",  "소녀시대",           "iEqdFBoV7HM",   new Situation[]{s드라이브,s출근},                 new Concept[]{c신나게,c추억});
+
+        // ── 2NE1 ─────────────────────────────────────────────────────────────
+        tag("I Am the Best",       "2NE1",              "AjrKFKqfA3I",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게});
+        tag("Fire",                "2NE1",              "oq4RBhSx0Ms",   new Situation[]{s출근,s운동,s청소},               new Concept[]{c신나게});
+        tag("Lonely",              "2NE1",              "5BHYGdDR7gQ",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("Come Back Home",      "2NE1",              "e3ZGZrQNuAs",   new Situation[]{s출근,s드라이브},                 new Concept[]{c신나게,c추억});
+        tag("Missing You",         "2NE1",              "r2WiWaJsIDU",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+
+        // ── f(x) ─────────────────────────────────────────────────────────────
+        tag("Electric Shock",      "f(x)",              "z5a54jOQ15Y",   new Situation[]{s출근,s청소},                     new Concept[]{c신나게,c새로운});
+        tag("4 Walls",             "f(x)",              "BjzPT_VE0n4",   new Situation[]{s카페,s잠들기},                   new Concept[]{c잔잔,c새로운});
+        tag("Nu ABO",              "f(x)",              "DHBH9qs8bnA",   new Situation[]{s출근,s드라이브},                 new Concept[]{c신나게,c새로운});
+
+        // ── Super Junior ──────────────────────────────────────────────────────
+        tag("Sorry Sorry",         "Super Junior",      "R0tDkP_MPNc",   new Situation[]{s출근,s청소},                     new Concept[]{c신나게,c추억});
+        tag("MAMBO",               "Super Junior",      "nWW7CMcHJSw",   new Situation[]{s출근,s청소},                     new Concept[]{c신나게,c새로운});
+
+        // ── SHINee 추가 ────────────────────────────────────────────────────────
+        tag("Lucifer",             "SHINee",            "WC3_BO7hGxM",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게,c새로운});
+        tag("Sherlock",            "SHINee",            "R4t4qqGFtNk",   new Situation[]{s출근,s드라이브},                 new Concept[]{c신나게,c새로운});
+        tag("Everybody",           "SHINee",            "WKPLT8_9NyA",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게});
+        tag("Love Like Oxygen",    "SHINee",            "OzlwRtM5Xnk",   new Situation[]{s카페,s드라이브},                 new Concept[]{c새로운,c잔잔});
+
+        // ── 2PM ──────────────────────────────────────────────────────────────
+        tag("Hands Up",            "2PM",               "QnJc1cU7C7c",   new Situation[]{s출근,s청소,s운동},               new Concept[]{c신나게});
+        tag("Go Crazy",            "2PM",               "b8RuHdp6wXQ",   new Situation[]{s출근,s청소},                     new Concept[]{c신나게});
+        tag("My House",            "2PM",               "3I6Qq2dBzEE",   new Situation[]{s드라이브,s카페},                 new Concept[]{c신나게,c새로운});
+
+        // ── MONSTA X ─────────────────────────────────────────────────────────
+        tag("Dramarama",           "MONSTA X",          "M3VqKBKrRY0",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게,c새로운});
+        tag("Shoot Out",           "MONSTA X",          "F4hNq27kCdM",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게});
+        tag("Love Killa",          "MONSTA X",          "4AkAFSIhM8Y",   new Situation[]{s드라이브,s출근},                 new Concept[]{c신나게,c새로운});
+
+        // ── 하이라이트 (Highlight/B2ST) ────────────────────────────────────────
+        tag("Fiction",             "하이라이트",          "FLbPVaGLdwY",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c추억});
+        tag("Beautiful Night",     "하이라이트",          "YjM0qj6BXJM",   new Situation[]{s드라이브,s카페},                 new Concept[]{c신나게,c추억});
+        tag("Ribbon",              "하이라이트",          "JKVSzPcMBdo",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c위로,c잔잔});
+
+        // ── BIGBANG 추가 ──────────────────────────────────────────────────────
+        tag("Blue",                "BIGBANG",           "e7GbgqhSmHI",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c추억});
+        tag("Loser",               "BIGBANG",           "GKcKSZDSGIg",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("Bae Bae",             "BIGBANG",           "RZJ1tFg7IWA",   new Situation[]{s드라이브,s카페},                 new Concept[]{c신나게,c추억});
+
+        // ── 에픽하이 ──────────────────────────────────────────────────────────
+        tag("우산",                 "에픽하이",           "TbV-HNbEdqA",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c위로,c슬프게});
+        tag("Amor Fati",           "에픽하이",           "sNBvhMzVCnA",   new Situation[]{s비오는날,s공부},                 new Concept[]{c위로,c잔잔});
+        tag("Born Hater",          "에픽하이",           "TvqiMm3YLG4",   new Situation[]{s출근,s드라이브},                 new Concept[]{c신나게,c새로운});
+
+        // ── 혁오 (HYUKOH) ─────────────────────────────────────────────────────
+        tag("Wi Ing Wi Ing",       "혁오",               "7d9kI8HYXCA",   new Situation[]{s비오는날,s카페},                 new Concept[]{c새로운,c잔잔});
+        tag("아리아리",              "혁오",               "P0LOY7ANaA4",   new Situation[]{s드라이브,s카페},                 new Concept[]{c새로운,c잔잔});
+        tag("Comes and Goes",      "혁오",               "8kOShNI4Jkg",   new Situation[]{s잠들기,s카페},                   new Concept[]{c잔잔,c위로});
+
+        // ── 잔나비 ────────────────────────────────────────────────────────────
+        tag("주저하는 연인들을 위해", "잔나비",             "cIhiG62L6RI",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("사랑하긴 했었나요",      "잔나비",             "YvZ7VPwxknU",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c추억});
+        tag("노래해",               "잔나비",             "E9jGcuJpjqE",   new Situation[]{s카페,s드라이브},                 new Concept[]{c새로운,c잔잔});
+
+        // ── 박효신 ────────────────────────────────────────────────────────────
+        tag("야생화",               "박효신",             "UhJNpO_GKSU",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c위로,c잔잔});
+        tag("I LOVE YOU",          "박효신",             "5U9cFNfOQDE",   new Situation[]{s잠들기,s카페},                   new Concept[]{c위로,c잔잔});
+
+        // ── 폴킴 추가 ──────────────────────────────────────────────────────────
+        tag("헤어지자 말해요",        "폴킴",              "RkZiHLpLFQU",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("너를 만나",             "폴킴",              "TlVbRGUGYD8",   new Situation[]{s비오는날,s카페},                 new Concept[]{c위로,c잔잔});
+
+        // ── 이적 / 성시경 ──────────────────────────────────────────────────────
+        tag("하늘을 달리다",          "이적",              "4mAyQAMthvA",   new Situation[]{s드라이브,s출근},                 new Concept[]{c신나게,c새로운});
+        tag("두 사람",              "성시경",             "d8mkHFbFn4E",   new Situation[]{s잠들기,s카페},                   new Concept[]{c위로,c잔잔});
+        tag("거리에서",              "성시경",             "mM3kqE9q3A0",   new Situation[]{s비오는날,s카페},                 new Concept[]{c위로,c추억});
+
+        // ── FIFTY FIFTY / NMIXX ───────────────────────────────────────────────
+        tag("Cupid",               "FIFTY FIFTY",       "VRAmBHmfzCk",   new Situation[]{s드라이브,s출근,s청소},           new Concept[]{c신나게,c새로운});
+        tag("O.O",                 "NMIXX",             "kA9VSNpAQEc",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게,c새로운});
+        tag("Dice",                "NMIXX",             "vgFLMRQiNd8",   new Situation[]{s출근,s청소},                     new Concept[]{c신나게,c새로운});
+
+        // ── ATEEZ 추가 ────────────────────────────────────────────────────────
+        tag("Fireworks",           "ATEEZ",             "oG_fH8lRISs",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게,c위로});
+        tag("Wave",                "ATEEZ",             "N4FBPXSQjuA",   new Situation[]{s드라이브,s청소},                 new Concept[]{c신나게,c새로운});
+        tag("Answer",              "ATEEZ",             "V92OEkxfTkI",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게,c위로});
+
+        // ── TXT 추가 ──────────────────────────────────────────────────────────
+        tag("Blue Hour",           "TXT",               "c34rCFWEMM4",   new Situation[]{s잠들기,s카페},                   new Concept[]{c잔잔,c위로});
+        tag("Anti-Romantic",       "TXT",               "VHbJJhwqaBk",   new Situation[]{s비오는날,s공부},                 new Concept[]{c잔잔,c슬프게});
+        tag("Eternally",           "TXT",               "1KFsKbP5gns",   new Situation[]{s잠들기,s공부},                   new Concept[]{c잔잔,c위로});
+
+        // ── aespa 추가 ────────────────────────────────────────────────────────
+        tag("Girls",               "aespa",             "GQLFVJBfb_E",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게,c새로운});
+        tag("Drama",               "aespa",             "JmbgpTY5xY0",   new Situation[]{s출근,s청소},                     new Concept[]{c신나게,c새로운});
+
+        // ── DAY6 추가 ─────────────────────────────────────────────────────────
+        tag("You Were Beautiful",  "DAY6",              "1z4RosaB-g4",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c추억});
+        tag("Sweet Chaos",         "DAY6",              "7_aHLEnWX5Y",   new Situation[]{s드라이브,s출근},                 new Concept[]{c신나게,c새로운});
+        tag("Hi Hello",            "DAY6",              "QcPC3UYaQB4",   new Situation[]{s출근,s카페},                     new Concept[]{c신나게,c새로운});
+
+        // ══════════════════════════════════════════════════════════════════════
+        // ── J-POP 추가 ─────────────────────────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════════════
+
+        // ── RADWIMPS ─────────────────────────────────────────────────────────
+        tag("前前前世",             "RADWIMPS",          "PDSkR6NZKYM",   new Situation[]{s드라이브,s출근},                 new Concept[]{c신나게,c추억});
+        tag("Nandemonaiya",        "RADWIMPS",          "ZAEbOvCkSkI",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c추억});
+        tag("Sparkle",             "RADWIMPS",          "OAGFn8CXBDI",   new Situation[]{s잠들기,s공부},                   new Concept[]{c잔잔,c새로운});
+        tag("大丈夫",               "RADWIMPS",          "WqZJXBx7A6Y",   new Situation[]{s비오는날,s공부},                 new Concept[]{c위로,c잔잔});
+
+        // ── バックナンバー (Back Number) ──────────────────────────────────────
+        tag("花束",                 "バックナンバー",      "eU0P9ztECFw",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("高嶺の花子さん",        "バックナンバー",      "aBTr3O_7Gho",   new Situation[]{s비오는날,s카페},                 new Concept[]{c슬프게,c추억});
+        tag("クリスマスソング",       "バックナンバー",      "d-bFT2z7YsQ",   new Situation[]{s드라이브,s잠들기},               new Concept[]{c슬프게,c추억});
+        tag("水平線",               "バックナンバー",      "nJiGfXGTPT4",   new Situation[]{s비오는날,s공부},                 new Concept[]{c위로,c잔잔});
+        tag("瞬き",                 "バックナンバー",      "dS05YY43B5c",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+
+        // ── Mr. Children ─────────────────────────────────────────────────────
+        tag("Tomorrow Never Knows","Mr. Children",      "hCz5xPuuIZk",   new Situation[]{s드라이브,s출근},                 new Concept[]{c신나게,c추억});
+        tag("Sign",                "Mr. Children",      "DF2QTiaTTjU",   new Situation[]{s비오는날,s공부},                 new Concept[]{c잔잔,c위로});
+        tag("終わりなき旅",          "Mr. Children",      "2VTZKpUmLm8",   new Situation[]{s비오는날,s공부},                 new Concept[]{c위로,c잔잔});
+
+        // ── 宇多田ヒカル ──────────────────────────────────────────────────────
+        tag("First Love",          "宇多田ヒカル",        "w_DWjpI9Itg",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c추억});
+        tag("Automatic",           "宇多田ヒカル",        "O36FNqdMFkk",   new Situation[]{s드라이브,s카페},                 new Concept[]{c잔잔,c추억});
+        tag("Beautiful World",     "宇多田ヒカル",        "iXPxJUhpU3A",   new Situation[]{s비오는날,s공부},                 new Concept[]{c잔잔,c위로});
+        tag("One Last Kiss",       "宇多田ヒカル",        "mSRivNPPZnY",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c추억});
+
+        // ── Aimer ─────────────────────────────────────────────────────────────
+        tag("眩いばかり",            "Aimer",             "X7vROvNsxAI",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("カタオモイ",            "Aimer",             "4I-M7PDTTxM",   new Situation[]{s비오는날,s공부},                 new Concept[]{c슬프게,c잔잔});
+        tag("残響散歌",              "Aimer",             "kSrAbFBbmkk",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게,c새로운});
+
+        // ── Eve ───────────────────────────────────────────────────────────────
+        tag("廻廻奇譚",              "Eve",               "y0inHhFNbxA",   new Situation[]{s출근,s공부},                     new Concept[]{c신나게,c새로운});
+        tag("心海",                 "Eve",               "LNqhL2IKjjE",   new Situation[]{s잠들기,s공부},                   new Concept[]{c잔잔,c위로});
+        tag("蒼のワルツ",            "Eve",               "SaSuYDyKMso",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c잔잔});
+
+        // ── ずっと真夜中でいいのに。 ──────────────────────────────────────────
+        tag("秒針を噛む",            "ずっと真夜中でいいのに。","Z2S9sVBJHKI",new Situation[]{s비오는날,s공부},               new Concept[]{c슬프게,c잔잔});
+        tag("眩しいDNAだけ",         "ずっと真夜中でいいのに。","xB6S5DPZv50",new Situation[]{s드라이브,s출근},               new Concept[]{c신나게,c새로운});
+
+        // ── 藤井風 ────────────────────────────────────────────────────────────
+        tag("何なんw",              "藤井風",             "7d_oY0LLi_s",   new Situation[]{s카페,s드라이브},                 new Concept[]{c새로운,c잔잔});
+        tag("優しさ",               "藤井風",             "kQ9OmJYQQzM",   new Situation[]{s잠들기,s카페},                   new Concept[]{c잔잔,c위로});
+        tag("死ぬのがいいわ",         "藤井風",             "gvLLVqFdgLY",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("まつり",               "藤井風",             "7S60gKIVMEw",   new Situation[]{s청소,s드라이브},                 new Concept[]{c신나게,c새로운});
+        tag("きらり",               "藤井風",             "O2z_WUMG0_U",   new Situation[]{s카페,s드라이브},                 new Concept[]{c신나게,c새로운});
+
+        // ── LiSA / Ado ────────────────────────────────────────────────────────
+        tag("紅蓮華",               "LiSA",              "CwkzK-F0Y3E",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게});
+        tag("うっせぇわ",            "Ado",               "Wy_cCXtCh-I",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게,c새로운});
+        tag("踊",                   "Ado",               "SKMnxMD9VCI",   new Situation[]{s출근,s청소},                     new Concept[]{c신나게,c새로운});
+        tag("私は最強",              "Ado",               "KCnkBv9qYcc",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게});
+        tag("新時代",               "Ado",               "Y-GE8_jCYqY",   new Situation[]{s출근,s청소,s운동},               new Concept[]{c신나게,c새로운});
+
+        // ── 緑黄色社会 ────────────────────────────────────────────────────────
+        tag("Mela!",               "緑黄色社会",          "wLhOi7xBEpU",   new Situation[]{s출근,s드라이브},                 new Concept[]{c신나게,c새로운});
+        tag("幸せ",                 "緑黄色社会",          "1d3r9w4EOXg",   new Situation[]{s잠들기,s카페},                   new Concept[]{c위로,c잔잔});
+        tag("ずっとずっとずっと",     "緑黄色社会",          "tkNVwnUWWP4",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c위로,c슬프게});
+
+        // ── 優里 / Spitz ──────────────────────────────────────────────────────
+        tag("ドライフラワー",         "優里",              "PrmiFHKFO4s",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c추억});
+        tag("レオ",                  "優里",              "9LoFvBevnOk",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("ロビンソン",             "スピッツ",           "PtHiE_IQKSE",   new Situation[]{s비오는날,s드라이브},             new Concept[]{c잔잔,c추억});
+        tag("チェリー",              "スピッツ",           "mJCFe6Ds3Ek",   new Situation[]{s드라이브,s카페},                 new Concept[]{c잔잔,c추억});
+        tag("空も飛べるはず",         "スピッツ",           "cjz_8pLdCPE",   new Situation[]{s비오는날,s드라이브},             new Concept[]{c잔잔,c추억});
+
+        // ── Perfume ───────────────────────────────────────────────────────────
+        tag("チョコレイト・ディスコ",   "Perfume",           "u2MO0F3wFzs",   new Situation[]{s청소,s드라이브},                 new Concept[]{c신나게,c추억});
+        tag("Polyrhythm",          "Perfume",           "jRVCCNGAJcA",   new Situation[]{s출근,s청소},                     new Concept[]{c신나게,c추억});
+
+        // ══════════════════════════════════════════════════════════════════════
+        // ── Western 추가 ───────────────────────────────────────────────────────
+        // ══════════════════════════════════════════════════════════════════════
+
+        // ── Oasis ─────────────────────────────────────────────────────────────
+        tag("Wonderwall",          "Oasis",             "bx1Bh8ZvH84",   new Situation[]{s비오는날,s드라이브},             new Concept[]{c슬프게,c추억});
+        tag("Don't Look Back in Anger","Oasis",         "cmpmmEWCYPc",   new Situation[]{s비오는날,s드라이브},             new Concept[]{c위로,c추억});
+        tag("Champagne Supernova", "Oasis",             "E6qX0Aa9HWY",   new Situation[]{s드라이브,s카페},                 new Concept[]{c잔잔,c추억});
+        tag("Live Forever",        "Oasis",             "CkS8SgtNjGw",   new Situation[]{s드라이브,s출근},                 new Concept[]{c신나게,c추억});
+
+        // ── R.E.M. ────────────────────────────────────────────────────────────
+        tag("Losing My Religion",  "R.E.M.",            "xwtdhWltSIg",   new Situation[]{s비오는날,s공부},                 new Concept[]{c슬프게,c추억});
+        tag("Everybody Hurts",     "R.E.M.",            "ijZRCIrTgQc",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+
+        // ── The Cure ──────────────────────────────────────────────────────────
+        tag("Friday I'm in Love",  "The Cure",          "mGgMZpGUZ-8",   new Situation[]{s출근,s청소},                     new Concept[]{c신나게,c추억});
+        tag("Just Like Heaven",    "The Cure",          "i88q4y1M5ss",   new Situation[]{s드라이브,s카페},                 new Concept[]{c잔잔,c추억});
+        tag("Lovesong",            "The Cure",          "2KCVO7jxHr8",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("Boys Don't Cry",      "The Cure",          "aB_4iNHBGFY",   new Situation[]{s비오는날,s출근},                 new Concept[]{c슬프게,c추억});
+
+        // ── Pearl Jam ─────────────────────────────────────────────────────────
+        tag("Black",               "Pearl Jam",         "p-Z_pTLfmrk",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c추억});
+        tag("Better Man",          "Pearl Jam",         "AFeYGKCLRb4",   new Situation[]{s드라이브,s비오는날},             new Concept[]{c슬프게,c추억});
+        tag("Yellow Ledbetter",    "Pearl Jam",         "aPYROoiCA0E",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c잔잔});
+
+        // ── Portishead / Massive Attack ────────────────────────────────────────
+        tag("Glory Box",           "Portishead",        "4Xs-BXJAZ-A",   new Situation[]{s잠들기,s카페},                   new Concept[]{c잔잔,c슬프게});
+        tag("Sour Times",          "Portishead",        "0Qq1mlSYWQU",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c잔잔});
+        tag("Teardrop",            "Massive Attack",    "u7K72X4eo_s",   new Situation[]{s잠들기,s카페,s공부},             new Concept[]{c잔잔,c슬프게});
+        tag("Unfinished Sympathy", "Massive Attack",    "NF5f5TRO2T8",   new Situation[]{s비오는날,s카페},                 new Concept[]{c잔잔,c슬프게});
+
+        // ── Sigur Rós ─────────────────────────────────────────────────────────
+        tag("Hoppípolla",          "Sigur Rós",         "-LHMK4ZeXNk",   new Situation[]{s비오는날,s잠들기,s운동},         new Concept[]{c잔잔,c위로});
+
+        // ── Jack Johnson ──────────────────────────────────────────────────────
+        tag("Better Together",     "Jack Johnson",      "u57d4_b_YgI",   new Situation[]{s드라이브,s카페,s청소},           new Concept[]{c잔잔,c위로});
+        tag("Banana Pancakes",     "Jack Johnson",      "OHmJ1MdH2k4",   new Situation[]{s카페,s공부},                     new Concept[]{c잔잔,c위로});
+        tag("Upside Down",         "Jack Johnson",      "9tE4bG4Bhlw",   new Situation[]{s드라이브,s청소},                 new Concept[]{c신나게,c위로});
+
+        // ── Conan Gray ────────────────────────────────────────────────────────
+        tag("Heather",             "Conan Gray",        "TNxLTf3_vRk",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("Maniac",              "Conan Gray",        "e2KGHCpXlus",   new Situation[]{s출근,s청소},                     new Concept[]{c신나게,c새로운});
+        tag("Greek God",           "Conan Gray",        "2m_z4z8EaYo",   new Situation[]{s출근,s청소},                     new Concept[]{c신나게,c새로운});
+        tag("People Watching",     "Conan Gray",        "BoWJ5gqOUAE",   new Situation[]{s카페,s공부},                     new Concept[]{c잔잔,c새로운});
+        tag("Astronomy",           "Conan Gray",        "5YT9XbEWpsg",   new Situation[]{s잠들기,s공부},                   new Concept[]{c잔잔,c위로});
+
+        // ── Phoebe Bridgers ───────────────────────────────────────────────────
+        tag("Moon Song",           "Phoebe Bridgers",   "1yMdHJAvQ7s",   new Situation[]{s잠들기,s공부},                   new Concept[]{c잔잔,c위로});
+        tag("Savior Complex",      "Phoebe Bridgers",   "Fmq2cLdlYI8",   new Situation[]{s잠들기,s공부},                   new Concept[]{c잔잔,c슬프게});
+        tag("Funeral",             "Phoebe Bridgers",   "PnbM_TKSFAM",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("Garden Song",         "Phoebe Bridgers",   "AzqTlJarOiA",   new Situation[]{s잠들기,s카페},                   new Concept[]{c잔잔,c위로});
+
+        // ── Olivia Rodrigo 추가 ───────────────────────────────────────────────
+        tag("brutal",              "Olivia Rodrigo",    "gkGRnvd9pDk",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게,c새로운});
+        tag("traitor",             "Olivia Rodrigo",    "2BhNEZKqxwM",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("deja vu",             "Olivia Rodrigo",    "RwNQoSLJl1Y",   new Situation[]{s비오는날,s드라이브},             new Concept[]{c슬프게,c추억});
+        tag("hope ur ok",          "Olivia Rodrigo",    "Hh5mQXpy6J4",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c위로,c슬프게});
+
+        // ── Kacey Musgraves ───────────────────────────────────────────────────
+        tag("Rainbow",             "Kacey Musgraves",   "ZPzSAFMJDwI",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c위로,c잔잔});
+        tag("Happy & Sad",         "Kacey Musgraves",   "_r0ZMOELtXc",   new Situation[]{s드라이브,s카페},                 new Concept[]{c잔잔,c새로운});
+        tag("Butterflies",         "Kacey Musgraves",   "gSrADvRZll0",   new Situation[]{s드라이브,s카페},                 new Concept[]{c새로운,c잔잔});
+        tag("Slow Burn",           "Kacey Musgraves",   "qqxUWCPEXRc",   new Situation[]{s드라이브,s잠들기},               new Concept[]{c잔잔,c위로});
+
+        // ── Steve Lacy ────────────────────────────────────────────────────────
+        tag("Bad Habit",           "Steve Lacy",        "Vi-KOYn_o4Q",   new Situation[]{s드라이브,s카페},                 new Concept[]{c새로운,c잔잔});
+        tag("Dark Red",            "Steve Lacy",        "a_e6e5G7wAE",   new Situation[]{s비오는날,s카페},                 new Concept[]{c슬프게,c잔잔});
+        tag("Helmet",              "Steve Lacy",        "y4oHJOqJniY",   new Situation[]{s카페,s잠들기},                   new Concept[]{c잔잔,c새로운});
+
+        // ── Mitski ────────────────────────────────────────────────────────────
+        tag("Nobody",              "Mitski",            "qooWnZW5VdI",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("Your Best American Girl","Mitski",         "u_hDHm9MD0I",   new Situation[]{s비오는날,s공부},                 new Concept[]{c슬프게,c잔잔});
+        tag("First Love / Late Spring","Mitski",        "f6YDPG96v5A",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c추억});
+        tag("Washing Machine Heart","Mitski",           "gTdRHHm7jrI",   new Situation[]{s카페,s드라이브},                 new Concept[]{c새로운,c잔잔});
+
+        // ── Frank Ocean 추가 ──────────────────────────────────────────────────
+        tag("Thinkin Bout You",    "Frank Ocean",       "lKYpkK0EfHU",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("White Ferrari",       "Frank Ocean",       "ZC4dMJYE5EM",   new Situation[]{s잠들기,s공부},                   new Concept[]{c잔잔,c위로});
+        tag("Self Control",        "Frank Ocean",       "tPUGSf-IXBI",   new Situation[]{s잠들기,s카페},                   new Concept[]{c잔잔,c위로});
+
+        // ── Harry Styles 추가 ─────────────────────────────────────────────────
+        tag("Adore You",           "Harry Styles",      "VF-r5TtlT98",   new Situation[]{s드라이브,s카페},                 new Concept[]{c새로운,c신나게});
+        tag("Matilda",             "Harry Styles",      "V8K5VQGF1VY",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c위로,c잔잔});
+        tag("Sign of the Times",   "Harry Styles",      "qN4ooNx77u0",   new Situation[]{s비오는날,s드라이브},             new Concept[]{c슬프게,c추억});
+        tag("Falling",             "Harry Styles",      "bQW2-6bLmIA",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+
+        // ── SZA 추가 ──────────────────────────────────────────────────────────
+        tag("The Weekend",         "SZA",               "qLEob_TNuEs",   new Situation[]{s드라이브,s카페},                 new Concept[]{c새로운,c잔잔});
+        tag("Blind",               "SZA",               "u3woWo4UZoY",   new Situation[]{s비오는날,s카페},                 new Concept[]{c슬프게,c새로운});
+        tag("Snooze",              "SZA",               "0ysMr5_QrUo",   new Situation[]{s잠들기,s카페},                   new Concept[]{c잔잔,c위로});
+        tag("Seek & Destroy",      "SZA",               "eHr3BnIj3bU",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게,c새로운});
+
+        // ── Halsey ────────────────────────────────────────────────────────────
+        tag("Without Me",          "Halsey",            "FzVR_fymZws",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("Colors",              "Halsey",            "xwWFBWAH8YY",   new Situation[]{s비오는날,s카페},                 new Concept[]{c슬프게,c잔잔});
+        tag("Nightmare",           "Halsey",            "BUDG-Tdx1aM",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게,c새로운});
+        tag("You should be sad",   "Halsey",            "cTkwuqhp8XU",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+
+        // ── Gracie Abrams ─────────────────────────────────────────────────────
+        tag("I Love You, I'm Sorry","Gracie Abrams",    "d8RKHxPeBoA",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("21",                  "Gracie Abrams",     "B6EAJGQN8nM",   new Situation[]{s비오는날,s공부},                 new Concept[]{c슬프게,c잔잔});
+        tag("Best",                "Gracie Abrams",     "2rZ7LhqNAkU",   new Situation[]{s잠들기,s공부},                   new Concept[]{c잔잔,c위로});
+
+        // ── beabadoobee / Powfu ───────────────────────────────────────────────
+        tag("Coffee",              "beabadoobee",       "OLyPCXpkrEo",   new Situation[]{s카페,s잠들기},                   new Concept[]{c잔잔,c위로});
+        tag("death bed",           "Powfu",             "snKGPE0pFpM",   new Situation[]{s잠들기,s카페},                   new Concept[]{c잔잔,c위로});
+        tag("Care",                "beabadoobee",       "Yg6v9bQX9qg",   new Situation[]{s비오는날,s카페},                 new Concept[]{c잔잔,c슬프게});
+
+        // ── Omar Apollo / Surfaces / Still Woozy ──────────────────────────────
+        tag("Evergreen",           "Omar Apollo",       "EL-mbGMpkG0",   new Situation[]{s카페,s드라이브},                 new Concept[]{c잔잔,c새로운});
+        tag("Sunday Best",         "Surfaces",          "WANNqr-vcx0",   new Situation[]{s출근,s청소},                     new Concept[]{c신나게,c위로});
+        tag("Wave of You",         "Surfaces",          "rYOGRxn3Q7M",   new Situation[]{s카페,s드라이브},                 new Concept[]{c잔잔,c위로});
+        tag("Goodie Bag",          "Still Woozy",       "XL5HXKHdTeU",   new Situation[]{s카페,s드라이브},                 new Concept[]{c새로운,c잔잔});
+
+        // ── The Lumineers ─────────────────────────────────────────────────────
+        tag("Ho Hey",              "The Lumineers",     "zvCBSSwts8M",   new Situation[]{s드라이브,s청소},                 new Concept[]{c신나게,c추억});
+        tag("Stubborn Love",       "The Lumineers",     "u8B8h7wgBss",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("Ophelia",             "The Lumineers",     "lP3GQPT-K-4",   new Situation[]{s드라이브,s카페},                 new Concept[]{c신나게,c추억});
+        tag("Sleep On The Floor",  "The Lumineers",     "7y6y5MbL6xs",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c잔잔,c위로});
+
+        // ── Of Monsters and Men ───────────────────────────────────────────────
+        tag("Little Talks",        "Of Monsters and Men","5Dk6Ql_lRCI", new Situation[]{s드라이브,s출근},                 new Concept[]{c신나게,c추억});
+        tag("Mountain Sound",      "Of Monsters and Men","XNMKQ0VBWYE",new Situation[]{s드라이브,s청소},                 new Concept[]{c신나게,c추억});
+
+        // ── Taylor Swift 추가 ─────────────────────────────────────────────────
+        tag("All Too Well",        "Taylor Swift",      "tollGa3S2L8",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c추억});
+        tag("Enchanted",           "Taylor Swift",      "rOCNhDYO7kU",   new Situation[]{s드라이브,s카페},                 new Concept[]{c새로운,c잔잔});
+        tag("Clean",               "Taylor Swift",      "J-IEHH8h1LE",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c위로,c잔잔});
+        tag("cardigan",            "Taylor Swift",      "K-a8s8OLBSE",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c추억});
+        tag("august",              "Taylor Swift",      "OuKJjkWpK_Y",   new Situation[]{s비오는날,s드라이브},             new Concept[]{c슬프게,c추억});
+
+        // ── Billie Eilish 추가 ────────────────────────────────────────────────
+        tag("lovely",              "Billie Eilish",     "V1Pl8CzNzCw",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("when the party's over","Billie Eilish",    "pbMwTqkKSps",   new Situation[]{s잠들기,s공부},                   new Concept[]{c잔잔,c슬프게});
+        tag("idontwannabeyouanymore","Billie Eilish",   "bId6wWvXM0k",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+
+        // ── Led Zeppelin / Pink Floyd ─────────────────────────────────────────
+        tag("Stairway to Heaven",  "Led Zeppelin",      "D9ioyEvdggk",   new Situation[]{s드라이브,s공부},                 new Concept[]{c잔잔,c추억});
+        tag("Wish You Were Here",  "Pink Floyd",        "IXdNnw99-Ic",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c추억});
+        tag("Comfortably Numb",    "Pink Floyd",        "x-xTttimR_8",   new Situation[]{s잠들기,s공부},                   new Concept[]{c잔잔,c추억});
+
+        // ── Cat Stevens / Bob Dylan / Neil Young ─────────────────────────────
+        tag("Wild World",          "Cat Stevens",       "Pt8c2Q3xhFo",   new Situation[]{s비오는날,s드라이브},             new Concept[]{c잔잔,c추억});
+        tag("Father and Son",      "Cat Stevens",       "WgZIv5HI7mQ",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c추억});
+        tag("Blowin' in the Wind", "Bob Dylan",         "vWwgrjjIMXA",   new Situation[]{s비오는날,s공부},                 new Concept[]{c잔잔,c추억});
+        tag("Heart of Gold",       "Neil Young",        "Ek0F9O7OEYA",   new Situation[]{s비오는날,s카페,s드라이브},       new Concept[]{c잔잔,c추억});
+        tag("Harvest Moon",        "Neil Young",        "MmMEBqHhXig",   new Situation[]{s잠들기,s카페},                   new Concept[]{c잔잔,c위로});
+        tag("Old Man",             "Neil Young",        "rAtDrFdomN8",   new Situation[]{s드라이브,s카페},                 new Concept[]{c잔잔,c추억});
+
+        // ── boygenius / Maggie Rogers ─────────────────────────────────────────
+        tag("Not Strong Enough",   "boygenius",         "K3MJjbVj8BQ",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("True Blue",           "boygenius",         "2OFxFdpPfxU",   new Situation[]{s카페,s공부},                     new Concept[]{c잔잔,c위로});
+        tag("Light On",            "Maggie Rogers",     "GKpwHBMmLUQ",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c위로,c잔잔});
+        tag("Alaska",              "Maggie Rogers",     "DKL4X0ZeHMA",   new Situation[]{s드라이브,s청소},                 new Concept[]{c신나게,c새로운});
+
+        // ── Iron & Wine / Nick Drake ──────────────────────────────────────────
+        tag("Naked as We Came",    "Iron & Wine",       "n5hVBGwpgVM",   new Situation[]{s잠들기,s공부},                   new Concept[]{c잔잔,c위로});
+        tag("Flightless Bird",     "Iron & Wine",       "gv7QqdXvW1Y",   new Situation[]{s잠들기,s카페},                   new Concept[]{c잔잔,c추억});
+        tag("Pink Moon",           "Nick Drake",        "8a-HfNE3EIo",   new Situation[]{s잠들기,s카페},                   new Concept[]{c잔잔,c위로});
+
+        // ── Soccer Mommy / Clairo ──────────────────────────────────────────────
+        tag("Circle the Drain",    "Soccer Mommy",      "0MeKxStv8Gk",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c잔잔});
+        tag("Alewife",             "Clairo",            "YV7-baBXcj0",   new Situation[]{s잠들기,s공부},                   new Concept[]{c잔잔,c위로});
+        tag("Bags",                "Clairo",            "sSj6p2MhfqM",   new Situation[]{s카페,s잠들기},                   new Concept[]{c잔잔,c위로});
+
+        // ── John Denver / The Lumineers 보강 ─────────────────────────────────
+        tag("Take Me Home, Country Roads","John Denver","1vrEljMfXYo",  new Situation[]{s드라이브,s청소},                 new Concept[]{c신나게,c추억});
+
+        // ── Vampire Weekend 추가 ──────────────────────────────────────────────
+        tag("Harmony Hall",        "Vampire Weekend",   "cPAbx5dzgx8",   new Situation[]{s드라이브,s카페},                 new Concept[]{c신나게,c새로운});
+        tag("Step",                "Vampire Weekend",   "z5-mHtTgGAU",   new Situation[]{s드라이브,s카페},                 new Concept[]{c잔잔,c추억});
+        tag("This Life",           "Vampire Weekend",   "gJijdkxqWE8",   new Situation[]{s드라이브,s출근},                 new Concept[]{c신나게,c새로운});
+
+        // ── JVKE ─────────────────────────────────────────────────────────────
+        tag("golden hour",         "JVKE",              "PEM0Vs8jf9w",   new Situation[]{s드라이브,s잠들기},               new Concept[]{c잔잔,c새로운});
+
+        // ── H.E.R. ────────────────────────────────────────────────────────────
+        tag("Focus",               "H.E.R.",            "kB8_Oc5xIgQ",   new Situation[]{s잠들기,s카페},                   new Concept[]{c잔잔,c위로});
+        tag("Best Part",           "H.E.R.",            "oo5I3Us7F1Y",   new Situation[]{s잠들기,s카페},                   new Concept[]{c잔잔,c위로});
     }
 
     private void tag(String title, String artist, String videoId,
