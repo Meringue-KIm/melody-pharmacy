@@ -1646,6 +1646,158 @@ public class DataInitializer implements ApplicationRunner {
         // ── H.E.R. ────────────────────────────────────────────────────────────
         tag("Focus",               "H.E.R.",            "kB8_Oc5xIgQ",   new Situation[]{s잠들기,s카페},                   new Concept[]{c잔잔,c위로});
         tag("Best Part",           "H.E.R.",            "oo5I3Us7F1Y",   new Situation[]{s잠들기,s카페},                   new Concept[]{c잔잔,c위로});
+
+        // ══════════════════════════════════════════════════════════════════════
+        // ── 취약 조합 집중 보강 (2026-06-10) ─────────────────────────────────
+        // ── 출근길×슬프게/잔잔 / 운동×슬프게/잔잔/위로 / 잠들기×신나게
+        // ── 공부×신나게 / 청소×슬프게/잔잔/위로
+        // ══════════════════════════════════════════════════════════════════════
+
+        // ── 피아노/앰비언트 (운동×잔잔, 공부×잔잔, 잠들기×잔잔) ─────────────
+        tag("River Flows in You",  "Yiruma",            "7maJOI3QMu0",   new Situation[]{s운동,s공부,s잠들기},             new Concept[]{c잔잔,c위로});
+        tag("Kiss the Rain",       "Yiruma",            "so5S8VC6bJs",   new Situation[]{s비오는날,s공부,s잠들기},         new Concept[]{c잔잔,c위로});
+        tag("On the Nature of Daylight","Max Richter",  "b_YHo9xEOuE",   new Situation[]{s비오는날,s공부,s잠들기},         new Concept[]{c잔잔,c위로});
+        tag("Experience",          "Ludovico Einaudi",  "_T98bB7jNEE",   new Situation[]{s공부,s잠들기},                   new Concept[]{c잔잔,c위로});
+        tag("Nuvole Bianche",      "Ludovico Einaudi",  "ybzX1qRaS0o",   new Situation[]{s공부,s잠들기},                   new Concept[]{c잔잔,c위로});
+        tag("Divenire",            "Ludovico Einaudi",  "RQqAqQw30w4",   new Situation[]{s공부,s잠들기},                   new Concept[]{c잔잔,c위로});
+        tag("Near Light",          "Ólafur Arnalds",    "5MhkC8Wggt8",   new Situation[]{s비오는날,s공부,s잠들기},         new Concept[]{c잔잔,c위로});
+        tag("Near Light",          "Nils Frahm",        "K_0Qb-1B2VM",   new Situation[]{s공부,s잠들기},                   new Concept[]{c잔잔,c위로});
+        tag("All Melody",          "Nils Frahm",        "psd4PsCzDvc",   new Situation[]{s공부,s잠들기},                   new Concept[]{c잔잔,c위로});
+
+        // ── 출근길×슬프게 + 잔잔 집중 ─────────────────────────────────────────
+        tag("Fake Plastic Trees",  "Radiohead",         "n5h-sDSMGnQ",   new Situation[]{s출근,s비오는날},                 new Concept[]{c슬프게,c잔잔});
+        tag("Street Spirit",       "Radiohead",         "n5h-sDSMGnQ",   new Situation[]{s출근,s비오는날},                 new Concept[]{c슬프게,c잔잔});
+        tag("Casimir Pulaski Day",  "Sufjan Stevens",   "sPpgFmXaAXI",   new Situation[]{s출근,s비오는날},                 new Concept[]{c슬프게,c잔잔});
+        tag("First Day of My Life","Bright Eyes",       "_gHzSxNFbRw",   new Situation[]{s출근,s비오는날},                 new Concept[]{c슬프게,c잔잔});
+        tag("Between the Bars",    "Elliott Smith",     "8r0G7DxVbKo",   new Situation[]{s출근,s잠들기},                   new Concept[]{c슬프게,c잔잔});
+        tag("The Night Will Always Win","Manchester Orchestra","5rSBb5Vr1S0",new Situation[]{s출근,s비오는날},              new Concept[]{c슬프게,c위로});
+        tag("Simple Song",         "The Shins",         "AccbFmcJBpA",   new Situation[]{s출근,s비오는날},                 new Concept[]{c슬프게,c잔잔});
+        tag("New Slang",           "The Shins",         "kFzViPFmODg",   new Situation[]{s출근,s카페},                     new Concept[]{c잔잔,c새로운});
+        tag("Caring is Creepy",    "The Shins",         "pT_HkL2o1j8",   new Situation[]{s출근,s비오는날},                 new Concept[]{c슬프게,c잔잔});
+        tag("Waltz #2 (XO)",       "Elliott Smith",     "tMdIUFO7EsM",   new Situation[]{s출근,s비오는날},                 new Concept[]{c슬프게,c잔잔});
+        tag("Turn Out the Lights", "Julien Baker",      "cikl7BxJP5I",   new Situation[]{s출근,s비오는날},                 new Concept[]{c슬프게,c위로});
+        tag("Appointments",        "Julien Baker",      "S9-W1d3PKq4",   new Situation[]{s출근,s비오는날},                 new Concept[]{c슬프게,c위로});
+        tag("Something Good",      "Alt-J",             "iGBFGkxGVec",   new Situation[]{s출근,s드라이브},                 new Concept[]{c잔잔,c새로운});
+        tag("Breezeblocks",        "Alt-J",             "6en5OcFAigg",   new Situation[]{s출근,s드라이브},                 new Concept[]{c잔잔,c새로운});
+        tag("Tessellate",          "Alt-J",             "bAlJsikxpQc",   new Situation[]{s출근,s비오는날},                 new Concept[]{c슬프게,c잔잔});
+        tag("Carry the Zero",      "Built to Spill",    "c91BMAG-3i4",   new Situation[]{s출근,s비오는날},                 new Concept[]{c슬프게,c잔잔});
+
+        // ── 운동×슬프게 / 잔잔 / 위로 (쿨다운·스트레칭) ──────────────────────
+        tag("Chasing Cars",        "Snow Patrol",       "GemKqzILV4w",   new Situation[]{s운동,s비오는날,s잠들기},         new Concept[]{c슬프게,c위로,c잔잔});
+        tag("Run",                 "Snow Patrol",       "1NBUM1BNUNM",   new Situation[]{s운동,s출근},                     new Concept[]{c슬프게,c위로});
+        tag("Open Your Eyes",      "Snow Patrol",       "MFXQR1D12mo",   new Situation[]{s운동,s비오는날},                 new Concept[]{c슬프게,c잔잔});
+        tag("Somewhere Only We Know","Keane",           "Txs3B8hzxiA",   new Situation[]{s운동,s비오는날,s청소},           new Concept[]{c슬프게,c위로});
+        tag("Everybody's Changing","Keane",             "C_7Yv5T0L18",   new Situation[]{s운동,s비오는날},                 new Concept[]{c슬프게,c위로});
+        tag("Bend and Break",      "Keane",             "WQJBRmgfvAY",   new Situation[]{s운동,s비오는날},                 new Concept[]{c슬프게,c위로});
+        tag("Nothing Compares 2 U","Sinead O'Connor",   "0-EF60neguk",   new Situation[]{s운동,s비오는날},                 new Concept[]{c슬프게,c위로});
+        tag("With or Without You", "U2",                "_1GS4PQBKF4",   new Situation[]{s운동,s비오는날},                 new Concept[]{c슬프게,c잔잔});
+        tag("Pride (In the Name of Love)","U2",         "dxpCQrRMhqI",   new Situation[]{s운동,s출근},                     new Concept[]{c신나게,c위로});
+        tag("Beautiful Day",       "U2",                "co6WMzDkh7g",   new Situation[]{s운동,s출근},                     new Concept[]{c신나게,c위로});
+        tag("The Unforgiven",      "Metallica",         "Ckom3gf57Yw",   new Situation[]{s운동,s비오는날},                 new Concept[]{c슬프게,c잔잔});
+        tag("Nothing Else Matters","Metallica",         "tAGnKpE4NCI",   new Situation[]{s운동,s잠들기},                   new Concept[]{c잔잔,c위로});
+        tag("Black",               "Dierks Bentley",    "0fNXQXc9xQU",   new Situation[]{s운동,s드라이브},                 new Concept[]{c신나게,c새로운});
+
+        // ── 잠들기전×신나게 / 공부×신나게 (가볍고 경쾌한 곡들) ─────────────────
+        tag("Say So",              "Doja Cat",          "pok-HnKkONI",   new Situation[]{s잠들기,s청소,s카페},             new Concept[]{c신나게,c새로운});
+        tag("Kiss Me More",        "Doja Cat",          "rDFBDiPOl2I",   new Situation[]{s잠들기,s카페},                   new Concept[]{c신나게,c새로운});
+        tag("Levitating",          "Dua Lipa",          "TUVcZfQe-Kw",   new Situation[]{s잠들기,s청소},                   new Concept[]{c신나게,c새로운});
+        tag("Shelter",             "Porter Robinson",   "fzQ6gRAEoy0",   new Situation[]{s잠들기,s공부},                   new Concept[]{c신나게,c잔잔});
+        tag("Sad Machine",         "Porter Robinson",   "HAIDqt2aUek",   new Situation[]{s잠들기,s공부},                   new Concept[]{c신나게,c잔잔});
+        tag("Flicker",             "Porter Robinson",   "P4y7Y_nkEik",   new Situation[]{s잠들기,s공부},                   new Concept[]{c신나게,c잔잔});
+        tag("Language",            "Porter Robinson",   "AKuDGGICZTg",   new Situation[]{s공부,s잠들기},                   new Concept[]{c신나게,c잔잔});
+        tag("Natural",             "Imagine Dragons",   "e2X4hHf39ZA",   new Situation[]{s공부,s출근},                     new Concept[]{c신나게,c위로});
+        tag("Warriors",            "Imagine Dragons",   "fmI_Ndrxy14",   new Situation[]{s공부,s출근,s운동},               new Concept[]{c신나게,c위로});
+        tag("Rise",                "Katy Perry",        "jz2LrPGvExs",   new Situation[]{s공부,s출근},                     new Concept[]{c신나게,c위로});
+        tag("Fight Song",          "Rachel Platten",    "xo1VInw-SKc",   new Situation[]{s공부,s출근},                     new Concept[]{c신나게,c위로});
+        tag("Hall of Fame",        "The Script",        "mk48xbyxHKA",   new Situation[]{s공부,s출근},                     new Concept[]{c신나게,c위로});
+        tag("Good Life",           "OneRepublic",       "jZhQOvn9FBE",   new Situation[]{s공부,s잠들기},                   new Concept[]{c신나게,c위로});
+        tag("I Lived",             "OneRepublic",       "si7bGsHLfsk",   new Situation[]{s공부,s출근},                     new Concept[]{c신나게,c위로});
+        tag("Secrets",             "OneRepublic",       "qHm9MG9GyAc",   new Situation[]{s공부,s잠들기},                   new Concept[]{c신나게,c잔잔});
+        tag("Something I Need",    "OneRepublic",       "sAr7zFgdoHc",   new Situation[]{s공부,s잠들기},                   new Concept[]{c신나게,c위로});
+        tag("Supersonic",          "Madeon",            "bh4-H0bFJGg",   new Situation[]{s공부,s청소},                     new Concept[]{c신나게,c새로운});
+        tag("Pay No Mind",         "Madeon",            "gxTzCOAy608",   new Situation[]{s공부,s잠들기},                   new Concept[]{c신나게,c잔잔});
+        tag("Crave You",           "Flight Facilities", "bvFKPRmSvBU",   new Situation[]{s잠들기,s카페},                   new Concept[]{c신나게,c잔잔});
+        tag("Never Be Like You",   "Flume",             "Ly7uj0JwgZ8",   new Situation[]{s잠들기,s카페},                   new Concept[]{c신나게,c잔잔});
+        tag("Rushing Back",        "Flume",             "Nt1s6JqlBaA",   new Situation[]{s잠들기,s공부},                   new Concept[]{c신나게,c잔잔});
+
+        // ── 청소할때×슬프게 / 잔잔 / 위로 ────────────────────────────────────
+        tag("The Man Who Can't Be Moved","The Script",  "INsSZrePAMc",   new Situation[]{s청소,s비오는날},                 new Concept[]{c슬프게,c위로});
+        tag("Breakeven",           "The Script",        "X-b5XdEMWb0",   new Situation[]{s청소,s비오는날},                 new Concept[]{c슬프게,c위로});
+        tag("Nothing",             "The Script",        "m-bNGBjfPTQ",   new Situation[]{s청소,s비오는날},                 new Concept[]{c슬프게,c위로});
+        tag("Iris",                "Goo Goo Dolls",     "NdYWuo9OFAw",   new Situation[]{s청소,s비오는날},                 new Concept[]{c슬프게,c위로});
+        tag("Slide",               "Goo Goo Dolls",     "oOdqMDuUfPs",   new Situation[]{s청소,s드라이브},                 new Concept[]{c잔잔,c추억});
+        tag("Hands Down",          "Dashboard Confessional","1AEqh3t4jFU",new Situation[]{s청소,s비오는날},                new Concept[]{c슬프게,c추억});
+        tag("Vindicated",          "Dashboard Confessional","NiH4YGDI4hY",new Situation[]{s청소,s비오는날},                new Concept[]{c슬프게,c위로});
+        tag("Stolen",              "Dashboard Confessional","CvgwBzMIBYE",new Situation[]{s청소,s비오는날},                new Concept[]{c슬프게,c추억});
+        tag("Here Is Gone",        "Goo Goo Dolls",     "HLQ3DWHiPdo",   new Situation[]{s청소,s비오는날},                 new Concept[]{c슬프게,c잔잔});
+        tag("Time of Your Life",   "Green Day",         "CnQ8N1KgrpE",   new Situation[]{s청소,s드라이브},                 new Concept[]{c잔잔,c추억});
+        tag("Konstantine",         "Something Corporate","EzD33_m7e6E", new Situation[]{s청소,s비오는날},                 new Concept[]{c슬프게,c추억});
+        tag("Carry On",            "fun.",              "5X0G-dQ1_C8",   new Situation[]{s청소,s출근},                     new Concept[]{c신나게,c위로});
+        tag("We Are Young",        "fun.",              "Sv6dMFF_sys",   new Situation[]{s청소,s출근,s드라이브},           new Concept[]{c신나게,c추억});
+        tag("Some Nights",         "fun.",              "qQkBeOisNM0",   new Situation[]{s청소,s드라이브},                 new Concept[]{c신나게,c추억});
+        tag("Safe and Sound",      "Capital Cities",    "8RKBKQvM4iI",   new Situation[]{s청소,s드라이브},                 new Concept[]{c신나게,c새로운});
+        tag("Tongue Tied",         "Grouplove",         "aFMtKiRFVVA",   new Situation[]{s청소,s드라이브},                 new Concept[]{c신나게,c추억});
+        tag("Colours",             "Grouplove",         "KIc6llkQYwE",   new Situation[]{s청소,s드라이브},                 new Concept[]{c신나게,c새로운});
+        tag("Slow Life",           "Grouplove",         "h5h3NiC_b1M",   new Situation[]{s청소,s카페},                     new Concept[]{c잔잔,c새로운});
+        tag("Mess Is Mine",        "Vance Joy",         "FoMpFtROHRU",   new Situation[]{s청소,s카페},                     new Concept[]{c잔잔,c위로});
+        tag("Riptide",             "Vance Joy",         "uJ_1HMAGb4k",   new Situation[]{s청소,s드라이브,s카페},           new Concept[]{c신나게,c새로운});
+        tag("Georgia",             "Vance Joy",         "lIBrFSFk-gM",   new Situation[]{s청소,s드라이브},                 new Concept[]{c신나게,c추억});
+        tag("Fire and the Flood",  "Vance Joy",         "zHD2HX1fPJI",   new Situation[]{s청소,s드라이브},                 new Concept[]{c신나게,c위로});
+        tag("Peanut Butter Jelly", "Galantis",          "sMELZGEv9hM",   new Situation[]{s청소,s운동},                     new Concept[]{c신나게,c새로운});
+        tag("No Money",            "Galantis",          "c9cUMKwUQX4",   new Situation[]{s청소,s운동},                     new Concept[]{c신나게,c새로운});
+        tag("Runaway",             "Galantis",          "Mq4_0uO7IKo",   new Situation[]{s청소,s운동,s드라이브},           new Concept[]{c신나게,c새로운});
+
+        // ── 한국 추가 (출근길/청소 취약 조합 보강) ────────────────────────────
+        tag("거미 줄",              "거미",              "8JzYbzO5vY4",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("눈의 꽃",              "박효신",            "CquYGRcYNy8",   new Situation[]{s비오는날,s잠들기,s청소},         new Concept[]{c슬프게,c위로});
+        tag("가슴 아파도",           "SG워너비",          "GWmMN2GKBHI",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("한 사람을 위한 마음",    "폴킴",             "8Y68aAhMmjg",   new Situation[]{s잠들기,s카페},                   new Concept[]{c위로,c잔잔});
+        tag("그냥",                 "10CM",              "PrIFa0U_GKE",   new Situation[]{s카페,s잠들기},                   new Concept[]{c잔잔,c위로});
+        tag("아메리카노",            "10CM",              "gCW9PhVNxsE",   new Situation[]{s카페,s공부},                     new Concept[]{c신나게,c새로운});
+        tag("폰서트",               "10CM",              "QRMX1y6LPeo",   new Situation[]{s카페,s드라이브},                 new Concept[]{c신나게,c새로운});
+        tag("봄이 좋냐",            "10CM",              "PIp1NxnCfq4",   new Situation[]{s카페,s드라이브},                 new Concept[]{c새로운,c잔잔});
+        tag("어디에도",              "검정치마",           "7JFWbKSfp3w",   new Situation[]{s비오는날,s카페},                 new Concept[]{c새로운,c잔잔});
+        tag("내가 죽던 날",          "검정치마",           "7-gO0EqHx4M",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("결혼해줘",             "검정치마",           "0Ld-D_aWxS8",   new Situation[]{s드라이브,s카페},                 new Concept[]{c새로운,c잔잔});
+        tag("She Is",               "검정치마",           "xDerWWMd7rk",   new Situation[]{s드라이브,s카페},                 new Concept[]{c신나게,c새로운});
+        tag("너의 모든 것",          "적재",              "xdNPR1J6A-c",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c위로,c잔잔});
+        tag("어떻게 이별까지 사랑하겠어","적재",           "MCsFrwBTKHo",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("내 곁에 있어줘",        "버즈",              "bMTg3eeLy5Y",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("나에게로 떠나는 여행",   "015B",              "v_3UEGa0oUQ",   new Situation[]{s드라이브,s출근},                 new Concept[]{c신나게,c추억});
+        tag("이젠 그랬으면 좋겠네",   "이문세",            "mFaLJlF04V4",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c추억});
+        tag("소녀",                 "이문세",            "GvimMKuVy8A",   new Situation[]{s드라이브,s카페},                 new Concept[]{c잔잔,c추억});
+        tag("붉은 노을",             "이문세",            "RqVxvvqGD_Y",   new Situation[]{s드라이브,s비오는날},             new Concept[]{c슬프게,c추억});
+        tag("다시 여기 바닷가에",     "이승환",            "mjqP7wJAVeU",   new Situation[]{s드라이브,s비오는날},             new Concept[]{c슬프게,c추억});
+        tag("내 곁에서 떠나가지 말아요","이승환",          "KOgvDZV4fME",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("할 수 있어",            "터보",              "9U6JNUOm-UQ",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게,c추억});
+        tag("오빠차",               "터보",              "zxbJGWa6FfM",   new Situation[]{s드라이브,s청소},                 new Concept[]{c신나게,c추억});
+        tag("슬픔 속에 그대",        "god",               "TbhAbGW_-Yo",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("길",                   "god",               "Lmh_lXoNST4",   new Situation[]{s비오는날,s출근},                 new Concept[]{c슬프게,c위로});
+        tag("서쪽 하늘",             "god",               "q5E5A-KlT00",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c추억});
+
+        // ── J-pop 추가 (취약 조합) ────────────────────────────────────────────
+        tag("One More Time, One More Chance","山崎まさよし","OlVOJNMwHls",new Situation[]{s비오는날,s잠들기},              new Concept[]{c슬프게,c추억});
+        tag("粉雪",                 "レミオロメン",        "BI8g2PcJl7Y",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c추억});
+        tag("春よ、来い",            "松任谷由実",          "VFMSFe_r8IE",   new Situation[]{s비오는날,s출근},                 new Concept[]{c슬프게,c추억});
+        tag("卒業",                 "斉藤由貴",            "ue_FEj9YU5s",   new Situation[]{s비오는날,s공부},                 new Concept[]{c슬프게,c추억});
+        tag("夢の中へ",              "井上陽水",            "gSAtxK7_J8Q",   new Situation[]{s드라이브,s청소},                 new Concept[]{c신나게,c추억});
+        tag("川の流れのように",       "美空ひばり",          "tJIlXBJ7Xxk",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c추억});
+        tag("少年時代",              "井上陽水",            "lqMJGEqMTXI",   new Situation[]{s비오는날,s드라이브},             new Concept[]{c잔잔,c추억});
+        tag("女々しくて",            "ゴールデンボンバー",   "eqW6kQNiD5A",   new Situation[]{s청소,s드라이브},                 new Concept[]{c신나게,c추억});
+        tag("愛を伝えたいだとか",     "あいみょん",          "M1SqJLd6YJU",   new Situation[]{s카페,s드라이브},                 new Concept[]{c신나게,c새로운});
+        tag("マリーゴールド",         "あいみょん",          "GNl2Tnezr28",   new Situation[]{s드라이브,s카페},                 new Concept[]{c신나게,c새로운});
+        tag("裸の心",               "あいみょん",          "UEjX7dkDpEI",   new Situation[]{s비오는날,s잠들기},               new Concept[]{c슬프게,c위로});
+        tag("ハルノヒ",              "あいみょん",          "WcixKPTBPHI",   new Situation[]{s드라이브,s출근},                 new Concept[]{c신나게,c새로운});
+        tag("プチ贅沢な時間を",       "竹内まりや",          "YhtBb0bVk1Y",   new Situation[]{s카페,s잠들기},                   new Concept[]{c잔잔,c추억});
+        tag("元気を出して",          "竹内まりや",          "O0EEqRmyiH8",   new Situation[]{s비오는날,s카페},                 new Concept[]{c위로,c추억});
+        tag("プラスティック・ラブ",    "竹内まりや",          "9Gj47G9liJA",   new Situation[]{s드라이브,s카페},                 new Concept[]{c신나게,c추억});
+        tag("TRUE",                 "水瀬いのり",          "Ov2oGHm7Sog",   new Situation[]{s공부,s잠들기},                   new Concept[]{c신나게,c잔잔});
+        tag("名前のない怪物",         "EGOIST",             "Z_l2aGKYuWU",   new Situation[]{s공부,s출근},                     new Concept[]{c신나게,c새로운});
+        tag("愛を叫べ",              "EGOIST",             "NKlZFhvzPy4",   new Situation[]{s공부,s운동},                     new Concept[]{c신나게});
+        tag("The Everlasting Guilty Crown","EGOIST",    "Z_l2aGKYuWU",   new Situation[]{s공부,s잠들기},                   new Concept[]{c신나게,c잔잔});
+        tag("Catch the Moment",     "LiSA",              "Eg79jVj58aQ",   new Situation[]{s공부,s잠들기},                   new Concept[]{c신나게,c잔잔});
+        tag("unlasting",            "LiSA",              "VoRKaBwj3vA",   new Situation[]{s잠들기,s비오는날},               new Concept[]{c슬프게,c위로});
+        tag("homura",               "LiSA",              "K5dKJWSt62g",   new Situation[]{s출근,s운동},                     new Concept[]{c신나게,c위로});
     }
 
     private void tag(String title, String artist, String videoId,
