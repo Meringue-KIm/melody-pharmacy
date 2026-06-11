@@ -10,9 +10,13 @@
 
 ## 🖥️ 화면 미리보기
 
-| 상황 선택 | 컨셉 선택 | 추천 결과 |
+| 로그인 | 상황 선택 | 컨셉 선택 |
 |---|---|---|
-| ![메인](docs/screenshots/main.png) | ![컨셉](docs/screenshots/concept.png) | ![추천](docs/screenshots/recommend.png) |
+| ![로그인](docs/screenshots/login.png) | ![메인](docs/screenshots/main.png) | ![컨셉](docs/screenshots/concept.png) |
+
+| 추천 결과 | 저장 목록 | 프로필 |
+|---|---|---|
+| ![추천](docs/screenshots/recommend.png) | ![저장](docs/screenshots/saved.png) | ![프로필](docs/screenshots/profile.png) |
 
 ---
 
