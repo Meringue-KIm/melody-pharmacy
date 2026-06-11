@@ -31,6 +31,8 @@ scripts/
 
 # ===== Claude =====
 .claude/
+CLAUDE.md
+AGENTS.md
 
 # ===== 서버 로그 =====
 backend/server.log.err
